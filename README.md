@@ -24,8 +24,8 @@ The front-end is built with **Next.js** and the back-end is powered by **Strapi*
 
 ```bash
 cd web
-pnpm install
-pnpm dev
+npm install
+npm run dev
 ```
 
 ### Back-end
