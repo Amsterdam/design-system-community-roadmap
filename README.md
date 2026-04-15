@@ -24,16 +24,16 @@ The front-end is built with **Next.js** and the back-end is powered by **Strapi*
 
 ```bash
 cd web
-pnpm install
-pnpm dev
+npm run install
+npm run dev
 ```
 
 ### Back-end
 
 ```bash
 cd cms
-npm install
-npm develop
+npm run install
+npm run develop
 ```
 
 ## Licence
