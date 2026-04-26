@@ -5,16 +5,16 @@ const config: Core.Config.Middlewares = [
   "strapi::errors",
   "strapi::security",
   {
-    name: "strapi::cors",
     config: {
+      headers: ["Content-Type", "Authorization", "Origin", "Accept"],
+      keepHeadersOnError: true,
+      methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS", "HEAD"],
       origin: (process.env.CORS_ORIGINS ?? "http://localhost:3000")
         .split(",")
         .map((origin) => origin.trim())
         .filter(Boolean),
-      methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS", "HEAD"],
-      headers: ["Content-Type", "Authorization", "Origin", "Accept"],
-      keepHeadersOnError: true,
     },
+    name: "strapi::cors",
   },
   "strapi::poweredBy",
   "strapi::query",

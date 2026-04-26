@@ -1,5 +1,6 @@
-import type { Meta, StoryObj } from '@storybook/react-vite';
-import { Button } from '@design-system-community-roadmap/ui';
+import type { Meta, StoryObj } from '@storybook/react-vite'
+
+import { Button } from '@design-system-community-roadmap/ui'
 
 const meta: Meta<typeof Button> = {
   title: 'Components/Button',
@@ -9,20 +10,21 @@ const meta: Meta<typeof Button> = {
     variant: 'primary',
   },
   argTypes: {
-    variant: { control: 'inline-radio', options: ['primary', 'secondary'] },
     onClick: { action: 'clicked' },
+    variant: { control: 'inline-radio', options: ['primary', 'secondary'] },
   },
-};
+}
 
-export default meta;
-type Story = StoryObj<typeof Button>;
+export default meta
 
-export const Primary: Story = {};
+type Story = StoryObj<typeof Button>
+
+export const Primary: Story = {}
 
 export const Secondary: Story = {
   args: { variant: 'secondary' },
-};
+}
 
 export const Disabled: Story = {
   args: { disabled: true },
-};
+}
