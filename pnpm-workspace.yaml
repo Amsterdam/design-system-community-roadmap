@@ -1,5 +1,7 @@
 packages:
   - "cms"
+  - "storybook"
+  - "ui"
   - "web"
 onlyBuiltDependencies:
   - "@swc/core"
