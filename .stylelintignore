@@ -1,0 +1,11 @@
+node_modules/
+**/node_modules/
+**/dist/
+**/build/
+**/coverage/
+**/.next/
+**/.cache/
+**/.tmp/
+cms/.strapi/
+cms/types/
+storybook/storybook-static/

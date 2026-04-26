@@ -1,0 +1,22 @@
+# Dependency / build artefacts
+node_modules/
+**/node_modules/
+**/dist/
+**/build/
+**/coverage/
+**/.next/
+**/.turbo/
+**/.cache/
+**/.tmp/
+
+# Strapi
+cms/.strapi/
+cms/.strapi-updater.json
+cms/types/
+
+# Storybook output
+storybook/storybook-static/
+
+# Lockfiles
+pnpm-lock.yaml
+package-lock.json

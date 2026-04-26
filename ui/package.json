@@ -13,7 +13,7 @@
     "src"
   ],
   "scripts": {
-    "lint": "tsc --noEmit"
+    "typecheck": "tsc --noEmit"
   },
   "peerDependencies": {
     "react": "^19.0.0",

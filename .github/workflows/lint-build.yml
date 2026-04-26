@@ -35,21 +35,21 @@ jobs:
         run: pnpm install --frozen-lockfile
 
       # Strapi's TS types are generated from schema files and live under cms/types
-      # (gitignored). Run typegen before lint so tsc has them on disk.
+      # (gitignored). Run typegen before typecheck so tsc has them on disk.
       - name: Generate Strapi types
         run: pnpm --filter ./cms run typegen
 
-      - name: Lint ui
-        run: pnpm --filter ./ui run lint
+      - name: Prettier
+        run: pnpm run format:check
 
-      - name: Lint web
-        run: pnpm --filter ./web run lint
+      - name: ESLint
+        run: pnpm run lint:js
 
-      - name: Lint cms
-        run: pnpm --filter ./cms run lint
+      - name: Stylelint
+        run: pnpm run lint:css
 
-      - name: Lint storybook
-        run: pnpm --filter ./storybook run lint
+      - name: Typecheck
+        run: pnpm run typecheck
 
       - name: Build web
         run: pnpm --filter ./web run build
