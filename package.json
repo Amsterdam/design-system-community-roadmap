@@ -12,9 +12,13 @@
     "lint:fix": "eslint . --fix && stylelint \"**/*.{css,scss}\" --fix",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
-    "typecheck": "pnpm --filter ./ui --filter ./web --filter ./cms --filter ./storybook run typecheck"
+    "typecheck": "pnpm --filter ./ui --filter ./web --filter ./cms --filter ./storybook run typecheck",
+    "prepare": "husky"
   },
   "devDependencies": {
+    "@commitlint/cli": "^20.5.2",
+    "@commitlint/config-conventional": "^20.5.0",
+    "@commitlint/prompt-cli": "^20.5.2",
     "@eslint/js": "^10.0.1",
     "@eslint/json": "^1.2.0",
     "@eslint/markdown": "^8.0.1",
@@ -29,6 +33,7 @@
     "eslint-plugin-react": "^7.37.5",
     "eslint-plugin-storybook": "^10.3.5",
     "globals": "^17.5.0",
+    "husky": "^9.1.7",
     "prettier": "^3.8.3",
     "sass": "^1.99.0",
     "stylelint": "^17.9.0",
