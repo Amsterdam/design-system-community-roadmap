@@ -1,0 +1,27 @@
+{
+  "kind": "collectionType",
+  "collectionName": "feature_likes",
+  "info": {
+    "singularName": "feature-like",
+    "pluralName": "feature-likes",
+    "displayName": "Feature Like"
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "end_user": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::end-user.end-user",
+      "inversedBy": "feature_likes"
+    },
+    "feature": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::feature.feature",
+      "inversedBy": "likes"
+    }
+  }
+}

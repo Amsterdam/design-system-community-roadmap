@@ -1,0 +1,57 @@
+{
+  "kind": "collectionType",
+  "collectionName": "end_users",
+  "info": {
+    "singularName": "end-user",
+    "pluralName": "end-users",
+    "displayName": "End User"
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "name": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 80,
+      "required": true
+    },
+    "emoji": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 2,
+      "required": true,
+      "regex": "[\\u2600-\\u27BF]|[\\uE000-\\uF8FF]|\\uD83C[\\uDC00-\\uDFFF]|\\uD83D[\\uDC00-\\uDFFF]|\\uD83E[\\uDD00-\\uDDFF]"
+    },
+    "isTeam": {
+      "type": "boolean",
+      "required": true,
+      "default": false
+    },
+    "ideas": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::idea.idea",
+      "mappedBy": "end_users"
+    },
+    "idea_likes": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::idea-like.idea-like",
+      "mappedBy": "end_user"
+    },
+    "feature_likes": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::feature-like.feature-like",
+      "mappedBy": "end_user"
+    },
+    "story_likes": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::story-like.story-like",
+      "mappedBy": "end_user"
+    }
+  }
+}

@@ -1,0 +1,27 @@
+{
+  "kind": "collectionType",
+  "collectionName": "story_likes",
+  "info": {
+    "singularName": "story-like",
+    "pluralName": "story-likes",
+    "displayName": "Story Like"
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "end_user": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::end-user.end-user",
+      "inversedBy": "story_likes"
+    },
+    "story": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::story.story",
+      "inversedBy": "likes"
+    }
+  }
+}
