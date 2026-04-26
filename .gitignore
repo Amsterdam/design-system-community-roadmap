@@ -29,5 +29,4 @@ lerna-debug.log*
 dist-ssr
 *storybook.log
 storybook-static
-.storybook
 
