@@ -1,7 +1,7 @@
 {
-  "name": "storybook",
+  "name": "@design-system-community-roadmap/storybook",
   "private": true,
-  "version": "0.0.0",
+  "version": "0.0.1",
   "type": "module",
   "scripts": {
     "lint": "eslint .",
@@ -9,11 +9,13 @@
     "build": "storybook build"
   },
   "dependencies": {
+    "@design-system-community-roadmap/ui": "workspace:*",
     "react": "^19.2.5",
     "react-dom": "^19.2.5"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
+    "sass": "^1.83.4",
     "@types/node": "^24.12.2",
     "@types/react": "^19.2.14",
     "@types/react-dom": "^19.2.3",

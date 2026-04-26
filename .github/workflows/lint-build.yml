@@ -39,14 +39,23 @@ jobs:
       - name: Generate Strapi types
         run: pnpm --filter ./cms run typegen
 
+      - name: Lint ui
+        run: pnpm --filter ./ui run lint
+
       - name: Lint web
         run: pnpm --filter ./web run lint
 
       - name: Lint cms
         run: pnpm --filter ./cms run lint
 
+      - name: Lint storybook
+        run: pnpm --filter ./storybook run lint
+
       - name: Build web
         run: pnpm --filter ./web run build
 
       - name: Build cms
         run: pnpm --filter ./cms run build
+
+      - name: Build storybook
+        run: pnpm --filter ./storybook run build
