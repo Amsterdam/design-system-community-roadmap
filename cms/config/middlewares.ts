@@ -1,27 +1,27 @@
-import type { Core } from "@strapi/strapi";
+import type { Core } from '@strapi/strapi'
 
 const config: Core.Config.Middlewares = [
-  "strapi::logger",
-  "strapi::errors",
-  "strapi::security",
+  'strapi::logger',
+  'strapi::errors',
+  'strapi::security',
   {
-    name: "strapi::cors",
     config: {
-      origin: (process.env.CORS_ORIGINS ?? "http://localhost:3000")
-        .split(",")
+      headers: ['Content-Type', 'Authorization', 'Origin', 'Accept'],
+      keepHeadersOnError: true,
+      methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS', 'HEAD'],
+      origin: (process.env.CORS_ORIGINS ?? 'http://localhost:3000')
+        .split(',')
         .map((origin) => origin.trim())
         .filter(Boolean),
-      methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS", "HEAD"],
-      headers: ["Content-Type", "Authorization", "Origin", "Accept"],
-      keepHeadersOnError: true,
     },
+    name: 'strapi::cors',
   },
-  "strapi::poweredBy",
-  "strapi::query",
-  "strapi::body",
-  "strapi::session",
-  "strapi::favicon",
-  "strapi::public",
-];
+  'strapi::poweredBy',
+  'strapi::query',
+  'strapi::body',
+  'strapi::session',
+  'strapi::favicon',
+  'strapi::public',
+]
 
-export default config;
+export default config

@@ -25,11 +25,7 @@
     },
     "status": {
       "type": "enumeration",
-      "enum": [
-        "in_review",
-        "accepted",
-        "postponed"
-      ],
+      "enum": ["in_review", "accepted", "postponed"],
       "default": "in_review",
       "required": true
     },
@@ -59,9 +55,7 @@
     "images": {
       "type": "media",
       "multiple": true,
-      "allowedTypes": [
-        "images"
-      ]
+      "allowedTypes": ["images"]
     }
   }
 }

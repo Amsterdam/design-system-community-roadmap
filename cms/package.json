@@ -9,9 +9,9 @@
     "deploy": "strapi deploy",
     "dev": "strapi develop",
     "develop": "strapi develop",
-    "lint": "tsc --noEmit",
     "start": "strapi start",
     "strapi": "strapi",
+    "typecheck": "tsc --noEmit",
     "typegen": "strapi ts:generate-types",
     "upgrade": "npx @strapi/upgrade latest",
     "upgrade:dry": "npx @strapi/upgrade latest --dry"

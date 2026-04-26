@@ -1,0 +1,24 @@
+{
+  "compileOnSave": false,
+  "compilerOptions": {
+    "allowSyntheticDefaultImports": true,
+    "declaration": false,
+    "downlevelIteration": true,
+    "experimentalDecorators": true,
+    "forceConsistentCasingInFileNames": true,
+    "importHelpers": true,
+    "jsx": "react-jsx",
+    "lib": ["es2020", "dom"],
+    "module": "es2020",
+    "moduleResolution": "bundler",
+    "noFallthroughCasesInSwitch": true,
+    "noImplicitOverride": true,
+    "noImplicitReturns": true,
+    "noEmit": true,
+    "noPropertyAccessFromIndexSignature": true,
+    "sourceMap": true,
+    "strict": true,
+    "target": "es2020"
+  },
+  "exclude": ["**/node_modules/*"]
+}
