@@ -8,31 +8,24 @@ on:
     branches-ignore: [main]
 
 permissions:
-  contents: write
-  deployments: write
+  contents: read
 
 jobs:
-  build-and-deploy:
-    concurrency: ci-${{ github.ref }}
+  build:
     runs-on: ubuntu-latest
-    if: ${{ github.actor != 'dependabot[bot]' }}
+    permissions:
+      contents: read
+    outputs:
+      branch-name: ${{ steps.branch.outputs.name }}
     steps:
-      - name: Create branch name without text before first forward slash
+      - name: Compute branch name
+        id: branch
         run: |
           RAW_BRANCH_NAME=${{ github.head_ref || github.ref_name }}
-          BRANCH_NAME=$(echo $RAW_BRANCH_NAME | sed 's/[^/]*\///')
-          echo "BRANCH_NAME=$BRANCH_NAME" >> $GITHUB_ENV
+          echo "name=$(echo $RAW_BRANCH_NAME | sed 's/[^/]*\///')" >> $GITHUB_OUTPUT
 
       - name: Check out
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
-
-      - name: Create deployment
-        uses: bobheadxi/deployments@648679e8e4915b27893bd7dbc35cb504dc915bc8 # v1.5.0
-        id: deployment
-        with:
-          step: start
-          token: ${{ secrets.GITHUB_TOKEN }}
-          env: demo-${{ env.BRANCH_NAME }}
 
       - name: Install pnpm
         uses: pnpm/action-setup@078e9d416474b29c0c387560859308974f7e9c53 # v6.0.1
@@ -56,19 +49,51 @@ jobs:
 
       - name: Build Storybook
         env:
-          STORYBOOK_BUILD_PATH: demo-${{ env.BRANCH_NAME }}
+          STORYBOOK_BUILD_PATH: demo-${{ steps.branch.outputs.name }}
         run: pnpm --filter ./storybook run build
 
       - name: Create a version mark
-        run: |
-          touch ./storybook/storybook-static/${{ github.sha }}.txt
+        run: touch ./storybook/storybook-static/${{ github.sha }}.txt
+
+      - name: Upload Storybook artifact
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: storybook-static
+          path: storybook/storybook-static
+          retention-days: 1
+
+  deploy:
+    needs: build
+    if: github.actor != 'dependabot[bot]'
+    concurrency: ci-${{ github.ref }}
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      deployments: write
+    steps:
+      - name: Create deployment
+        uses: bobheadxi/deployments@648679e8e4915b27893bd7dbc35cb504dc915bc8 # v1.5.0
+        id: deployment
+        with:
+          step: start
+          token: ${{ secrets.GITHUB_TOKEN }}
+          env: demo-${{ needs.build.outputs.branch-name }}
+
+      - name: Check out
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+
+      - name: Download Storybook artifact
+        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
+        with:
+          name: storybook-static
+          path: storybook-static
 
       - name: Pushing to pages branch
         uses: JamesIves/github-pages-deploy-action@d92aa235d04922e8f08b40ce78cc5442fcfbfa2f # v4.8.0
         with:
           branch: gh-pages
-          folder: storybook/storybook-static
-          target-folder: demo-${{ env.BRANCH_NAME }}
+          folder: storybook-static
+          target-folder: demo-${{ needs.build.outputs.branch-name }}
 
       - name: Wait for GitHub Pages to be deployed
         uses: nick-fields/retry@ad984534de44a9489a53aefd81eb77f87c70dc60 # v4.0.0
@@ -77,7 +102,7 @@ jobs:
           max_attempts: 40
           retry_wait_seconds: 15
           command: |
-            curl -sf https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}/demo-${{ env.BRANCH_NAME }}/${{ github.sha }}.txt
+            curl -sf https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}/demo-${{ needs.build.outputs.branch-name }}/${{ github.sha }}.txt
 
       - name: Update deployment status
         uses: bobheadxi/deployments@648679e8e4915b27893bd7dbc35cb504dc915bc8 # v1.5.0
@@ -88,4 +113,4 @@ jobs:
           status: ${{ job.status }}
           env: ${{ steps.deployment.outputs.env }}
           deployment_id: ${{ steps.deployment.outputs.deployment_id }}
-          env_url: https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}/demo-${{ env.BRANCH_NAME }}
+          env_url: https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}/demo-${{ needs.build.outputs.branch-name }}
