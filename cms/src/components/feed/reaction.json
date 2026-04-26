@@ -14,7 +14,7 @@
     },
     "end_user": {
       "type": "relation",
-      "relation": "oneToOne",
+      "relation": "manyToOne",
       "target": "api::end-user.end-user",
       "required": true
     }
