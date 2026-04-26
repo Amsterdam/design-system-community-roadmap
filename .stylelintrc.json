@@ -1,10 +1,6 @@
 {
   "extends": ["stylelint-config-standard-scss"],
-  "plugins": [
-    "stylelint-order",
-    "stylelint-use-logical",
-    "stylelint-value-no-unknown-custom-properties"
-  ],
+  "plugins": ["stylelint-order", "stylelint-use-logical", "stylelint-value-no-unknown-custom-properties"],
   "rules": {
     "alpha-value-notation": ["percentage"],
     "at-rule-empty-line-before": null,
@@ -63,7 +59,6 @@
     "no-invalid-double-slash-comments": true,
     "order/order": ["custom-properties", "declarations"],
     "order/properties-alphabetical-order": true,
-    "plugin/use-baseline": [true, { "ignoreSelectors": ["nesting"] }],
     "property-disallowed-list": [
       [
         "contain-intrinsic-height",

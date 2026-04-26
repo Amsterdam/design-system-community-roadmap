@@ -4,7 +4,7 @@ packages:
   - "ui"
   - "web"
 onlyBuiltDependencies:
-  - '@parcel/watcher'
+  - "@parcel/watcher"
   - "@swc/core"
   - core-js-pure
   - esbuild

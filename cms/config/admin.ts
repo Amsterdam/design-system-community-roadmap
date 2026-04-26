@@ -1,4 +1,4 @@
-import type { Core } from '@strapi/strapi';
+import type { Core } from '@strapi/strapi'
 
 const config = ({ env }: Core.Config.Shared.ConfigParams): Core.Config.Admin => ({
   apiToken: {
@@ -19,6 +19,6 @@ const config = ({ env }: Core.Config.Shared.ConfigParams): Core.Config.Admin => 
       salt: env('TRANSFER_TOKEN_SALT'),
     },
   },
-});
+})
 
-export default config;
+export default config
