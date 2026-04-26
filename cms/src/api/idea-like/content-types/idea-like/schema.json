@@ -1,0 +1,27 @@
+{
+  "kind": "collectionType",
+  "collectionName": "idea_likes",
+  "info": {
+    "singularName": "idea-like",
+    "pluralName": "idea-likes",
+    "displayName": "Idea Like"
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "end_user": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::end-user.end-user",
+      "inversedBy": "idea_likes"
+    },
+    "idea": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::idea.idea",
+      "inversedBy": "likes"
+    }
+  }
+}

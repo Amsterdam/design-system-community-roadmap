@@ -1,0 +1,62 @@
+{
+  "kind": "collectionType",
+  "collectionName": "features",
+  "info": {
+    "singularName": "feature",
+    "pluralName": "features",
+    "displayName": "Feature"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "title": {
+      "type": "string",
+      "required": true,
+      "minLength": 1,
+      "maxLength": 140
+    },
+    "content": {
+      "type": "text",
+      "required": true,
+      "minLength": 1,
+      "maxLength": 10000
+    },
+    "images": {
+      "type": "media",
+      "multiple": true,
+      "allowedTypes": ["images"]
+    },
+    "startDate": {
+      "type": "date",
+      "required": true
+    },
+    "endDate": {
+      "type": "date"
+    },
+    "idea": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::idea.idea",
+      "inversedBy": "features"
+    },
+    "reactions": {
+      "type": "component",
+      "component": "feed.reaction",
+      "repeatable": true
+    },
+    "likes": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::feature-like.feature-like",
+      "mappedBy": "feature"
+    },
+    "story": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::story.story",
+      "inversedBy": "features"
+    }
+  }
+}

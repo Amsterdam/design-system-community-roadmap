@@ -1,0 +1,23 @@
+{
+  "collectionName": "components_feed_reactions",
+  "info": {
+    "displayName": "Reaction",
+    "icon": "discuss"
+  },
+  "options": {},
+  "attributes": {
+    "content": {
+      "type": "text",
+      "required": true,
+      "minLength": 1,
+      "maxLength": 2000
+    },
+    "end_user": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::end-user.end-user",
+      "required": true
+    }
+  },
+  "config": {}
+}

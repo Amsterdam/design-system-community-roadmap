@@ -4,6 +4,11 @@ node_modules/
 .next/
 out/
 
+# Strapi
+.strapi/
+dist/
+.strapi-updater.json
+
 # Files that may contain secrets
 *.env
 .env.*
