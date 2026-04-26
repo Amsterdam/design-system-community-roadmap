@@ -1,0 +1,52 @@
+name: Lint & Build
+on:
+  push:
+    branches: [main]
+  pull_request:
+permissions:
+  contents: read
+jobs:
+  lint-build:
+    runs-on: ubuntu-latest
+    # Strapi reads these at build time. They are throwaway values used only to
+    # let the admin bundle compile in CI, they never touch real environments.
+    env:
+      APP_KEYS: "ci-app-key-1,ci-app-key-2"
+      API_TOKEN_SALT: "ci-api-token-salt"
+      ADMIN_JWT_SECRET: "ci-admin-jwt-secret"
+      TRANSFER_TOKEN_SALT: "ci-transfer-token-salt"
+      JWT_SECRET: "ci-jwt-secret"
+      ENCRYPTION_KEY: "ci-encryption-key"
+      NODE_ENV: production
+    steps:
+      - name: Check out branch
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+
+      - name: Set up pnpm
+        uses: pnpm/action-setup@a7487c7e89a18df4991f7f222e4898a00d66ddda # v4.1.0
+
+      - name: Set up Node.js
+        uses: actions/setup-node@53b83947a5a98c8d113130e565377fae1a50d02f # v6.3.0
+        with:
+          node-version: 24
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      # Strapi's TS types are generated from schema files and live under cms/types
+      # (gitignored). Run typegen before lint so tsc has them on disk.
+      - name: Generate Strapi types
+        run: pnpm --filter ./cms run typegen
+
+      - name: Lint web
+        run: pnpm --filter ./web run lint
+
+      - name: Lint cms
+        run: pnpm --filter ./cms run lint
+
+      - name: Build web
+        run: pnpm --filter ./web run build
+
+      - name: Build cms
+        run: pnpm --filter ./cms run build
