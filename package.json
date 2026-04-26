@@ -2,8 +2,5 @@
   "name": "@amsterdam/design-system-community-roadmap",
   "version": "1.0.0",
   "private": true,
-  "workspaces": [
-    "web",
-    "cms"
-  ]
+  "packageManager": "pnpm@10.32.1"
 }
