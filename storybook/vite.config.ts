@@ -1,10 +1,10 @@
+/// <reference types="vitest/config" />
 import { storybookTest } from '@storybook/addon-vitest/vitest-plugin';
 import react from '@vitejs/plugin-react';
 import { playwright } from '@vitest/browser-playwright';
 // https://vite.dev/config/
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-/// <reference types="vitest/config" />
 import { defineConfig } from 'vite';
 
 const dirname = typeof __dirname !== 'undefined' ? __dirname : path.dirname(fileURLToPath(import.meta.url));
