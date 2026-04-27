@@ -19,13 +19,12 @@
     "@commitlint/cli": "^20.5.2",
     "@commitlint/config-conventional": "^20.5.0",
     "@commitlint/prompt-cli": "^20.5.2",
-    "@eslint/js": "^10.0.1",
     "@eslint/json": "^1.2.0",
     "@eslint/markdown": "^8.0.1",
     "@typescript-eslint/eslint-plugin": "^8.59.0",
     "@typescript-eslint/parser": "^8.59.0",
     "@vitest/eslint-plugin": "^1.6.16",
-    "eslint": "^9.39.4",
+    "@eslint/js": "^9",
     "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-import": "^2.32.0",
     "eslint-plugin-mdx": "^3.7.0",
@@ -43,5 +42,19 @@
     "stylelint-value-no-unknown-custom-properties": "^6.1.1",
     "typescript": "^6.0.3",
     "typescript-eslint": "^8.59.0"
+  },
+  "pnpm": {
+    "overrides": {
+      "cms>react": "^18.3.1",
+      "cms>react-dom": "^18.3.1",
+      "zod": "^3.25.76",
+      "lodash": "^4.18.1"
+    },
+    "peerDependencyRules": {
+      "allowedVersions": {
+        "codemirror": "5",
+        "typescript": "5"
+      }
+    }
   }
 }

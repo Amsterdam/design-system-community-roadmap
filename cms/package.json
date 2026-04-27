@@ -21,15 +21,15 @@
     "@strapi/plugin-users-permissions": "5.43.0",
     "@strapi/strapi": "5.43.0",
     "pg": "8.20.0",
-    "react": "^19.2.5",
-    "react-dom": "^19.2.5",
-    "react-router-dom": "^7.14.2",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "react-router-dom": "^6.30.3",
     "styled-components": "^6.0.0"
   },
   "devDependencies": {
     "@types/node": "^25",
-    "@types/react": "^19",
-    "@types/react-dom": "^19",
+    "@types/react": "^18",
+    "@types/react-dom": "^18",
     "typescript": "^5"
   },
   "engines": {
