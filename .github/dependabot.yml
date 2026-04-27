@@ -8,7 +8,30 @@ updates:
     commit-message:
       prefix: "chore(deps)"
       prefix-development: "chore(deps-dev)"
-
+  - package-ecosystem: "npm"
+    directory: "/cms"
+    groups:
+      strapi:
+        patterns:
+          - "@strapi/*"
+    schedule:
+      interval: "daily"
+    open-pull-requests-limit: 10
+    commit-message:
+      prefix: "chore(deps)"
+      prefix-development: "chore(deps-dev)"
+    ignore:
+      # Strapi 5.x pins React 18 and react-router-dom 6, re-evaluate when Strapi ships React 19 support
+      - dependency-name: "react"
+        versions: [">=19"]
+      - dependency-name: "react-dom"
+        versions: [">=19"]
+      - dependency-name: "react-router-dom"
+        versions: [">=7"]
+      - dependency-name: "@types/react"
+        versions: [">=19"]
+      - dependency-name: "@types/react-dom"
+        versions: [">=19"]
   - package-ecosystem: "github-actions"
     directory: "/"
     schedule:
