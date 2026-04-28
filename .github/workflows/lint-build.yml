@@ -14,6 +14,8 @@ jobs:
       APP_KEYS: "ci-app-key-1,ci-app-key-2"
       API_TOKEN_SALT: "ci-api-token-salt"
       ADMIN_JWT_SECRET: "ci-admin-jwt-secret"
+      NEXT_PUBLIC_STRAPI_URL: "https://example.com"
+      STRAPI_API_TOKEN: "example"
       TRANSFER_TOKEN_SALT: "ci-transfer-token-salt"
       JWT_SECRET: "ci-jwt-secret"
       ENCRYPTION_KEY: "ci-encryption-key"
