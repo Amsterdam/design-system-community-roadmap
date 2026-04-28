@@ -31,3 +31,4 @@ dist-ssr
 storybook-static
 
 cms/.strapi-cloud.json
+web/next-env.d.ts
