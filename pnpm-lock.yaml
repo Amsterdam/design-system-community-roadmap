@@ -102,8 +102,8 @@ importers:
         specifier: 5.43.0
         version: 5.43.0(bc4caf1cda7a319ea23b257ba73fd154)
       '@strapi/plugin-users-permissions':
-        specifier: 5.43.0
-        version: 5.43.0(2aaaf6069b860c465dea58e7c184b649)
+        specifier: 5.44.0
+        version: 5.44.0(2aaaf6069b860c465dea58e7c184b649)
       '@strapi/strapi':
         specifier: 5.43.0
         version: 5.43.0(@babel/runtime@7.29.2)(@codemirror/autocomplete@6.20.1)(@codemirror/language@6.12.3)(@codemirror/lint@6.9.5)(@codemirror/search@6.7.0)(@codemirror/state@6.6.0)(@codemirror/theme-one-dark@6.1.3)(@codemirror/view@6.41.1)(@emotion/is-prop-valid@1.4.0)(@swc/helpers@0.5.21)(@types/hoist-non-react-statics@3.3.7(@types/react@18.3.28))(@types/node@25.6.0)(@types/react-dom@18.3.7(@types/react@18.3.28))(@types/react@18.3.28)(codemirror@5.65.21)(esbuild@0.27.7)(koa@2.16.4)(lightningcss@1.32.0)(pg@8.20.0)(react-dom@18.3.1(react@18.3.1))(react-router-dom@6.30.3(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(react@18.3.1)(redux@4.2.1)(sass@1.99.0)(styled-components@6.4.1(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(terser@5.46.2)(type-fest@4.41.0)
@@ -3167,8 +3167,8 @@ packages:
       react-router-dom: ^6.30.3
       styled-components: ^6.0.0
 
-  '@strapi/plugin-users-permissions@5.43.0':
-    resolution: {integrity: sha512-sQaplY4LkBD3ZlqoxE/D2ArqfYagEPhU253KtLBwVyQ39TpjI7QNlMx4FK1b8aqgC1t+4F3uhkHDW7BuzqmoiQ==}
+  '@strapi/plugin-users-permissions@5.44.0':
+    resolution: {integrity: sha512-FrTOtnE6cixDXYbyiVePCF14ZQ12wJ5GtwQ2+4heCaoc474amiiUuRzHjReufk4H01m2R83rfmAORc42hQeLSw==}
     engines: {node: '>=20.0.0 <=24.x.x', npm: '>=6.0.0'}
     peerDependencies:
       '@strapi/strapi': ^5.0.0
@@ -3232,6 +3232,10 @@ packages:
 
   '@strapi/utils@5.43.0':
     resolution: {integrity: sha512-WMMzqoqb90fqzEX1xpnsSWb5XzyIfZtrdj3MDcHMIJT8QoZa/ntsAiPak9JpeQpPRkGdH62zvbQYMhupvP91IA==}
+    engines: {node: '>=20.0.0 <=24.x.x', npm: '>=6.0.0'}
+
+  '@strapi/utils@5.44.0':
+    resolution: {integrity: sha512-RVlovyRGut0Il3oMG2In+lbjBEvmUhMEGNQS7ASUTY62J7abK+r42fejG8yQFBW3t/41fz9gKKdeUt22CGxr+w==}
     engines: {node: '>=20.0.0 <=24.x.x', npm: '>=6.0.0'}
 
   '@swc/core-darwin-arm64@1.15.30':
@@ -9039,6 +9043,7 @@ packages:
 
   uuid@8.3.2:
     resolution: {integrity: sha512-+NYs2QeMWy+GWFOEm9xnn6HCDp0l7QBD7ml8zLUmJ+93Q5NF0NocErnwkTkXVFNiX3/fpC6afS8Dhb/gz7R7eg==}
+    deprecated: uuid@10 and below is no longer supported.  For ESM codebases, update to uuid@latest.  For CommonJS codebases, use uuid@11 (but be aware this version will likely be deprecated in 2028).
     hasBin: true
 
   v8flags@4.0.1:
@@ -12669,12 +12674,12 @@ snapshots:
       - codemirror
       - typescript
 
-  '@strapi/plugin-users-permissions@5.43.0(2aaaf6069b860c465dea58e7c184b649)':
+  '@strapi/plugin-users-permissions@5.44.0(2aaaf6069b860c465dea58e7c184b649)':
     dependencies:
       '@strapi/design-system': 2.2.0(@babel/runtime@7.29.2)(@codemirror/autocomplete@6.20.1)(@codemirror/language@6.12.3)(@codemirror/lint@6.9.5)(@codemirror/search@6.7.0)(@codemirror/state@6.6.0)(@codemirror/theme-one-dark@6.1.3)(@codemirror/view@6.41.1)(@strapi/icons@2.2.0(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(styled-components@6.4.1(react-dom@18.3.1(react@18.3.1))(react@18.3.1)))(@types/react-dom@18.3.7(@types/react@18.3.28))(@types/react@18.3.28)(codemirror@5.65.21)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(styled-components@6.4.1(react-dom@18.3.1(react@18.3.1))(react@18.3.1))
       '@strapi/icons': 2.2.0(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(styled-components@6.4.1(react-dom@18.3.1(react@18.3.1))(react@18.3.1))
       '@strapi/strapi': 5.43.0(@babel/runtime@7.29.2)(@codemirror/autocomplete@6.20.1)(@codemirror/language@6.12.3)(@codemirror/lint@6.9.5)(@codemirror/search@6.7.0)(@codemirror/state@6.6.0)(@codemirror/theme-one-dark@6.1.3)(@codemirror/view@6.41.1)(@emotion/is-prop-valid@1.4.0)(@swc/helpers@0.5.21)(@types/hoist-non-react-statics@3.3.7(@types/react@18.3.28))(@types/node@25.6.0)(@types/react-dom@18.3.7(@types/react@18.3.28))(@types/react@18.3.28)(codemirror@5.65.21)(esbuild@0.27.7)(koa@2.16.4)(lightningcss@1.32.0)(pg@8.20.0)(react-dom@18.3.1(react@18.3.1))(react-router-dom@6.30.3(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(react@18.3.1)(redux@4.2.1)(sass@1.99.0)(styled-components@6.4.1(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(terser@5.46.2)(type-fest@4.41.0)
-      '@strapi/utils': 5.43.0
+      '@strapi/utils': 5.44.0
       bcryptjs: 2.4.3
       formik: 2.4.5(@types/react@18.3.28)(react@18.3.1)
       grant: 5.4.24
@@ -13015,6 +13020,19 @@ snapshots:
       - typescript
 
   '@strapi/utils@5.43.0':
+    dependencies:
+      '@sindresorhus/slugify': 1.1.0
+      date-fns: 2.30.0
+      execa: 5.1.1
+      http-errors: 2.0.0
+      lodash: 4.18.1
+      node-machine-id: 1.1.12
+      p-map: 4.0.0
+      preferred-pm: 3.1.3
+      yup: 0.32.9
+      zod: 3.25.76
+
+  '@strapi/utils@5.44.0':
     dependencies:
       '@sindresorhus/slugify': 1.1.0
       date-fns: 2.30.0
