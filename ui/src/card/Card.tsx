@@ -26,7 +26,7 @@ const Card = ({ title, description, href, isLiked, onLike, variant = 'big', vote
       <AmsCard.Heading level={3} size={isBig ? 'level-3' : 'level-4'}>
         {href ? <AmsCard.Link href={href}>{title}</AmsCard.Link> : title}
       </AmsCard.Heading>
-      <Paragraph className={clsx(styles['description'], !isBig && styles['descriptionSmall'])} size="small">
+      <Paragraph className={styles['description']} size="small">
         {description}
       </Paragraph>
       <div className={styles['footer']}>

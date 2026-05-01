@@ -56,7 +56,7 @@ const Navigation = () => {
   }, [])
 
   return (
-    <Menu className={styles['menu']} inWideWindow>
+    <Menu inWideWindow>
       {navItems.map((item) => {
         const isActive = active === item.id
         return (
