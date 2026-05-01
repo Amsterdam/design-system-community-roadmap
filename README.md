@@ -6,36 +6,42 @@ The Community Roadmap is a digital platform that helps software development team
 
 ## Stack
 
-The front-end is built with **Next.js** and the back-end is powered by **Strapi**.
+The front-end is built with **Next.js** and the back-end is powered by **Strapi**. Shared UI components live in a separate package and are previewed with **Storybook**.
 
 ## Project structure
 
+This is a [pnpm](https://pnpm.io/) workspace with four packages:
+
 ```
-
 /
-├── web/ # Next.js front-end
-└── cms/ # Strapi back-end
-
+├── web/        # Next.js front-end
+├── cms/        # Strapi back-end
+├── ui/         # Shared UI component library
+└── storybook/  # Storybook for the UI package
 ```
 
 ## Getting started
 
-### Front-end
+Install dependencies from the repository root:
 
 ```bash
-cd web
-npm run install
-npm run dev
+pnpm install
 ```
 
-### Back-end
+Run all packages in parallel:
 
 ```bash
-cd cms
-npm run install
-npm run develop
+pnpm dev
+```
+
+Or run a single package:
+
+```bash
+pnpm --filter ./web dev
+pnpm --filter ./cms dev
+pnpm --filter ./storybook dev
 ```
 
 ## Licence
 
-This project is free and open-source software licenced under the **European Union Public License (EUPL) v1.2** or higher.
+This project is free and open-source software licenced under the **European Union Public Licence (EUPL) v1.2** or higher.
