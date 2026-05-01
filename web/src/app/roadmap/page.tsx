@@ -1,15 +1,46 @@
-import { strapi } from '../../utils/strapi'
+import type { RoadmapFeature, RoadmapStory } from '@design-system-community-roadmap/ui'
 
-const Page = async () => {
-  const { data: features } = await strapi.features.findMany()
+import RoadmapPage from '@/components/RoadmapPage'
+import { strapi } from '@/utils/strapi'
 
-  return (
-    <main>
-      {features.map((feature) => (
-        <span key={feature.id}>{feature.content}</span>
-      ))}
-    </main>
-  )
+export default async function Page() {
+  const [{ data: stories }, { data: allFeatures }] = await Promise.all([
+    strapi.stories.findManyWithFeatures(),
+    strapi.features.findMany(),
+  ])
+
+  const features: RoadmapFeature[] = stories
+    .filter((s) => Boolean(s.endDate))
+    .map((s) => ({
+      title: s.title,
+      documentId: s.documentId,
+      endDate: s.endDate as string,
+      id: s.id,
+      startDate: s.startDate,
+      stories: (s.features ?? []).map(
+        (f): RoadmapStory => ({
+          title: f.title,
+          documentId: f.documentId,
+          endDate: f.endDate,
+          id: f.id,
+          startDate: f.startDate,
+        }),
+      ),
+    }))
+
+  const featureIdsInStories = new Set(stories.flatMap((s) => (s.features ?? []).map((f) => f.id)))
+
+  const standaloneStories: RoadmapStory[] = allFeatures
+    .filter((f) => !featureIdsInStories.has(f.id))
+    .map(
+      (f): RoadmapStory => ({
+        title: f.title,
+        documentId: f.documentId,
+        endDate: f.endDate,
+        id: f.id,
+        startDate: f.startDate,
+      }),
+    )
+
+  return <RoadmapPage features={features} standaloneStories={standaloneStories} />
 }
-
-export default Page

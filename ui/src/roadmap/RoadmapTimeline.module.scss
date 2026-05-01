@@ -1,0 +1,158 @@
+.wrapper {
+  --roadmap-day-count: 7;
+  --roadmap-col-width: 100px;
+}
+
+.timeline__header,
+.timeline__body {
+  display: grid;
+  grid-template-columns: repeat(
+    var(--roadmap-day-count),
+    var(--roadmap-col-width)
+  );
+  min-inline-size: 100%;
+}
+
+.timeline__header {
+  background-color: var(--ams-color-background-body);
+  border-block-end: var(--ams-border-width-s) solid var(--ams-color-separator);
+  grid-template-rows: auto auto;
+  inset-block-start: 0;
+  position: sticky;
+  z-index: 2;
+}
+
+.timeline__bands {
+  display: grid;
+  grid-column: 1 / -1;
+  grid-template-columns: subgrid;
+}
+
+.timeline__band {
+  align-items: center;
+  border-inline-start: var(--ams-border-width-s) solid
+    var(--ams-color-separator);
+  display: flex;
+  min-inline-size: 0;
+  padding-block: var(--ams-space-xs);
+  padding-inline: var(--ams-space-s);
+  position: relative;
+
+  &:first-child {
+    border-inline-start: none;
+  }
+}
+
+.timeline__band-label {
+  color: var(--ams-color-text);
+  font-family: var(--ams-typography-font-family);
+  font-size: var(--ams-typography-body-text-small-font-size);
+  font-weight: var(--ams-typography-body-text-bold-font-weight);
+  inset-inline-start: var(--ams-space-s);
+  overflow: hidden;
+  position: sticky;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.timeline__day-labels {
+  display: grid;
+  grid-column: 1 / -1;
+  grid-template-columns: subgrid;
+  min-block-size: 2.5rem;
+}
+
+.timeline__day-label {
+  color: var(--ams-color-text-secondary);
+  display: flex;
+  flex-direction: column;
+  font-family: var(--ams-typography-font-family);
+  font-size: 0.75rem;
+  justify-content: center;
+  padding-block: var(--ams-space-xs);
+  position: relative;
+  text-align: center;
+  white-space: nowrap;
+}
+
+.timeline__label-text {
+  background-color: var(--ams-color-background-body);
+  inset-inline-start: 0;
+  padding-inline: var(--ams-space-xs);
+  position: absolute;
+  transform: translateX(-50%);
+  z-index: 1;
+}
+
+.timeline__day-label--today {
+  color: var(--ams-color-interactive);
+  font-weight: var(--ams-typography-body-text-bold-font-weight);
+
+  .timeline__label-text {
+    background-color: var(--ams-color-background-body);
+    border-radius: var(--ams-space-xs);
+  }
+}
+
+.timeline__day-label--hidden {
+  opacity: 50%;
+}
+
+.timeline__day-name {
+  font-size: 0.625rem;
+  text-transform: uppercase;
+}
+
+.timeline__day-num {
+  font-weight: var(--ams-typography-body-text-bold-font-weight);
+  line-height: 1;
+}
+
+/* ── Body ── */
+
+.timeline__body {
+  grid-template-rows: auto;
+  position: relative;
+}
+
+.timeline__grid-lines {
+  display: grid;
+  grid-column: 1 / -1;
+  grid-template-columns: subgrid;
+  inset-block: 0;
+  pointer-events: none;
+  position: absolute;
+  z-index: 0;
+}
+
+.timeline__grid-line {
+  border-inline-start: var(--ams-border-width-s) solid
+    var(--ams-color-separator);
+  grid-row: 1 / -1;
+  opacity: 30%;
+}
+
+.timeline__feature-group {
+  /* Using display: contents so rows stack naturally in the body grid */
+  display: contents;
+}
+
+.timeline__row {
+  align-items: center;
+  border-block-end: var(--ams-border-width-s) solid var(--ams-color-separator);
+  display: grid;
+  grid-column: 1 / -1;
+  grid-template-columns: subgrid;
+  position: relative;
+  z-index: 1;
+}
+
+.timeline__row--feature {
+  background-color: var(--ams-color-background-body);
+  block-size: var(--roadmap-feature-row-height, 3.5rem);
+}
+
+.timeline__row--story {
+  background-color: var(--ams-color-background-body);
+  block-size: var(--roadmap-story-row-height, 3rem);
+}

@@ -1,0 +1,40 @@
+.item {
+  align-items: center;
+  align-self: center;
+  background: none;
+  block-size: calc(100% - var(--ams-space-xs));
+  border: none;
+  border-radius: var(--ams-space-xs);
+  cursor: pointer;
+  display: flex;
+  min-inline-size: 0;
+  overflow: hidden;
+  padding-inline: var(--ams-space-s);
+  text-align: start;
+}
+
+.item--feature {
+  background-color: var(--ams-color-interactive);
+}
+
+.item--story {
+  background-color: var(--ams-color-highlight-azure);
+}
+
+.item--selected {
+  outline: var(--ams-border-width-xl) solid var(--ams-color-text);
+  outline-offset: var(--ams-border-width-m);
+  z-index: 10;
+}
+
+.item__title {
+  color: var(--ams-color-text-inverse);
+  display: block;
+  font-family: var(--ams-typography-font-family);
+  font-size: var(--ams-typography-body-text-small-font-size);
+  font-weight: var(--ams-typography-body-text-bold-font-weight);
+  min-inline-size: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}

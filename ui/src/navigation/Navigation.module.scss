@@ -1,3 +1,9 @@
+.menu {
+  block-size: 100%;
+  padding-block: var(--ams-menu-padding-block);
+  padding-inline: var(--ams-space-m);
+}
+
 .linkActive {
   background-color: var(--navigation-link-active-background-color);
 }
