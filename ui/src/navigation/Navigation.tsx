@@ -1,8 +1,5 @@
 'use client'
 
-import '@amsterdam/design-system-assets/font/index.css'
-import '@amsterdam/design-system-css/dist/index.css'
-import '@amsterdam/design-system-tokens/dist/index.css'
 import { Menu, PageHeader } from '@amsterdam/design-system-react'
 import { LightBulbIcon, MapIcon } from '@amsterdam/design-system-react-icons'
 import { clsx } from 'clsx'
@@ -18,7 +15,7 @@ const navItems = [
 const Navigation = () => {
   const [active, setActive] = useState(navItems[0].id)
   const pendingKey = useRef<string | null>(null)
-  const pendingTimer = useRef<ReturnType<typeof setTimeout>>(undefined)
+  const pendingTimer = useRef<ReturnType<typeof setTimeout> | undefined>(undefined)
 
   useEffect(() => {
     const match = navItems.find((item) => item.href === window.location.pathname)
@@ -27,7 +24,9 @@ const Navigation = () => {
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      if (['INPUT', 'TEXTAREA'].includes((e.target as HTMLElement).tagName)) return
+      const target = e.target
+      if (!(target instanceof HTMLElement)) return
+      if (['INPUT', 'SELECT', 'TEXTAREA'].includes(target.tagName) || target.isContentEditable) return
 
       const key = e.key.toUpperCase()
 

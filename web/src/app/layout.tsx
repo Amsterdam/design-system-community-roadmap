@@ -1,5 +1,6 @@
 import type { Metadata } from 'next'
 
+import '@design-system-community-roadmap/ui/styles'
 import Navigation from '@design-system-community-roadmap/ui'
 
 import './globals.css'
