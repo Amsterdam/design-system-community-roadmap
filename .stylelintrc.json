@@ -13,7 +13,7 @@
     "csstools/value-no-unknown-custom-properties": [
       true,
       {
-        "importFrom": ["ui/src/styles/tokens.css"]
+        "importFrom": ["ui/src/styles/tokens.css", "ui/node_modules/@amsterdam/design-system-tokens/dist/index.css"]
       }
     ],
     "custom-property-pattern": null,

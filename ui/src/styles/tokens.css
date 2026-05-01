@@ -1,3 +1,5 @@
 :root {
   --background-color: #fff;
+  --navigation-link-active-background-color: rgb(255 255 255 / 12%);
+  --navigation-shortcut-background-color: rgb(255 255 255 / 20%);
 }
