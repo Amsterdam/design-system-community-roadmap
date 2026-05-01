@@ -9,6 +9,7 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
+    "@amsterdam/design-system-react": "^4.1.0",
     "@design-system-community-roadmap/ui": "workspace:*",
     "@strapi/client": "^1.6.1",
     "next": "16.2.4",
