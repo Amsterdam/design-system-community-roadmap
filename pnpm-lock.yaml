@@ -239,6 +239,9 @@ importers:
 
   web:
     dependencies:
+      '@amsterdam/design-system-react':
+        specifier: ^4.1.0
+        version: 4.1.0(@amsterdam/design-system-css@4.1.0(@amsterdam/design-system-assets@2.3.0)(@amsterdam/design-system-tokens@4.0.1))(react-dom@19.2.5(react@19.2.5))(react@19.2.5)
       '@design-system-community-roadmap/ui':
         specifier: workspace:*
         version: link:../ui

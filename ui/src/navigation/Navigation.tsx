@@ -1,6 +1,6 @@
 'use client'
 
-import { Menu, PageHeader } from '@amsterdam/design-system-react'
+import { Menu } from '@amsterdam/design-system-react'
 import { LightBulbIcon, MapIcon } from '@amsterdam/design-system-react-icons'
 import { clsx } from 'clsx'
 import { useEffect, useRef, useState } from 'react'
@@ -8,7 +8,7 @@ import { useEffect, useRef, useState } from 'react'
 import styles from './Navigation.module.scss'
 
 const navItems = [
-  { href: '/ideeen', icon: <LightBulbIcon />, id: 'ideeen', label: 'Ideeën', shortcut: ['C', 'I'] },
+  { href: '/', icon: <LightBulbIcon />, id: 'ideeen', label: 'Ideeën', shortcut: ['C', 'I'] },
   { href: '/roadmap', icon: <MapIcon />, id: 'roadmap', label: 'Roadmap', shortcut: ['C', 'R'] },
 ]
 
@@ -56,41 +56,28 @@ const Navigation = () => {
   }, [])
 
   return (
-    <>
-      <PageHeader
-        brandName="Community Roadmap"
-        menuItems={[
-          <PageHeader.MenuLink href="/inloggen" key="inloggen">
-            Inloggen
-          </PageHeader.MenuLink>,
-          <PageHeader.MenuLink fixed href="/zoeken" key="zoeken">
-            Zoeken
-          </PageHeader.MenuLink>,
-        ]}
-      />
-      <Menu className={styles['menu']} inWideWindow>
-        {navItems.map((item) => {
-          const isActive = active === item.id
-          return (
-            <Menu.Link
-              aria-current={isActive ? 'page' : undefined}
-              className={clsx(isActive && styles['linkActive'])}
-              href={item.href}
-              icon={item.icon}
-              key={item.id}
-              onClick={() => setActive(item.id)}
-            >
-              <span className={styles['label']}>{item.label}</span>
-              <span aria-hidden="true" className={styles['shortcut']}>
-                {item.shortcut.map((k) => (
-                  <kbd key={k}>{k}</kbd>
-                ))}
-              </span>
-            </Menu.Link>
-          )
-        })}
-      </Menu>
-    </>
+    <Menu inWideWindow>
+      {navItems.map((item) => {
+        const isActive = active === item.id
+        return (
+          <Menu.Link
+            aria-current={isActive ? 'page' : undefined}
+            className={clsx(isActive && styles['linkActive'])}
+            href={item.href}
+            icon={item.icon}
+            key={item.id}
+            onClick={() => setActive(item.id)}
+          >
+            <span className={styles['label']}>{item.label}</span>
+            <span aria-hidden="true" className={styles['shortcut']}>
+              {item.shortcut.map((k) => (
+                <kbd key={k}>{k}</kbd>
+              ))}
+            </span>
+          </Menu.Link>
+        )
+      })}
+    </Menu>
   )
 }
 

@@ -1,0 +1,35 @@
+.card {
+  block-size: 100%;
+  inline-size: 100%;
+  transition: box-shadow 0.2s ease;
+
+  &:hover {
+    box-shadow: var(--ams-space-xs) var(--ams-space-xs) 0 0
+      var(--ams-color-text);
+  }
+}
+
+.cardBig {
+  padding-block: var(--ams-space-m);
+  padding-inline: var(--ams-space-m);
+}
+
+.cardSmall {
+  padding-block: var(--ams-space-s);
+  padding-inline: var(--ams-space-s);
+}
+
+.description {
+  -webkit-box-orient: vertical;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  overflow: hidden;
+}
+
+.footer {
+  display: flex;
+  justify-content: flex-end;
+  margin-block-start: var(--ams-space-m);
+  position: relative;
+  z-index: 1;
+}

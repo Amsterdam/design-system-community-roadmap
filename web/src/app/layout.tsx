@@ -1,21 +1,21 @@
-import type { Metadata } from 'next'
-
+import { Page } from '@amsterdam/design-system-react'
+import { AppHeader, Navigation } from '@design-system-community-roadmap/ui'
 import '@design-system-community-roadmap/ui/styles'
-import Navigation from '@design-system-community-roadmap/ui'
 
+import styles from './layout.module.scss'
 import './globals.css'
-
-export const metadata: Metadata = {
-  title: 'Community Roadmap',
-  description: 'De community roadmap van het Amsterdam Design System',
-}
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="nl">
       <body>
-        <Navigation />
-        {children}
+        <Page>
+          <AppHeader />
+          <main className={styles['body']}>
+            <Navigation />
+            <div className={styles['content']}>{children}</div>
+          </main>
+        </Page>
       </body>
     </html>
   )
