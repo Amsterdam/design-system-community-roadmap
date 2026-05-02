@@ -1,6 +1,9 @@
+'use client'
 import { Page } from '@amsterdam/design-system-react'
-import { AppHeader, Navigation } from '@design-system-community-roadmap/ui'
+import { Navigation } from '@design-system-community-roadmap/ui'
 import '@design-system-community-roadmap/ui/styles'
+
+import AppHeaderClient from '@/components/AppHeaderClient'
 
 import styles from './layout.module.scss'
 import './globals.css'
@@ -10,7 +13,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="nl">
       <body>
         <Page>
-          <AppHeader />
+          <AppHeaderClient />
           <main className={styles['body']}>
             <Navigation />
             <div className={styles['content']}>{children}</div>
