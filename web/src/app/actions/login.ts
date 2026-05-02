@@ -16,17 +16,20 @@ const COOKIE_MAX_AGE = 60 * 60 * 24 * 30
 
 async function setSessionCookies(documentId: string, name: string, emoji: string) {
   const cookieStore = await cookies()
+  const secure = process.env.NODE_ENV === 'production'
   cookieStore.set(SESSION_COOKIE, documentId, {
     httpOnly: true,
     maxAge: COOKIE_MAX_AGE,
     path: '/',
     sameSite: 'lax',
+    secure,
   })
   cookieStore.set(DISPLAY_COOKIE, JSON.stringify({ emoji, name }), {
     httpOnly: false,
     maxAge: COOKIE_MAX_AGE,
     path: '/',
     sameSite: 'lax',
+    secure,
   })
 }
 
