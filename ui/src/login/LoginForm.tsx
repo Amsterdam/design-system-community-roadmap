@@ -62,7 +62,10 @@ const LoginForm = ({
           aria-describedby={nameError ? 'login-name-error' : undefined}
           autoComplete="given-name"
           id="login-name"
-          onChange={(e) => setName(e.target.value)}
+          onChange={(e) => {
+            setName(e.target.value)
+            if (nameError) setNameError(undefined)
+          }}
           placeholder="Jouw voornaam"
           value={name}
         />
