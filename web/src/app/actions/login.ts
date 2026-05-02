@@ -10,6 +10,47 @@ export type AuthResult = {
   error?: string
 }
 
+const ALLOWED_EMOJIS = new Set([
+  '⭐',
+  '🌈',
+  '🌊',
+  '🌵',
+  '🌻',
+  '🍀',
+  '🍉',
+  '🍕',
+  '🎨',
+  '🎭',
+  '🎮',
+  '🎯',
+  '🎸',
+  '🏄',
+  '🏔️',
+  '🐙',
+  '🐳',
+  '🐸',
+  '🐻',
+  '🐼',
+  '🔮',
+  '🦀',
+  '🦁',
+  '🦄',
+  '🦅',
+  '🦊',
+  '🦋',
+  '🧩',
+  '🧸',
+  '🚀',
+])
+
+function validateInputs(name: string, emoji: string): string | null {
+  const trimmed = name.trim()
+  if (!trimmed) return 'Vul je voornaam in.'
+  if (trimmed.length > 50) return 'Naam mag maximaal 50 tekens bevatten.'
+  if (!ALLOWED_EMOJIS.has(emoji)) return 'Ongeldige emoji gekozen.'
+  return null
+}
+
 const SESSION_COOKIE = 'ams-community-user'
 const DISPLAY_COOKIE = 'ams-community-user-display'
 const COOKIE_MAX_AGE = 60 * 60 * 24 * 30
@@ -34,9 +75,13 @@ async function setSessionCookies(documentId: string, name: string, emoji: string
 }
 
 export async function loginAction(name: string, emoji: string): Promise<AuthResult> {
+  const validationError = validateInputs(name, emoji)
+  if (validationError) return { error: validationError }
+
+  const trimmedName = name.trim()
   const params = new URLSearchParams({
     'filters[emoji][$eq]': emoji,
-    'filters[name][$eq]': name,
+    'filters[name][$eq]': trimmedName,
     'pagination[pageSize]': '1',
   })
 
@@ -56,6 +101,10 @@ export async function loginAction(name: string, emoji: string): Promise<AuthResu
 }
 
 export async function registerAction(name: string, emoji: string): Promise<AuthResult> {
+  const validationError = validateInputs(name, emoji)
+  if (validationError) return { error: validationError }
+
+  const trimmedName = name.trim()
   const emojiParams = new URLSearchParams({
     'filters[emoji][$eq]': emoji,
     'pagination[pageSize]': '1',
@@ -70,7 +119,7 @@ export async function registerAction(name: string, emoji: string): Promise<AuthR
   }
 
   const res = await client.fetch('end-users', {
-    body: JSON.stringify({ data: { emoji, isTeam: false, name } }),
+    body: JSON.stringify({ data: { emoji, isTeam: false, name: trimmedName } }),
     headers: { 'Content-Type': 'application/json' },
     method: 'POST',
   })

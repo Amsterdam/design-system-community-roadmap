@@ -4,6 +4,8 @@ import { AppHeader } from '@design-system-community-roadmap/ui'
 import { usePathname } from 'next/navigation'
 import { useEffect, useState } from 'react'
 
+import { logoutAction } from '@/app/actions/login'
+
 function getDisplayUser(): { emoji: string; name: string } | undefined {
   if (typeof document === 'undefined') return undefined
   const match = document.cookie.match(/(?:^|;\s*)ams-community-user-display=([^;]*)/)
@@ -23,5 +25,5 @@ export default function AppHeaderClient() {
     setCurrentUser(getDisplayUser())
   }, [pathname])
 
-  return <AppHeader currentUser={currentUser} />
+  return <AppHeader currentUser={currentUser} onLogout={logoutAction} />
 }

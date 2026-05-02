@@ -7,3 +7,10 @@ export async function GET(req: Request) {
   cookieStore.delete('ams-community-user-display')
   return NextResponse.redirect(new URL('/', req.url))
 }
+
+export async function POST(req: Request) {
+  const cookieStore = await cookies()
+  cookieStore.delete('ams-community-user')
+  cookieStore.delete('ams-community-user-display')
+  return NextResponse.redirect(new URL('/', req.url))
+}

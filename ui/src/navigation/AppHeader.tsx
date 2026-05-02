@@ -2,9 +2,10 @@ import { PageHeader } from '@amsterdam/design-system-react'
 
 type AppHeaderProps = {
   currentUser?: { emoji: string; name: string }
+  onLogout?: () => void
 }
 
-const AppHeader = ({ currentUser }: AppHeaderProps) => (
+const AppHeader = ({ currentUser, onLogout }: AppHeaderProps) => (
   <PageHeader
     brandName="Community Roadmap"
     menuItems={[
@@ -13,7 +14,7 @@ const AppHeader = ({ currentUser }: AppHeaderProps) => (
       </PageHeader.MenuLink>,
       ...(currentUser
         ? [
-            <PageHeader.MenuLink href="/uitloggen" key="uitloggen">
+            <PageHeader.MenuLink href="/uitloggen" key="uitloggen" onClick={onLogout}>
               {currentUser.emoji} {currentUser.name}
             </PageHeader.MenuLink>,
           ]
