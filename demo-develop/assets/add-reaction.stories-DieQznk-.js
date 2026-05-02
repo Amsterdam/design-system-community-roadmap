@@ -1,4 +1,4 @@
-import{n as e}from"./chunk-DnJy8xQt.js";import{l as t,t as n}from"./src-VDpEHFcF.js";var r,i,a,o,s,c;e((()=>{n(),r={title:`Reactions/AddReaction`,component:t,args:{onSubmit:()=>{}},argTypes:{onSubmit:{action:`submitted`}}},i={args:{isLoggedIn:!0}},a={args:{isLoggedIn:!1}},o={args:{isLoggedIn:!0,loading:!0}},s={args:{error:`Er is iets misgegaan bij het plaatsen van je reactie.`,isLoggedIn:!0}},i.parameters={...i.parameters,docs:{...i.parameters?.docs,source:{originalSource:`{
+import{n as e}from"./chunk-DnJy8xQt.js";import{l as t,t as n}from"./src-D4dkDXMU.js";var r,i,a,o,s,c;e((()=>{n(),r={title:`Reactions/AddReaction`,component:t,args:{onSubmit:()=>{}},argTypes:{onSubmit:{action:`submitted`}}},i={args:{isLoggedIn:!0}},a={args:{isLoggedIn:!1}},o={args:{isLoggedIn:!0,loading:!0}},s={args:{error:`Er is iets misgegaan bij het plaatsen van je reactie.`,isLoggedIn:!0}},i.parameters={...i.parameters,docs:{...i.parameters?.docs,source:{originalSource:`{
   args: {
     isLoggedIn: true
   }
