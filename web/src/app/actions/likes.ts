@@ -53,7 +53,12 @@ export async function toggleIdeaLikeAction(ideaDocumentId: string, isLiked: bool
       const searchData = await searchRes.json()
       const parsed = strapiCollection(IdeaLikeSchema).safeParse(searchData)
 
-      if (parsed.success && parsed.data.data.length > 0) {
+      if (!parsed.success) {
+        console.error('[toggleIdeaLikeAction] Invalid idea-likes response:', parsed.error)
+        return { error: 'Kon like niet verwerken om te verwijderen.' }
+      }
+
+      if (parsed.data.data.length > 0) {
         const likeDocumentId = parsed.data.data[0].documentId
         const deleteRes = await client.fetch(`idea-likes/${likeDocumentId}`, {
           method: 'DELETE',

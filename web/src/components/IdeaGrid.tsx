@@ -27,9 +27,22 @@ export default function IdeaGrid({ currentUserDocumentId, ideas }: IdeaGridProps
       router.push('/inloggen')
       return
     }
+
     const result = await toggleIdeaLikeAction(ideaDocumentId, isLiked)
+
     if (result.needsLogin) {
       router.push('/inloggen')
+      return
+    }
+
+    if (result.error || result.success === false) {
+      alert(result.error ?? 'Het liken van dit idee is mislukt. Probeer het opnieuw.')
+      router.refresh()
+      return
+    }
+
+    if (result.success) {
+      router.refresh()
     }
   }
 

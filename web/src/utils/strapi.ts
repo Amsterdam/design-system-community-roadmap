@@ -55,6 +55,7 @@ export const strapi = {
   ideas: {
     findMany: (init?: RequestInit) => {
       const params = new URLSearchParams({
+        'populate[likes][fields][0]': 'documentId',
         'populate[likes][populate][end_user][fields][0]': 'documentId',
       })
       return fetchParsed(`ideas?${params}`, strapiCollection(IdeaSchema), init)
