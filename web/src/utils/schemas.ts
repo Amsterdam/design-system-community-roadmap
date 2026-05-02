@@ -18,7 +18,7 @@ export const StrapiImageSchema = z.object({
 export const ReactionSchema = z.object({
   content: z.string(),
   end_user: z.object({ documentId: z.string(), id: z.number(), name: z.string() }).nullable().optional(),
-  id: z.number().optional(),
+  id: z.number(),
 })
 
 export const IdeaStatusSchema = z.enum(['in_review', 'accepted', 'postponed'])

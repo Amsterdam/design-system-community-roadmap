@@ -46,7 +46,7 @@ export default async function IdeePage({ params }: Props) {
         <dt>
           <strong>Status</strong>
         </dt>
-        <dd>{idea.status}</dd>
+        <dd>{idea.status ?? 'Onbekend'}</dd>
         {idea.end_users?.[0] && (
           <>
             <dt>

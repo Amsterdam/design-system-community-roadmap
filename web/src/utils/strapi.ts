@@ -41,8 +41,9 @@ export const strapi = {
       const params = new URLSearchParams({
         'populate[likes][populate][end_user][fields][0]': 'documentId',
         'populate[likes][populate][end_user][fields][1]': 'name',
-        'populate[reactions][populate][end_user][fields][0]': 'documentId',
-        'populate[reactions][populate][end_user][fields][1]': 'name',
+        'populate[reactions][populate][end_user][fields][0]': 'id',
+        'populate[reactions][populate][end_user][fields][1]': 'documentId',
+        'populate[reactions][populate][end_user][fields][2]': 'name',
         'populate[story][fields][0]': 'documentId',
         'populate[story][fields][1]': 'title',
       })
