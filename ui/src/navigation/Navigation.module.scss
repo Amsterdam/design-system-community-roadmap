@@ -1,35 +1,35 @@
-.linkActive {
-  background-color: var(--navigation-link-active-background-color);
-}
-
-.label {
-  display: block;
-}
-
-.shortcut {
-  display: none;
-}
-
-.menu {
+.navigation {
   padding-block-end: var(--ams-space-l) !important;
   padding-block-start: var(--ams-space-l) !important;
 }
 
+.navigation__link--active {
+  background-color: var(--navigation-link-active-background-color);
+}
+
+.navigation__label {
+  display: block;
+}
+
+.navigation__shortcut {
+  display: none;
+}
+
 @media (width >= 72.5rem) {
-  .shortcut {
+  .navigation__shortcut {
     display: flex;
     gap: var(--ams-space-xs);
     justify-content: center;
     opacity: 55%;
+  }
 
-    kbd {
-      background-color: var(--navigation-shortcut-background-color);
-      font-family: ui-monospace, monospace;
-      font-size: var(--ams-typography-body-text-small-font-size);
-      font-weight: 400;
-      line-height: 1;
-      padding-block: var(--ams-space-xs);
-      padding-inline: var(--ams-space-xs);
-    }
+  .navigation__shortcut-key {
+    background-color: var(--navigation-shortcut-background-color);
+    font-family: ui-monospace, monospace;
+    font-size: var(--ams-typography-body-text-small-font-size);
+    font-weight: 400;
+    line-height: 1;
+    padding-block: var(--ams-space-xs);
+    padding-inline: var(--ams-space-xs);
   }
 }

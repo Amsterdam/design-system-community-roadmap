@@ -56,22 +56,24 @@ const Navigation = () => {
   }, [])
 
   return (
-    <Menu className={styles['menu']} inWideWindow>
+    <Menu className={styles['navigation']} inWideWindow>
       {navItems.map((item) => {
         const isActive = active === item.id
         return (
           <Menu.Link
             aria-current={isActive ? 'page' : undefined}
-            className={clsx(isActive && styles['linkActive'])}
+            className={clsx(isActive && styles['navigation__link--active'])}
             href={item.href}
             icon={item.icon}
             key={item.id}
             onClick={() => setActive(item.id)}
           >
-            <span className={styles['label']}>{item.label} </span>
-            <span aria-hidden="true" className={styles['shortcut']}>
+            <span className={styles['navigation__label']}>{item.label} </span>
+            <span aria-hidden="true" className={styles['navigation__shortcut']}>
               {item.shortcut.map((k) => (
-                <kbd key={k}>{k}</kbd>
+                <kbd className={styles['navigation__shortcut-key']} key={k}>
+                  {k}
+                </kbd>
               ))}
             </span>
           </Menu.Link>
