@@ -68,8 +68,12 @@ const Navigation = () => {
             key={item.id}
             onClick={() => setActive(item.id)}
           >
-            <span className={styles['navigation__label']}>{item.label} </span>
-            <span aria-hidden="true" className={styles['navigation__shortcut']}>
+            <span className={styles['navigation__label']}>{item.label}</span>
+            <span
+              aria-hidden="true"
+              className={styles['navigation__shortcut']}
+              style={{ marginInlineStart: '0.25rem' }}
+            >
               {item.shortcut.map((k) => (
                 <kbd className={styles['navigation__shortcut-key']} key={k}>
                   {k}
