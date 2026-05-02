@@ -1,11 +1,12 @@
+import type { ReactionItem } from '@design-system-community-roadmap/ui'
 import type { Metadata } from 'next'
 
-import { Reactions } from '@design-system-community-roadmap/ui'
-import Link from 'next/link'
 import { notFound } from 'next/navigation'
 
-import type { Feature, PopulatedLike } from '@/utils/schemas'
+import type { Feature } from '@/utils/schemas'
 
+import { getCurrentUser } from '@/app/actions/login'
+import StoryDetail from '@/components/StoryDetail'
 import { strapi } from '@/utils/strapi'
 
 type Props = {
@@ -37,57 +38,30 @@ export default async function StoryPage({ params }: Props) {
     notFound()
   }
 
+  const currentUser = await getCurrentUser()
+  const currentUserDocumentId = currentUser?.documentId
+
+  const isLiked =
+    !!currentUserDocumentId && (feature.likes?.some((l) => l.end_user?.documentId === currentUserDocumentId) ?? false)
+
+  const reactions: ReactionItem[] = (feature.reactions ?? []).map((r) => ({
+    author: r.end_user ? { isTeam: r.end_user.isTeam, name: r.end_user.name } : null,
+    content: r.content,
+    id: r.id,
+  }))
+
   return (
-    <article>
-      <h1>{feature.title}</h1>
-      <p>{feature.content}</p>
-
-      <h2>Details</h2>
-      <dl>
-        <dt>
-          <strong>Startdatum</strong>
-        </dt>
-        <dd>{feature.startDate ? new Date(feature.startDate).toLocaleDateString('nl-NL') : 'Onbekend'}</dd>
-        {feature.endDate && (
-          <>
-            <dt>
-              <strong>Einddatum</strong>
-            </dt>
-            <dd>{new Date(feature.endDate).toLocaleDateString('nl-NL')}</dd>
-          </>
-        )}
-      </dl>
-
-      {feature.story && (
-        <>
-          <h2>Parent Feature</h2>
-          <p>
-            <Link href={`/features/${feature.story.documentId}`}>{feature.story.title}</Link>
-          </p>
-        </>
-      )}
-
-      <h2>Likes ({feature.likes?.length ?? 0})</h2>
-      {feature.likes && feature.likes.length > 0 ? (
-        <ul>
-          {feature.likes.map((like: PopulatedLike) => (
-            <li key={like.documentId}>{like.end_user?.name}</li>
-          ))}
-        </ul>
-      ) : (
-        <p>Nog geen likes.</p>
-      )}
-
-      <h2>Reacties ({feature.reactions?.length ?? 0})</h2>
-      <Reactions
-        reactions={
-          feature.reactions?.map((r) => ({
-            author: r.end_user ? { isTeam: r.end_user.isTeam, name: r.end_user.name } : null,
-            content: r.content,
-            id: r.id,
-          })) ?? []
-        }
-      />
-    </article>
+    <StoryDetail
+      content={feature.content}
+      currentUserDocumentId={currentUserDocumentId}
+      endDate={feature.endDate}
+      featureDocumentId={feature.documentId}
+      isLiked={isLiked}
+      parentFeature={feature.story}
+      reactions={reactions}
+      startDate={feature.startDate}
+      title={feature.title}
+      voteCount={feature.likes?.length ?? 0}
+    />
   )
 }

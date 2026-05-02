@@ -31,7 +31,9 @@ const Reactions = ({ compact = false, reactions, teamLabel = 'Design System team
         >
           <Paragraph className={styles['reactions__content']}>{reaction.content}</Paragraph>
           <div className={styles['reactions__author']}>
-            <span className={styles['reactions__author-name']}>{reaction.author?.name ?? 'Anoniem'}</span>
+            {!reaction.author?.isTeam && (
+              <span className={styles['reactions__author-name']}>{reaction.author?.name ?? 'Anoniem'}</span>
+            )}
             {reaction.author?.isTeam && <Badge color="magenta" label={teamLabel} />}
           </div>
         </li>

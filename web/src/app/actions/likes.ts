@@ -1,9 +1,11 @@
 'use server'
 
+import type { z } from 'zod'
+
 import { revalidatePath } from 'next/cache'
 
 import { client } from '@/utils/fetch'
-import { IdeaLikeSchema, strapiCollection } from '@/utils/schemas'
+import { FeatureLikeSchema, IdeaLikeSchema, StoryLikeSchema, strapiCollection } from '@/utils/schemas'
 
 import { getCurrentUser } from './login'
 
@@ -13,68 +15,94 @@ export type ActionResponse = {
   success?: boolean
 }
 
-export async function toggleIdeaLikeAction(ideaDocumentId: string, isLiked: boolean): Promise<ActionResponse> {
+async function toggleLike<T extends z.ZodType<{ documentId: string }>>({
+  collection,
+  documentId,
+  entityField,
+  isLiked,
+  revalidatePaths,
+  schema,
+}: {
+  collection: string
+  documentId: string
+  entityField: string
+  isLiked: boolean
+  revalidatePaths: string[]
+  schema: T
+}): Promise<ActionResponse> {
   const user = await getCurrentUser()
-  if (!user) {
-    return { needsLogin: true }
-  }
+  if (!user) return { needsLogin: true }
 
   try {
     if (isLiked) {
-      // Create a new like
-      const res = await client.fetch('idea-likes', {
+      const res = await client.fetch(collection, {
         body: JSON.stringify({
-          data: {
-            end_user: user.documentId,
-            idea: ideaDocumentId,
-          },
+          data: { end_user: user.documentId, [entityField]: documentId },
         }),
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        headers: { 'Content-Type': 'application/json' },
         method: 'POST',
       })
 
-      if (!res.ok) {
-        return { error: 'Kon like niet toevoegen.' }
-      }
+      if (!res.ok) return { error: 'Kon like niet toevoegen.' }
     } else {
-      // Find and remove existing like
       const params = new URLSearchParams({
+        [`filters[${entityField}][documentId][$eq]`]: documentId,
         'filters[end_user][documentId][$eq]': user.documentId,
-        'filters[idea][documentId][$eq]': ideaDocumentId,
       })
 
-      const searchRes = await client.fetch(`idea-likes?${params}`)
-      if (!searchRes.ok) {
-        return { error: 'Kon like niet vinden om te verwijderen.' }
-      }
+      const searchRes = await client.fetch(`${collection}?${params}`)
+      if (!searchRes.ok) return { error: 'Kon like niet vinden om te verwijderen.' }
 
-      const searchData = await searchRes.json()
-      const parsed = strapiCollection(IdeaLikeSchema).safeParse(searchData)
+      const parsed = strapiCollection(schema).safeParse(await searchRes.json())
 
       if (!parsed.success) {
-        console.error('[toggleIdeaLikeAction] Invalid idea-likes response:', parsed.error)
+        console.error(`[toggleLike] Invalid ${collection} response:`, parsed.error)
         return { error: 'Kon like niet verwerken om te verwijderen.' }
       }
 
       if (parsed.data.data.length > 0) {
-        const likeDocumentId = parsed.data.data[0].documentId
-        const deleteRes = await client.fetch(`idea-likes/${likeDocumentId}`, {
-          method: 'DELETE',
-        })
-
-        if (!deleteRes.ok) {
-          return { error: 'Kon like niet verwijderen.' }
-        }
+        const deleteRes = await client.fetch(`${collection}/${parsed.data.data[0].documentId}`, { method: 'DELETE' })
+        if (!deleteRes.ok) return { error: 'Kon like niet verwijderen.' }
       }
     }
 
-    revalidatePath('/')
-    revalidatePath(`/ideeen/${ideaDocumentId}`)
+    revalidatePaths.forEach((path) => revalidatePath(path))
     return { success: true }
   } catch (error) {
-    console.error('[toggleIdeaLikeAction] Error:', error)
+    console.error('[toggleLike] Error:', error)
     return { error: 'Er is een onverwachte fout opgetreden.' }
   }
+}
+
+export async function toggleIdeaLikeAction(ideaDocumentId: string, isLiked: boolean): Promise<ActionResponse> {
+  return toggleLike({
+    collection: 'idea-likes',
+    documentId: ideaDocumentId,
+    entityField: 'idea',
+    isLiked,
+    revalidatePaths: ['/', `/ideeen/${ideaDocumentId}`],
+    schema: IdeaLikeSchema,
+  })
+}
+
+export async function toggleStoryLikeAction(storyDocumentId: string, isLiked: boolean): Promise<ActionResponse> {
+  return toggleLike({
+    collection: 'story-likes',
+    documentId: storyDocumentId,
+    entityField: 'story',
+    isLiked,
+    revalidatePaths: ['/', '/roadmap', `/features/${storyDocumentId}`],
+    schema: StoryLikeSchema,
+  })
+}
+
+export async function toggleFeatureLikeAction(featureDocumentId: string, isLiked: boolean): Promise<ActionResponse> {
+  return toggleLike({
+    collection: 'feature-likes',
+    documentId: featureDocumentId,
+    entityField: 'feature',
+    isLiked,
+    revalidatePaths: ['/', '/roadmap', `/stories/${featureDocumentId}`],
+    schema: FeatureLikeSchema,
+  })
 }
