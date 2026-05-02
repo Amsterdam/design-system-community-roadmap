@@ -31,7 +31,10 @@ export default function IdeaLikeButton({ currentUserDocumentId, ideaDocumentId, 
 
     if (result.success) {
       router.refresh()
+      return
     }
+
+    router.refresh()
   }
 
   return <LikeButton count={voteCount} isLiked={isLiked} onToggle={handleToggle} size={size} />
