@@ -24,7 +24,7 @@ export default function RoadmapPage({ features, standaloneStories }: RoadmapPage
       <Grid.Cell span="all">
         <Roadmap
           features={features}
-          onStoryNavigate={(story) => router.push(`/ideeen/${story.documentId}`)}
+          onStoryNavigate={(story) => router.push(`/stories/${story.documentId}`)}
           standaloneStories={standaloneStories}
         />
       </Grid.Cell>

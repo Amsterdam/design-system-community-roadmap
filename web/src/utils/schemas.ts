@@ -1,10 +1,10 @@
 import { z } from 'zod'
 
 const strapiBase = z.object({
-  createdAt: z.string(),
+  createdAt: z.string().optional(),
   documentId: z.string(),
   id: z.number(),
-  updatedAt: z.string(),
+  updatedAt: z.string().optional(),
 })
 
 export const StrapiImageSchema = z.object({
@@ -17,59 +17,82 @@ export const StrapiImageSchema = z.object({
 
 export const ReactionSchema = z.object({
   content: z.string(),
-  end_user: z
-    .object({ documentId: z.string(), emoji: z.string(), id: z.number(), name: z.string() })
-    .nullable()
-    .optional(),
+  end_user: z.object({ documentId: z.string(), id: z.number(), name: z.string() }).nullable().optional(),
+  id: z.number(),
 })
 
 export const IdeaStatusSchema = z.enum(['in_review', 'accepted', 'postponed'])
 
 export const EndUserSchema = strapiBase.extend({
-  emoji: z.string(),
+  emoji: z.string().optional(),
   feature_likes: z.array(z.any()).optional(),
   idea_likes: z.array(z.any()).optional(),
   ideas: z.array(z.any()).optional(),
-  isTeam: z.boolean(),
+  isTeam: z.boolean().optional(),
   name: z.string(),
   story_likes: z.array(z.any()).optional(),
+})
+
+export const PopulatedLikeSchema = z.object({
+  documentId: z.string(),
+  end_user: z
+    .object({
+      documentId: z.string(),
+      name: z.string().optional(),
+    })
+    .nullable()
+    .optional(),
+})
+
+export const NestedFeatureSchema = z.object({
+  title: z.string(),
+  documentId: z.string(),
+  endDate: z.string().nullable().optional(),
+  id: z.number(),
+  startDate: z.string().optional(),
 })
 
 export const IdeaSchema = strapiBase.extend({
   title: z.string(),
   content: z.string(),
   end_users: z.array(EndUserSchema).optional(),
-  features: z.array(z.any()).optional(),
+  features: z.array(NestedFeatureSchema).optional(),
   images: z.array(StrapiImageSchema).optional(),
-  likes: z.array(z.any()).optional(),
-  publishedAt: z.string().nullable(),
+  likes: z.array(PopulatedLikeSchema).optional(),
+  publishedAt: z.string().nullable().optional(),
   reactions: z.array(ReactionSchema).optional(),
-  status: IdeaStatusSchema,
+  status: IdeaStatusSchema.optional(),
 })
 
 export const FeatureSchema = strapiBase.extend({
   title: z.string(),
   content: z.string(),
-  endDate: z.string().nullable(),
+  endDate: z.string().nullable().optional(),
   idea: IdeaSchema.nullable().optional(),
   images: z.array(StrapiImageSchema).optional(),
-  likes: z.array(z.any()).optional(),
-  publishedAt: z.string().nullable(),
+  likes: z.array(PopulatedLikeSchema).optional(),
+  publishedAt: z.string().nullable().optional(),
   reactions: z.array(ReactionSchema).optional(),
-  startDate: z.string(),
-  story: z.any().optional(),
+  startDate: z.string().optional(),
+  story: z
+    .object({
+      title: z.string(),
+      documentId: z.string(),
+    })
+    .nullable()
+    .optional(),
 })
 
 export const StorySchema = strapiBase.extend({
   title: z.string(),
   content: z.string(),
-  endDate: z.string().nullable(),
-  features: z.array(FeatureSchema).optional(),
+  endDate: z.string().nullable().optional(),
+  features: z.array(NestedFeatureSchema).optional(),
   images: z.array(StrapiImageSchema).optional(),
-  likes: z.array(z.any()).optional(),
-  publishedAt: z.string().nullable(),
+  likes: z.array(PopulatedLikeSchema).optional(),
+  publishedAt: z.string().nullable().optional(),
   reactions: z.array(ReactionSchema).optional(),
-  startDate: z.string(),
+  startDate: z.string().optional(),
 })
 
 export const IdeaLikeSchema = strapiBase.extend({
@@ -91,6 +114,8 @@ export type StrapiImage = z.infer<typeof StrapiImageSchema>
 export type Reaction = z.infer<typeof ReactionSchema>
 export type IdeaStatus = z.infer<typeof IdeaStatusSchema>
 export type EndUser = z.infer<typeof EndUserSchema>
+export type PopulatedLike = z.infer<typeof PopulatedLikeSchema>
+export type NestedFeature = z.infer<typeof NestedFeatureSchema>
 export type Idea = z.infer<typeof IdeaSchema>
 export type Feature = z.infer<typeof FeatureSchema>
 export type Story = z.infer<typeof StorySchema>

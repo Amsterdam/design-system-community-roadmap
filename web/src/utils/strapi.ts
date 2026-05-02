@@ -7,19 +7,12 @@ import {
   FeatureSchema,
   IdeaLikeSchema,
   IdeaSchema,
+  NestedFeatureSchema,
   StoryLikeSchema,
   StorySchema,
   strapiCollection,
   strapiSingle,
 } from './schemas'
-
-const NestedFeatureSchema = z.object({
-  title: z.string(),
-  documentId: z.string(),
-  endDate: z.string().nullable(),
-  id: z.number(),
-  startDate: z.string(),
-})
 
 const StoryWithFeaturesSchema = StorySchema.extend({
   features: z.array(NestedFeatureSchema).optional(),
@@ -44,8 +37,18 @@ export const strapi = {
   },
   features: {
     findMany: (init?: RequestInit) => fetchParsed('features', strapiCollection(FeatureSchema), init),
-    findOne: (id: string | number, init?: RequestInit) =>
-      fetchParsed(`features/${id}`, strapiSingle(FeatureSchema), init),
+    findOne: (id: string | number, init?: RequestInit) => {
+      const params = new URLSearchParams({
+        'populate[likes][populate][end_user][fields][0]': 'documentId',
+        'populate[likes][populate][end_user][fields][1]': 'name',
+        'populate[reactions][populate][end_user][fields][0]': 'id',
+        'populate[reactions][populate][end_user][fields][1]': 'documentId',
+        'populate[reactions][populate][end_user][fields][2]': 'name',
+        'populate[story][fields][0]': 'documentId',
+        'populate[story][fields][1]': 'title',
+      })
+      return fetchParsed(`features/${id}?${params}`, strapiSingle(FeatureSchema), init)
+    },
   },
   ideaLikes: {
     findMany: (init?: RequestInit) => fetchParsed('idea-likes', strapiCollection(IdeaLikeSchema), init),
@@ -55,12 +58,33 @@ export const strapi = {
   ideas: {
     findMany: (init?: RequestInit) => {
       const params = new URLSearchParams({
+        'populate[end_users][fields][0]': 'name',
+        'populate[end_users][fields][1]': 'documentId',
+        'populate[end_users][fields][2]': 'id',
+        'populate[end_users][fields][3]': 'isTeam',
         'populate[likes][fields][0]': 'documentId',
         'populate[likes][populate][end_user][fields][0]': 'documentId',
       })
-      return fetchParsed(`ideas?${params}`, strapiCollection(IdeaSchema), init)
+      return fetchParsed('ideas?' + params, strapiCollection(IdeaSchema), init)
     },
-    findOne: (id: string | number, init?: RequestInit) => fetchParsed(`ideas/${id}`, strapiSingle(IdeaSchema), init),
+    findOne: (id: string | number, init?: RequestInit) => {
+      const params = new URLSearchParams({
+        'populate[end_users][fields][0]': 'name',
+        'populate[end_users][fields][1]': 'documentId',
+        'populate[end_users][fields][2]': 'id',
+        'populate[end_users][fields][3]': 'isTeam',
+        'populate[features][fields][0]': 'documentId',
+        'populate[features][fields][1]': 'title',
+        'populate[features][fields][2]': 'id',
+        'populate[features][fields][3]': 'startDate',
+        'populate[features][fields][4]': 'endDate',
+        'populate[likes][populate][end_user][fields][0]': 'documentId',
+        'populate[likes][populate][end_user][fields][1]': 'name',
+        'populate[reactions][populate][end_user][fields][0]': 'documentId',
+        'populate[reactions][populate][end_user][fields][1]': 'name',
+      })
+      return fetchParsed(`ideas/${id}?${params}`, strapiSingle(IdeaSchema), init)
+    },
   },
   stories: {
     findMany: (init?: RequestInit) => fetchParsed('stories', strapiCollection(StorySchema), init),
@@ -74,7 +98,20 @@ export const strapi = {
       })
       return fetchParsed(`stories?${params}`, strapiCollection(StoryWithFeaturesSchema), init)
     },
-    findOne: (id: string | number, init?: RequestInit) => fetchParsed(`stories/${id}`, strapiSingle(StorySchema), init),
+    findOne: (id: string | number, init?: RequestInit) => {
+      const params = new URLSearchParams({
+        'populate[features][fields][0]': 'documentId',
+        'populate[features][fields][1]': 'title',
+        'populate[features][fields][2]': 'id',
+        'populate[features][fields][3]': 'startDate',
+        'populate[features][fields][4]': 'endDate',
+        'populate[likes][populate][end_user][fields][0]': 'documentId',
+        'populate[likes][populate][end_user][fields][1]': 'name',
+        'populate[reactions][populate][end_user][fields][0]': 'documentId',
+        'populate[reactions][populate][end_user][fields][1]': 'name',
+      })
+      return fetchParsed(`stories/${id}?${params}`, strapiSingle(StorySchema), init)
+    },
   },
   storyLikes: {
     findMany: (init?: RequestInit) => fetchParsed('story-likes', strapiCollection(StoryLikeSchema), init),

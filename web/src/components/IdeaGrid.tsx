@@ -62,6 +62,7 @@ export default function IdeaGrid({ currentUserDocumentId, ideas }: IdeaGridProps
         return (
           <Grid.Cell key={idea.id} span={{ narrow: 4, medium: 4, wide: isTopThree ? 4 : 3 }}>
             <Card
+              author={idea.end_users?.[0]}
               description={idea.content}
               href={`/ideeen/${idea.documentId}`}
               isLiked={isLiked}

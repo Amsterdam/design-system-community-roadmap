@@ -10,35 +10,37 @@ export default async function Page() {
   ])
 
   const features: RoadmapFeature[] = stories
-    .filter((s): s is { endDate: string } & typeof s => s.endDate !== null)
+    .filter((s) => !!s.endDate && !!s.startDate)
     .map((s) => ({
       title: s.title,
       documentId: s.documentId,
-      endDate: s.endDate,
+      endDate: s.endDate!,
       id: s.id,
-      startDate: s.startDate,
-      stories: (s.features ?? []).map(
-        (f): RoadmapStory => ({
-          title: f.title,
-          documentId: f.documentId,
-          endDate: f.endDate,
-          id: f.id,
-          startDate: f.startDate,
-        }),
-      ),
+      startDate: s.startDate!,
+      stories: (s.features ?? [])
+        .filter((f) => !!f.startDate)
+        .map(
+          (f): RoadmapStory => ({
+            title: f.title,
+            documentId: f.documentId,
+            endDate: f.endDate ?? null,
+            id: f.id,
+            startDate: f.startDate!,
+          }),
+        ),
     }))
 
   const featureIdsInStories = new Set(stories.flatMap((s) => (s.features ?? []).map((f) => f.id)))
 
   const standaloneStories: RoadmapStory[] = allFeatures
-    .filter((f) => !featureIdsInStories.has(f.id))
+    .filter((f) => !featureIdsInStories.has(f.id) && !!f.startDate)
     .map(
       (f): RoadmapStory => ({
         title: f.title,
         documentId: f.documentId,
-        endDate: f.endDate,
+        endDate: f.endDate ?? null,
         id: f.id,
-        startDate: f.startDate,
+        startDate: f.startDate!,
       }),
     )
 
