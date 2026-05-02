@@ -1,23 +1,23 @@
-.idea-detail__stories-container {
+.feature-detail__stories-container {
   margin-block-start: var(--ams-space-l);
 }
 
-.idea-detail__stories {
+.feature-detail__stories {
   margin-block-start: var(--ams-space-m);
 }
 
-.idea-detail__story-content {
+.feature-detail__story-content {
   display: flex;
   flex-direction: column;
   gap: var(--ams-space-xs);
   padding-block: var(--ams-space-xs);
 }
 
-.idea-detail__story-date {
+.feature-detail__story-date {
   display: flex;
 }
 
-.idea-detail__details {
+.feature-detail__details {
   display: grid;
   gap: var(--ams-space-xs) var(--ams-space-m);
   grid-template-columns: max-content 1fr;
@@ -31,7 +31,7 @@
   }
 }
 
-.idea-detail__header {
+.feature-detail__header {
   align-items: flex-start;
   display: flex;
   gap: var(--ams-space-m);

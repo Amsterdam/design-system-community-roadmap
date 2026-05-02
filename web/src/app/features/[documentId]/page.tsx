@@ -1,10 +1,12 @@
+import type { ReactionItem } from '@design-system-community-roadmap/ui'
 import type { Metadata } from 'next'
 
-import Link from 'next/link'
 import { notFound } from 'next/navigation'
 
-import type { NestedFeature, PopulatedLike, Reaction, Story } from '@/utils/schemas'
+import type { Story } from '@/utils/schemas'
 
+import { getCurrentUser } from '@/app/actions/login'
+import FeatureDetail from '@/components/FeatureDetail'
 import { strapi } from '@/utils/strapi'
 
 type Props = {
@@ -36,63 +38,30 @@ export default async function FeaturePage({ params }: Props) {
     notFound()
   }
 
+  const currentUser = await getCurrentUser()
+  const currentUserDocumentId = currentUser?.documentId
+
+  const isLiked =
+    !!currentUserDocumentId && (story.likes?.some((l) => l.end_user?.documentId === currentUserDocumentId) ?? false)
+
+  const reactions: ReactionItem[] = (story.reactions ?? []).map((r) => ({
+    author: r.end_user ? { isTeam: r.end_user.isTeam, name: r.end_user.name } : null,
+    content: r.content,
+    id: r.id,
+  }))
+
   return (
-    <article>
-      <h1>{story.title}</h1>
-      <p>{story.content}</p>
-
-      <h2>Details</h2>
-      <dl>
-        <dt>
-          <strong>Startdatum</strong>
-        </dt>
-        <dd>{story.startDate ? new Date(story.startDate).toLocaleDateString('nl-NL') : 'Onbekend'}</dd>
-        {story.endDate && (
-          <>
-            <dt>
-              <strong>Einddatum</strong>
-            </dt>
-            <dd>{new Date(story.endDate).toLocaleDateString('nl-NL')}</dd>
-          </>
-        )}
-      </dl>
-
-      {story.features && story.features.length > 0 && (
-        <>
-          <h2>Stories</h2>
-          <ul>
-            {story.features.map((f: NestedFeature) => (
-              <li key={f.documentId}>
-                <Link href={`/stories/${f.documentId}`}>{f.title}</Link>
-              </li>
-            ))}
-          </ul>
-        </>
-      )}
-
-      <h2>Likes ({story.likes?.length ?? 0})</h2>
-      {story.likes && story.likes.length > 0 ? (
-        <ul>
-          {story.likes.map((like: PopulatedLike) => (
-            <li key={like.documentId}>{like.end_user?.name}</li>
-          ))}
-        </ul>
-      ) : (
-        <p>Nog geen likes.</p>
-      )}
-
-      <h2>Reacties ({story.reactions?.length ?? 0})</h2>
-      {story.reactions && story.reactions.length > 0 ? (
-        <ul>
-          {story.reactions.map((reaction: Reaction) => (
-            <li key={reaction.id}>
-              <strong>{reaction.end_user?.name}</strong>: {reaction.content}
-            </li>
-          ))}
-        </ul>
-      ) : (
-        <p>Nog geen reacties.</p>
-      )}
-    </article>
+    <FeatureDetail
+      content={story.content}
+      currentUserDocumentId={currentUserDocumentId}
+      endDate={story.endDate}
+      isLiked={isLiked}
+      reactions={reactions}
+      startDate={story.startDate}
+      stories={story.features ?? []}
+      storyDocumentId={story.documentId}
+      title={story.title}
+      voteCount={story.likes?.length ?? 0}
+    />
   )
 }
