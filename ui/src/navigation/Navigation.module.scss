@@ -10,6 +10,11 @@
   display: none;
 }
 
+.menu {
+  padding-block-end: var(--ams-space-l) !important;
+  padding-block-start: var(--ams-space-l) !important;
+}
+
 @media (width >= 72.5rem) {
   .shortcut {
     display: flex;

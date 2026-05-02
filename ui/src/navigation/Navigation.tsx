@@ -56,7 +56,7 @@ const Navigation = () => {
   }, [])
 
   return (
-    <Menu inWideWindow>
+    <Menu className={styles['menu']} inWideWindow>
       {navItems.map((item) => {
         const isActive = active === item.id
         return (
@@ -68,7 +68,7 @@ const Navigation = () => {
             key={item.id}
             onClick={() => setActive(item.id)}
           >
-            <span className={styles['label']}>{item.label}</span>
+            <span className={styles['label']}>{item.label} </span>
             <span aria-hidden="true" className={styles['shortcut']}>
               {item.shortcut.map((k) => (
                 <kbd key={k}>{k}</kbd>
