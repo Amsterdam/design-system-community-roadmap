@@ -174,7 +174,7 @@ export function zoomRange(range: RoadmapViewRange, factor: number, pivotDate: Da
   const totalDays = differenceInCalendarDays(range.end, range.start)
   const newTotalDays = Math.max(3, Math.min(730, Math.round(totalDays * factor)))
 
-  const beforePivot = Math.round((pivotIndex / totalDays) * newTotalDays)
+  const beforePivot = totalDays > 0 ? Math.round((pivotIndex / totalDays) * newTotalDays) : Math.round(newTotalDays / 2)
   const afterPivot = newTotalDays - beforePivot
 
   return {

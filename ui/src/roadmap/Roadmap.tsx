@@ -1,6 +1,6 @@
 'use client'
 
-import { useCallback, useMemo, useRef, useState } from 'react'
+import { useCallback, useRef, useState } from 'react'
 
 import type { RoadmapFeature, RoadmapStory, RoadmapViewRange } from './dateUtils'
 
@@ -19,10 +19,7 @@ type RoadmapProps = {
 }
 
 const Roadmap = ({ features, initialRange, onStoryNavigate, standaloneStories = [] }: RoadmapProps) => {
-  const resolvedInitialRange = useMemo(
-    () => initialRange ?? getDefaultRangeForFeatures(features, standaloneStories),
-    [],
-  )
+  const resolvedInitialRange = useRef(initialRange ?? getDefaultRangeForFeatures(features, standaloneStories)).current
 
   const [range, setRange] = useState<RoadmapViewRange>(resolvedInitialRange)
   const [selectedItem, setSelectedItem] = useState<SelectedItem>(null)

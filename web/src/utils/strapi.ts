@@ -59,12 +59,16 @@ export const strapi = {
   },
   stories: {
     findMany: (init?: RequestInit) => fetchParsed('stories', strapiCollection(StorySchema), init),
-    findManyWithFeatures: (init?: RequestInit) =>
-      fetchParsed(
-        'stories?populate[features][fields][0]=id&populate[features][fields][1]=title&populate[features][fields][2]=startDate&populate[features][fields][3]=endDate&populate[features][fields][4]=documentId',
-        strapiCollection(StoryWithFeaturesSchema),
-        init,
-      ),
+    findManyWithFeatures: (init?: RequestInit) => {
+      const params = new URLSearchParams({
+        'populate[features][fields][0]': 'id',
+        'populate[features][fields][1]': 'title',
+        'populate[features][fields][2]': 'startDate',
+        'populate[features][fields][3]': 'endDate',
+        'populate[features][fields][4]': 'documentId',
+      })
+      return fetchParsed(`stories?${params}`, strapiCollection(StoryWithFeaturesSchema), init)
+    },
     findOne: (id: string | number, init?: RequestInit) => fetchParsed(`stories/${id}`, strapiSingle(StorySchema), init),
   },
   storyLikes: {

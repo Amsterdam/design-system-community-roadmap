@@ -10,11 +10,11 @@ export default async function Page() {
   ])
 
   const features: RoadmapFeature[] = stories
-    .filter((s) => Boolean(s.endDate))
+    .filter((s): s is { endDate: string } & typeof s => s.endDate !== null)
     .map((s) => ({
       title: s.title,
       documentId: s.documentId,
-      endDate: s.endDate as string,
+      endDate: s.endDate,
       id: s.id,
       startDate: s.startDate,
       stories: (s.features ?? []).map(

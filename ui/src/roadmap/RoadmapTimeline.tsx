@@ -145,6 +145,7 @@ const RoadmapTimeline = ({
 
   const handleMouseDown = (e: React.MouseEvent) => {
     if (e.button !== 0) return
+    if ((e.target as Element).closest('button, a')) return
     isDraggingRef.current = true
     lastXRef.current = e.clientX
     accumulatedDragXRef.current = 0
