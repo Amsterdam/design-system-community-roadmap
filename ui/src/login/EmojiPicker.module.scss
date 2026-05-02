@@ -1,0 +1,35 @@
+.emoji-picker {
+  display: grid;
+  gap: var(--ams-space-xs);
+  grid-template-columns: repeat(6, 1fr);
+}
+
+.emoji-picker__option {
+  align-items: center;
+  aspect-ratio: 1;
+  background: none;
+  border: var(--ams-border-width-m) solid transparent;
+  cursor: var(--ams-cursor-interactive);
+  display: flex;
+  font-size: var(--ams-typography-body-text-large-font-size);
+  justify-content: center;
+  line-height: 1;
+  padding-block: var(--ams-space-xs);
+  padding-inline: var(--ams-space-xs);
+
+  &:focus-visible {
+    outline: auto;
+    outline-offset: var(--ams-focus-outline-offset);
+  }
+}
+
+.emoji-picker__option--selected {
+  border-color: var(--ams-color-interactive);
+  border-width: var(--ams-border-width-l);
+}
+
+.emoji-picker__option--taken {
+  cursor: var(--ams-cursor-disabled);
+  filter: grayscale(1);
+  opacity: 30%;
+}
