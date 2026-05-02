@@ -2,4 +2,10 @@
   --background-color: #fff;
   --navigation-link-active-background-color: rgb(255 255 255 / 12%);
   --navigation-shortcut-background-color: rgb(255 255 255 / 20%);
+  --roadmap-col-width: 0px;
+  --roadmap-day-count: 0;
+  --roadmap-feature-row-height: 3.5rem;
+  --roadmap-header-height: 0px;
+  --roadmap-sidebar-width: 15rem;
+  --roadmap-story-row-height: 3rem;
 }

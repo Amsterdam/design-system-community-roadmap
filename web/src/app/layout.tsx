@@ -10,7 +10,7 @@ import './globals.css'
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="nl">
+    <html lang="nl" suppressHydrationWarning>
       <body>
         <Page>
           <AppHeaderClient />

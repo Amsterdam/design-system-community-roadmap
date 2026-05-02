@@ -19,7 +19,9 @@ export default function IdeaGrid({ ideas }: IdeaGridProps) {
   return (
     <Grid gapVertical="none">
       <Grid.Cell span="all">
-        <Heading level={2}>Ideeën</Heading>
+        <Heading level={1} size="level-2">
+          Ideeën
+        </Heading>
       </Grid.Cell>
 
       {sortedIdeas.map((idea, index) => {
