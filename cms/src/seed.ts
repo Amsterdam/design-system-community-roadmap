@@ -401,7 +401,7 @@ export default async ({ strapi }: { strapi: Core.Strapi }) => {
       })
     }
 
-    if (Math.random() > 0.4) {
+    if (Math.random() > 0.3) {
       reactions.push({
         content: teamReactions[Math.floor(Math.random() * teamReactions.length)],
         end_user: teamUser.documentId,
@@ -411,6 +411,7 @@ export default async ({ strapi }: { strapi: Core.Strapi }) => {
     await strapi.documents('api::idea.idea').update({
       data: { reactions },
       documentId: idea.documentId,
+      status: 'published',
     })
 
     const numLikes = Math.floor(Math.random() * 10)
@@ -426,21 +427,24 @@ export default async ({ strapi }: { strapi: Core.Strapi }) => {
   }
 
   const entities = [...allStories, ...allFeatures]
-  const entityTypes = [...allStories.map(() => 'api::story.story'), ...allFeatures.map(() => 'api::feature.feature')]
-  const likeTypes = [
-    ...allStories.map(() => 'api::story-like.story-like'),
-    ...allFeatures.map(() => 'api::feature-like.feature-like'),
+  const entityTypes = [
+    ...allStories.map(() => 'api::story.story' as const),
+    ...allFeatures.map(() => 'api::feature.feature' as const),
   ]
-  const relationFields = [...allStories.map(() => 'story'), ...allFeatures.map(() => 'feature')]
+  const likeTypes = [
+    ...allStories.map(() => 'api::story-like.story-like' as const),
+    ...allFeatures.map(() => 'api::feature-like.feature-like' as const),
+  ]
+  const relationFields = [...allStories.map(() => 'story' as const), ...allFeatures.map(() => 'feature' as const)]
 
   for (let i = 0; i < entities.length; i++) {
     const entity = entities[i]
-    const type = entityTypes[i] as any
-    const likeType = likeTypes[i] as any
+    const type = entityTypes[i]
+    const likeType = likeTypes[i]
     const relationField = relationFields[i]
 
     const reactions = []
-    const numReactions = Math.floor(Math.random() * 3)
+    const numReactions = Math.floor(Math.random() * 3) + 1
     for (let j = 0; j < numReactions; j++) {
       reactions.push({
         content: dutchReactions[Math.floor(Math.random() * dutchReactions.length)],
@@ -448,9 +452,17 @@ export default async ({ strapi }: { strapi: Core.Strapi }) => {
       })
     }
 
+    if (Math.random() > 0.4) {
+      reactions.push({
+        content: teamReactions[Math.floor(Math.random() * teamReactions.length)],
+        end_user: teamUser.documentId,
+      })
+    }
+
     await strapi.documents(type).update({
       data: { reactions },
       documentId: entity.documentId,
+      status: 'published',
     })
 
     const numLikes = Math.floor(Math.random() * 5)

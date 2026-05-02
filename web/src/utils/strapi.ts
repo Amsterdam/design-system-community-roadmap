@@ -44,6 +44,7 @@ export const strapi = {
         'populate[reactions][populate][end_user][fields][0]': 'id',
         'populate[reactions][populate][end_user][fields][1]': 'documentId',
         'populate[reactions][populate][end_user][fields][2]': 'name',
+        'populate[reactions][populate][end_user][fields][3]': 'isTeam',
         'populate[story][fields][0]': 'documentId',
         'populate[story][fields][1]': 'title',
       })
@@ -110,6 +111,7 @@ export const strapi = {
         'populate[likes][populate][end_user][fields][1]': 'name',
         'populate[reactions][populate][end_user][fields][0]': 'documentId',
         'populate[reactions][populate][end_user][fields][1]': 'name',
+        'populate[reactions][populate][end_user][fields][2]': 'isTeam',
       })
       return fetchParsed(`stories/${id}?${params}`, strapiSingle(StorySchema), init)
     },

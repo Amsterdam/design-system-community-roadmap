@@ -1,9 +1,10 @@
 import type { Metadata } from 'next'
 
+import { Reactions } from '@design-system-community-roadmap/ui'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
 
-import type { Feature, PopulatedLike, Reaction } from '@/utils/schemas'
+import type { Feature, PopulatedLike } from '@/utils/schemas'
 
 import { strapi } from '@/utils/strapi'
 
@@ -78,17 +79,15 @@ export default async function StoryPage({ params }: Props) {
       )}
 
       <h2>Reacties ({feature.reactions?.length ?? 0})</h2>
-      {feature.reactions && feature.reactions.length > 0 ? (
-        <ul>
-          {feature.reactions.map((reaction: Reaction) => (
-            <li key={reaction.id}>
-              <strong>{reaction.end_user?.name}</strong>: {reaction.content}
-            </li>
-          ))}
-        </ul>
-      ) : (
-        <p>Nog geen reacties.</p>
-      )}
+      <Reactions
+        reactions={
+          feature.reactions?.map((r) => ({
+            author: r.end_user ? { isTeam: r.end_user.isTeam, name: r.end_user.name } : null,
+            content: r.content,
+            id: r.id,
+          })) ?? []
+        }
+      />
     </article>
   )
 }
