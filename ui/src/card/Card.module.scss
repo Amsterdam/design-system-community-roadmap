@@ -27,9 +27,15 @@
 }
 
 .footer {
+  align-items: center;
   display: flex;
   justify-content: flex-end;
   margin-block-start: var(--ams-space-m);
   position: relative;
   z-index: 1;
+}
+
+.author {
+  margin-block: 0;
+  margin-inline-end: auto;
 }

@@ -96,7 +96,7 @@ export async function loginAction(name: string, emoji: string): Promise<AuthResu
   }
 
   const match = parsed.data.data[0]
-  await setSessionCookies(match.documentId, match.name, match.emoji)
+  await setSessionCookies(match.documentId, match.name, match.emoji ?? emoji)
   return redirect('/')
 }
 
@@ -138,7 +138,7 @@ export async function registerAction(name: string, emoji: string): Promise<AuthR
   }
 
   const newUser = parsed.data.data
-  await setSessionCookies(newUser.documentId, newUser.name, newUser.emoji)
+  await setSessionCookies(newUser.documentId, newUser.name, newUser.emoji ?? emoji)
   return redirect('/')
 }
 

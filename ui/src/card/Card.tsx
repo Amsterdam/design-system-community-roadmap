@@ -9,6 +9,9 @@ import styles from './Card.module.scss'
 type CardVariant = 'big' | 'small'
 
 type CardProps = {
+  author?: {
+    name: string
+  }
   description: string
   href?: string
   isLiked?: boolean
@@ -18,7 +21,7 @@ type CardProps = {
   voteCount: number
 }
 
-const Card = ({ title, description, href, isLiked, onLike, variant = 'big', voteCount }: CardProps) => {
+const Card = ({ title, author, description, href, isLiked, onLike, variant = 'big', voteCount }: CardProps) => {
   const isBig = variant === 'big'
 
   return (
@@ -30,6 +33,11 @@ const Card = ({ title, description, href, isLiked, onLike, variant = 'big', vote
         {description}
       </Paragraph>
       <div className={styles['footer']}>
+        {author && (
+          <Paragraph className={styles['author']} size="small">
+            Idee van {author.name}
+          </Paragraph>
+        )}
         <LikeButton count={voteCount} isLiked={isLiked} onToggle={onLike} size={isBig ? 'default' : 'small'} />
       </div>
     </AmsCard>
