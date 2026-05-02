@@ -20,9 +20,8 @@
     "emoji": {
       "type": "string",
       "minLength": 1,
-      "maxLength": 2,
-      "required": true,
-      "regex": "[\\u2600-\\u27BF]|[\\uE000-\\uF8FF]|\\uD83C[\\uDC00-\\uDFFF]|\\uD83D[\\uDC00-\\uDFFF]|\\uD83E[\\uDD00-\\uDDFF]"
+      "maxLength": 10,
+      "required": true
     },
     "isTeam": {
       "type": "boolean",
