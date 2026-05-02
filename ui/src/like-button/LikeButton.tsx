@@ -7,7 +7,7 @@ import { useState } from 'react'
 
 import styles from './LikeButton.module.scss'
 
-type LikeButtonSize = 'default' | 'small'
+type LikeButtonSize = 'default' | 'large' | 'small'
 
 type LikeButtonProps = {
   count: number
@@ -28,16 +28,20 @@ const LikeButton = ({ count, isLiked: initialLiked = false, onToggle, size = 'de
   }
 
   return (
-    <div className={styles['wrapper']}>
+    <div className={styles['like-button']}>
       <Badge color="magenta" label={voteCount} />
       <button
         aria-label={liked ? 'Verwijder like' : 'Voeg like toe'}
         aria-pressed={liked}
-        className={clsx(styles['button'], size === 'small' && styles['buttonSmall'])}
+        className={clsx(
+          styles['like-button__button'],
+          size === 'small' && styles['like-button__button--small'],
+          size === 'large' && styles['like-button__button--large'],
+        )}
         onClick={handleToggle}
         type="button"
       >
-        {liked ? <HeartFillIcon className={styles['iconLiked']} /> : <HeartIcon />}
+        {liked ? <HeartFillIcon className={styles['like-button__icon--liked']} /> : <HeartIcon />}
       </button>
     </div>
   )

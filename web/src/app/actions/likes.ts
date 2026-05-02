@@ -71,6 +71,7 @@ export async function toggleIdeaLikeAction(ideaDocumentId: string, isLiked: bool
     }
 
     revalidatePath('/')
+    revalidatePath(`/ideeen/${ideaDocumentId}`)
     return { success: true }
   } catch (error) {
     console.error('[toggleIdeaLikeAction] Error:', error)

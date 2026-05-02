@@ -1,0 +1,25 @@
+.idea-detail__list {
+  list-style: disc;
+  margin-block-start: var(--ams-space-xs);
+  padding-inline-start: var(--ams-space-m);
+}
+
+.idea-detail__details {
+  display: grid;
+  gap: var(--ams-space-xs) var(--ams-space-m);
+  grid-template-columns: max-content 1fr;
+  margin-block-start: var(--ams-space-xs);
+
+  dt,
+  dd {
+    margin-block: 0;
+    margin-inline: 0;
+    padding-block: 0;
+    padding-inline: 0;
+  }
+}
+
+.idea-detail__like {
+  display: flex;
+  justify-content: flex-end;
+}

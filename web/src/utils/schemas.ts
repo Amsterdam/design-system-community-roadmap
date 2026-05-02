@@ -17,7 +17,15 @@ export const StrapiImageSchema = z.object({
 
 export const ReactionSchema = z.object({
   content: z.string(),
-  end_user: z.object({ documentId: z.string(), id: z.number(), name: z.string() }).nullable().optional(),
+  end_user: z
+    .object({
+      documentId: z.string(),
+      id: z.number(),
+      isTeam: z.boolean().optional(),
+      name: z.string(),
+    })
+    .nullable()
+    .optional(),
   id: z.number(),
 })
 
