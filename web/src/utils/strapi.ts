@@ -82,6 +82,7 @@ export const strapi = {
         'populate[likes][populate][end_user][fields][1]': 'name',
         'populate[reactions][populate][end_user][fields][0]': 'documentId',
         'populate[reactions][populate][end_user][fields][1]': 'name',
+        'populate[reactions][populate][end_user][fields][2]': 'isTeam',
       })
       return fetchParsed(`ideas/${id}?${params}`, strapiSingle(IdeaSchema), init)
     },
