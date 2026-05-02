@@ -1,0 +1,10 @@
+.roadmap {
+  display: flex;
+  inline-size: 100%;
+}
+
+.roadmap__timeline-wrapper {
+  flex: 1;
+  min-inline-size: 0;
+  overflow-x: auto;
+}

@@ -63,7 +63,7 @@ export const FeatureSchema = strapiBase.extend({
 export const StorySchema = strapiBase.extend({
   title: z.string(),
   content: z.string(),
-  endDate: z.string(),
+  endDate: z.string().nullable(),
   features: z.array(FeatureSchema).optional(),
   images: z.array(StrapiImageSchema).optional(),
   likes: z.array(z.any()).optional(),

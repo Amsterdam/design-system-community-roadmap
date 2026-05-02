@@ -1,4 +1,4 @@
-import type { z } from 'zod'
+import { z } from 'zod'
 
 import { client } from './fetch'
 import {
@@ -12,6 +12,18 @@ import {
   strapiCollection,
   strapiSingle,
 } from './schemas'
+
+const NestedFeatureSchema = z.object({
+  title: z.string(),
+  documentId: z.string(),
+  endDate: z.string().nullable(),
+  id: z.number(),
+  startDate: z.string(),
+})
+
+const StoryWithFeaturesSchema = StorySchema.extend({
+  features: z.array(NestedFeatureSchema).optional(),
+})
 
 async function fetchParsed<T>(endpoint: string, schema: z.ZodType<T>, init?: RequestInit): Promise<T> {
   const res = await client.fetch(endpoint, init)
@@ -47,6 +59,16 @@ export const strapi = {
   },
   stories: {
     findMany: (init?: RequestInit) => fetchParsed('stories', strapiCollection(StorySchema), init),
+    findManyWithFeatures: (init?: RequestInit) => {
+      const params = new URLSearchParams({
+        'populate[features][fields][0]': 'id',
+        'populate[features][fields][1]': 'title',
+        'populate[features][fields][2]': 'startDate',
+        'populate[features][fields][3]': 'endDate',
+        'populate[features][fields][4]': 'documentId',
+      })
+      return fetchParsed(`stories?${params}`, strapiCollection(StoryWithFeaturesSchema), init)
+    },
     findOne: (id: string | number, init?: RequestInit) => fetchParsed(`stories/${id}`, strapiSingle(StorySchema), init),
   },
   storyLikes: {
