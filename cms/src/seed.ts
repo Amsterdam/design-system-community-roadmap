@@ -409,7 +409,7 @@ export default async ({ strapi }: { strapi: Core.Strapi }) => {
     }
 
     await strapi.documents('api::idea.idea').update({
-      data: { reactions },
+      data: { reactions } as never,
       documentId: idea.documentId,
       status: 'published',
     })
@@ -460,7 +460,7 @@ export default async ({ strapi }: { strapi: Core.Strapi }) => {
     }
 
     await strapi.documents(type).update({
-      data: { reactions },
+      data: { reactions } as never,
       documentId: entity.documentId,
       status: 'published',
     })
