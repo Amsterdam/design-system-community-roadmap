@@ -53,8 +53,12 @@ export const strapi = {
       fetchParsed(`idea-likes/${id}`, strapiSingle(IdeaLikeSchema), init),
   },
   ideas: {
-    findMany: (init?: RequestInit) =>
-      fetchParsed('ideas?populate[likes][fields][0]=id', strapiCollection(IdeaSchema), init),
+    findMany: (init?: RequestInit) => {
+      const params = new URLSearchParams({
+        'populate[likes][populate][end_user][fields][0]': 'documentId',
+      })
+      return fetchParsed(`ideas?${params}`, strapiCollection(IdeaSchema), init)
+    },
     findOne: (id: string | number, init?: RequestInit) => fetchParsed(`ideas/${id}`, strapiSingle(IdeaSchema), init),
   },
   stories: {

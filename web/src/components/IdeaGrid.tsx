@@ -2,19 +2,36 @@
 
 import { Grid, Heading } from '@amsterdam/design-system-react'
 import { Card } from '@design-system-community-roadmap/ui'
+import { useRouter } from 'next/navigation'
 
 import type { Idea } from '@/utils/schemas'
 
+import { toggleIdeaLikeAction } from '@/app/actions/likes'
+
 type IdeaGridProps = {
+  currentUserDocumentId?: string
   ideas: Idea[]
 }
 
-export default function IdeaGrid({ ideas }: IdeaGridProps) {
+export default function IdeaGrid({ currentUserDocumentId, ideas }: IdeaGridProps) {
+  const router = useRouter()
+
   const sortedIdeas = [...ideas].sort((a, b) => {
     const likesA = a.likes?.length ?? 0
     const likesB = b.likes?.length ?? 0
     return likesB - likesA
   })
+
+  const handleLike = async (ideaDocumentId: string, isLiked: boolean) => {
+    if (!currentUserDocumentId) {
+      router.push('/inloggen')
+      return
+    }
+    const result = await toggleIdeaLikeAction(ideaDocumentId, isLiked)
+    if (result.needsLogin) {
+      router.push('/inloggen')
+    }
+  }
 
   return (
     <Grid gapVertical="none">
@@ -26,12 +43,17 @@ export default function IdeaGrid({ ideas }: IdeaGridProps) {
 
       {sortedIdeas.map((idea, index) => {
         const isTopThree = index < 3
+        const isLiked =
+          !!currentUserDocumentId &&
+          (idea.likes?.some((l) => l.end_user?.documentId === currentUserDocumentId) ?? false)
 
         return (
           <Grid.Cell key={idea.id} span={{ narrow: 4, medium: 4, wide: isTopThree ? 4 : 3 }}>
             <Card
               description={idea.content}
               href={`/ideeen/${idea.documentId}`}
+              isLiked={isLiked}
+              onLike={(liked) => handleLike(idea.documentId, liked)}
               title={idea.title}
               variant={isTopThree ? 'big' : 'small'}
               voteCount={idea.likes?.length ?? 0}
