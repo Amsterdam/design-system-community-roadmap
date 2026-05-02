@@ -36,7 +36,6 @@ export default function IdeaGrid({ currentUserDocumentId, ideas }: IdeaGridProps
     }
 
     if (result.error || result.success === false) {
-      alert(result.error ?? 'Het liken van dit idee is mislukt. Probeer het opnieuw.')
       router.refresh()
       return
     }
