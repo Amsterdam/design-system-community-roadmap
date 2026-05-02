@@ -55,6 +55,7 @@ export default function IdeaDetail({
   const feedReactions = teamReaction ? reactions.filter((r) => r.id !== teamReaction.id) : reactions
 
   const sortedFeatures = [...features].sort((a, b) => {
+    if (!a.startDate && !b.startDate) return 0
     if (!a.startDate) return 1
     if (!b.startDate) return -1
     return new Date(a.startDate).getTime() - new Date(b.startDate).getTime()
