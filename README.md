@@ -42,6 +42,16 @@ pnpm --filter ./cms dev
 pnpm --filter ./storybook dev
 ```
 
+### Seeding the CMS
+
+The CMS includes a seed script that populates the database with demo content: users, ideas, roadmap features and stories, and reactions.
+
+```bash
+pnpm --filter ./cms seed
+```
+
+This sets the `SEED` environment variable which triggers the seed script on Strapi bootstrap. Run this once after starting with a fresh database — re-running on an already-seeded database will skip the seed automatically.
+
 ## Licence
 
 This project is free and open-source software licenced under the **European Union Public Licence (EUPL) v1.2** or higher.
