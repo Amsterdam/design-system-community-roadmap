@@ -1,7 +1,7 @@
 import type { ReactionItem } from '@design-system-community-roadmap/ui'
 import type { Meta, StoryObj } from '@storybook/react-vite'
 
-import StoryDetail from '../../../../web/src/components/StoryDetail'
+import StoryDetail from '@/components/StoryDetail'
 
 const mockReactions: ReactionItem[] = [
   {
