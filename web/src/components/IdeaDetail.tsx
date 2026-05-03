@@ -5,11 +5,14 @@ import type { ReactionItem } from '@design-system-community-roadmap/ui'
 import { Badge, Grid, Heading, Paragraph, ProgressList, StandaloneLink } from '@amsterdam/design-system-react'
 import { Reactions } from '@design-system-community-roadmap/ui'
 
+import type { StrapiImage } from '@/utils/schemas'
+
 import { formatDateRange } from '@/utils/date'
 
 import AddReaction from './AddReaction'
 import styles from './IdeaDetail.module.scss'
 import IdeaLikeButton from './IdeaLikeButton'
+import StrapiImageBlock from './StrapiImageBlock'
 
 const statusLabels: Record<string, string> = {
   accepted: 'Geaccepteerd',
@@ -31,6 +34,7 @@ export type IdeaDetailProps = {
   currentUserDocumentId?: string
   features: Feature[]
   ideaDocumentId: string
+  images?: StrapiImage[] | null
   isLiked: boolean
   reactions: ReactionItem[]
   status?: string
@@ -46,6 +50,7 @@ export default function IdeaDetail({
   currentUserDocumentId,
   features,
   ideaDocumentId,
+  images,
   isLiked,
   reactions,
   status,
@@ -77,6 +82,8 @@ export default function IdeaDetail({
           />
         </div>
         <Paragraph>{content}</Paragraph>
+
+        <StrapiImageBlock fallbackAlt={title} images={images} />
 
         {features.length > 0 && (
           <div className={styles['idea-detail__stories-container']}>

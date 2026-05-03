@@ -54,6 +54,7 @@ export default async function IdeePage({ params }: Props) {
       currentUserDocumentId={currentUserDocumentId}
       features={idea.features ?? []}
       ideaDocumentId={idea.documentId}
+      images={idea.images}
       isLiked={isLiked}
       reactions={reactions}
       status={idea.status}

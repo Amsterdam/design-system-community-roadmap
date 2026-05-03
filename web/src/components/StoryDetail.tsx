@@ -7,10 +7,13 @@ import { AddReaction, LikeButton, Reactions } from '@design-system-community-roa
 import { useRouter } from 'next/navigation'
 import { useState } from 'react'
 
+import type { StrapiImage } from '@/utils/schemas'
+
 import { toggleFeatureLikeAction } from '@/app/actions/likes'
 import { addFeatureReactionAction } from '@/app/actions/reactions'
 
 import styles from './StoryDetail.module.scss'
+import StrapiImageBlock from './StrapiImageBlock'
 
 type ParentFeature = {
   documentId: string
@@ -22,6 +25,7 @@ export type StoryDetailProps = {
   currentUserDocumentId?: string
   endDate?: string | null
   featureDocumentId: string
+  images?: StrapiImage[] | null
   isLiked: boolean
   parentFeature?: ParentFeature | null
   reactions: ReactionItem[]
@@ -36,6 +40,7 @@ export default function StoryDetail({
   currentUserDocumentId,
   endDate,
   featureDocumentId,
+  images,
   isLiked,
   parentFeature,
   reactions,
@@ -94,6 +99,8 @@ export default function StoryDetail({
           <LikeButton count={voteCount} isLiked={isLiked} onToggle={handleLikeToggle} size="large" />
         </div>
         <Paragraph>{content}</Paragraph>
+
+        <StrapiImageBlock fallbackAlt={title} images={images} />
       </Grid.Cell>
       <Grid.Cell className="ams-prose" span={{ narrow: 4, medium: 8, wide: 5 }}>
         {parentFeature && (

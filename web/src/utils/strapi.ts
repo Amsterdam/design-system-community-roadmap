@@ -24,6 +24,11 @@ async function fetchParsed<T>(endpoint: string, schema: z.ZodType<T>, init?: Req
   return schema.parse(await res.json())
 }
 
+const imagePopulateParams = {
+  'populate[images][fields][0]': 'url',
+  'populate[images][fields][1]': 'alternativeText',
+}
+
 export const strapi = {
   endUsers: {
     findMany: (init?: RequestInit) => fetchParsed('end-users', strapiCollection(EndUserSchema), init),
@@ -39,6 +44,7 @@ export const strapi = {
     findMany: (init?: RequestInit) => fetchParsed('features', strapiCollection(FeatureSchema), init),
     findOne: (id: string | number, init?: RequestInit) => {
       const params = new URLSearchParams({
+        ...imagePopulateParams,
         'populate[likes][populate][end_user][fields][0]': 'documentId',
         'populate[likes][populate][end_user][fields][1]': 'name',
         'populate[reactions][populate][end_user][fields][0]': 'id',
@@ -79,6 +85,7 @@ export const strapi = {
         'populate[features][fields][2]': 'id',
         'populate[features][fields][3]': 'startDate',
         'populate[features][fields][4]': 'endDate',
+        ...imagePopulateParams,
         'populate[likes][populate][end_user][fields][0]': 'documentId',
         'populate[likes][populate][end_user][fields][1]': 'name',
         'populate[reactions][populate][end_user][fields][0]': 'documentId',
@@ -107,6 +114,7 @@ export const strapi = {
         'populate[features][fields][2]': 'id',
         'populate[features][fields][3]': 'startDate',
         'populate[features][fields][4]': 'endDate',
+        ...imagePopulateParams,
         'populate[likes][populate][end_user][fields][0]': 'documentId',
         'populate[likes][populate][end_user][fields][1]': 'name',
         'populate[reactions][populate][end_user][fields][0]': 'documentId',
