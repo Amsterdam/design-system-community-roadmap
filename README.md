@@ -50,7 +50,7 @@ The CMS includes a seed script that populates the database with demo content: us
 pnpm --filter ./cms seed
 ```
 
-This sets the `SEED` environment variable which triggers the seed script on Strapi bootstrap. Run this once after starting with a fresh database — re-running on an already-seeded database will skip the seed automatically.
+This command starts Strapi with the `SEED` environment variable set, so it both boots the CMS and runs the seed script during bootstrap. Use this for the first run on a fresh database. After the seed completes, you can stop the process and run `pnpm --filter ./cms dev` normally. Re-running `pnpm --filter ./cms seed` on an already-seeded database will skip the seed automatically.
 
 ## Licence
 
