@@ -3,7 +3,7 @@ import type { Meta, StoryObj } from '@storybook/react-vite'
 import { AddReaction } from '@design-system-community-roadmap/ui'
 
 const meta = {
-  title: 'Reactions/AddReaction',
+  title: 'Molecules/Add Reaction',
   component: AddReaction,
   args: {
     onSubmit: () => {},

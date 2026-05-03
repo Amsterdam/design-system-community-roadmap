@@ -98,7 +98,7 @@ const mockStandaloneStories: RoadmapStory[] = [
 ]
 
 const meta = {
-  title: 'Roadmap',
+  title: 'Organisms/Roadmap',
   component: Roadmap,
   args: {
     features: mockFeatures,

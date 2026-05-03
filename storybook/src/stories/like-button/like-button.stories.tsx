@@ -3,7 +3,7 @@ import type { Meta, StoryObj } from '@storybook/react-vite'
 import { LikeButton } from '@design-system-community-roadmap/ui'
 
 const meta = {
-  title: 'LikeButton',
+  title: 'Atoms/Like Button',
   component: LikeButton,
   argTypes: {
     count: { control: { min: 0, type: 'number' } },
