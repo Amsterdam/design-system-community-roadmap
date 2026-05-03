@@ -5,7 +5,7 @@ import Navigation from '@design-system-community-roadmap/ui'
 import styles from './page-layout.module.scss'
 
 const meta = {
-  title: 'Navigation',
+  title: 'Organisms/Navigation',
   component: Navigation,
 } satisfies Meta<typeof Navigation>
 

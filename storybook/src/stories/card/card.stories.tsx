@@ -3,7 +3,7 @@ import type { Meta, StoryObj } from '@storybook/react-vite'
 import { Card } from '@design-system-community-roadmap/ui'
 
 const meta = {
-  title: 'Card',
+  title: 'Molecules/Card',
   component: Card,
   argTypes: {
     isLiked: { control: 'boolean' },

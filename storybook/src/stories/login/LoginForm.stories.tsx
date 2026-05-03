@@ -3,7 +3,7 @@ import type { Meta, StoryObj } from '@storybook/react-vite'
 import { LoginForm } from '@design-system-community-roadmap/ui'
 
 const meta = {
-  title: 'Login/LoginForm',
+  title: 'Molecules/Login Form',
   component: LoginForm,
   decorators: [
     (Story) => (

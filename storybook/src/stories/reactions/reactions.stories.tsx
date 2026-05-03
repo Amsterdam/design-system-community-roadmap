@@ -3,7 +3,7 @@ import type { Meta, StoryObj } from '@storybook/react-vite'
 import { Reactions } from '@design-system-community-roadmap/ui'
 
 const meta = {
-  title: 'Reactions',
+  title: 'Molecules/Reactions',
   component: Reactions,
   argTypes: {
     compact: { control: 'boolean' },

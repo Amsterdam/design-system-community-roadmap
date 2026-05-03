@@ -16,6 +16,22 @@ const config: StorybookConfig = {
           find: '@design-system-community-roadmap/ui/styles',
           replacement: fileURLToPath(new URL('../../ui/src/styles/global.css', import.meta.url)),
         },
+        {
+          find: 'next/navigation',
+          replacement: fileURLToPath(new URL('../src/__mocks__/next-navigation.ts', import.meta.url)),
+        },
+        {
+          find: '@/app/actions/likes',
+          replacement: fileURLToPath(new URL('../src/__mocks__/actions-likes.ts', import.meta.url)),
+        },
+        {
+          find: '@/app/actions/reactions',
+          replacement: fileURLToPath(new URL('../src/__mocks__/actions-reactions.ts', import.meta.url)),
+        },
+        {
+          find: /^@\//,
+          replacement: fileURLToPath(new URL('../../web/src/', import.meta.url)),
+        },
       ],
     },
   }),

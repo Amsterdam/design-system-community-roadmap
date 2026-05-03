@@ -4,7 +4,7 @@ import { EmojiPicker } from '@design-system-community-roadmap/ui'
 import { useState } from 'react'
 
 const meta = {
-  title: 'Login/EmojiPicker',
+  title: 'Atoms/Emoji Picker',
   component: EmojiPicker,
   argTypes: {
     value: { control: 'text' },
