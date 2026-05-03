@@ -1,0 +1,12 @@
+import{n as e}from"./chunk-DnJy8xQt.js";import{t}from"./jsx-runtime-BGU0mfus.js";import{a as n,i as r,o as i,r as a,s as o,t as s}from"./src-Gn7_WTbF.js";var c,l,u,d,f,p,m,h,g;e((()=>{s(),r(),c=t(),l=new Date,u=e=>i(e,`yyyy-MM-dd`),d=[{title:`Applicatie-layout`,documentId:`feature-1`,endDate:u(o(l,30)),id:1,startDate:u(n(l,5)),stories:[{title:`[Design] Achtergrond-kleur voor interne applicaties`,documentId:`story-1-1`,endDate:u(o(l,8)),id:11,startDate:u(n(l,3))},{title:`[Code] Geneste items en actieve weergave Menu`,documentId:`story-1-3`,endDate:u(o(l,30)),id:13,startDate:u(o(l,17))}]},{title:`Data tabel`,documentId:`feature-2`,endDate:u(o(l,55)),id:2,startDate:u(o(l,15)),stories:[{title:`[Design] Tabel varianten`,documentId:`story-2-1`,endDate:u(o(l,35)),id:21,startDate:u(o(l,15))},{title:`[Code] Sorteerbare kolommen`,documentId:`story-2-2`,endDate:u(o(l,55)),id:22,startDate:u(o(l,36))}]},{title:`Patronen`,documentId:`feature-3`,endDate:u(o(l,45)),id:3,startDate:u(o(l,20)),stories:[]},{title:`Form Control Design`,documentId:`feature-4`,endDate:u(o(l,80)),id:4,startDate:u(o(l,40)),stories:[{title:`[Design] Form layout richtlijnen`,documentId:`story-4-1`,endDate:u(o(l,60)),id:41,startDate:u(o(l,40))}]}],f={title:`Roadmap`,component:a,args:{features:d,standaloneStories:[{title:`Testen`,documentId:`story-standalone-1`,endDate:u(o(l,25)),id:101,startDate:u(o(l,10))},{title:`Rich Text editor onderzoek`,documentId:`story-standalone-2`,endDate:null,id:102,startDate:u(o(l,50))}]},parameters:{layout:`fullscreen`}},p={},m={play:async()=>{},render:e=>(0,c.jsx)(a,{...e,features:d.map((e,t)=>t===0?{...e}:e)})},h={args:{standaloneStories:[]}},p.parameters={...p.parameters,docs:{...p.parameters?.docs,source:{originalSource:`{}`,...p.parameters?.docs?.source}}},m.parameters={...m.parameters,docs:{...m.parameters?.docs,source:{originalSource:`{
+  play: async () => {},
+  render: args => {
+    return <Roadmap {...args} features={mockFeatures.map((f, i) => i === 0 ? {
+      ...f
+    } : f)} />;
+  }
+}`,...m.parameters?.docs?.source}}},h.parameters={...h.parameters,docs:{...h.parameters?.docs,source:{originalSource:`{
+  args: {
+    standaloneStories: []
+  }
+}`,...h.parameters?.docs?.source}}},g=[`Default`,`WithExpandedFeature`,`FeaturesOnly`]}))();export{p as Default,h as FeaturesOnly,m as WithExpandedFeature,g as __namedExportsOrder,f as default};
