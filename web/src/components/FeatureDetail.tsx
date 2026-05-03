@@ -7,11 +7,14 @@ import { AddReaction, LikeButton, Reactions } from '@design-system-community-roa
 import { useRouter } from 'next/navigation'
 import { useState } from 'react'
 
+import type { StrapiImage } from '@/utils/schemas'
+
 import { toggleStoryLikeAction } from '@/app/actions/likes'
 import { addStoryReactionAction } from '@/app/actions/reactions'
 import { formatDateRange } from '@/utils/date'
 
 import styles from './FeatureDetail.module.scss'
+import StrapiImageBlock from './StrapiImageBlock'
 
 type NestedStory = {
   documentId: string
@@ -24,6 +27,7 @@ export type FeatureDetailProps = {
   content: string
   currentUserDocumentId?: string
   endDate?: string | null
+  images?: StrapiImage[] | null
   isLiked: boolean
   reactions: ReactionItem[]
   startDate?: string
@@ -38,6 +42,7 @@ export default function FeatureDetail({
   content,
   currentUserDocumentId,
   endDate,
+  images,
   isLiked,
   reactions,
   startDate,
@@ -104,6 +109,8 @@ export default function FeatureDetail({
           <LikeButton count={voteCount} isLiked={isLiked} onToggle={handleLikeToggle} size="large" />
         </div>
         <Paragraph>{content}</Paragraph>
+
+        <StrapiImageBlock fallbackAlt={title} images={images} />
 
         {stories.length > 0 && (
           <div className={styles['feature-detail__stories-container']}>

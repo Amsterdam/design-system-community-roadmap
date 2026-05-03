@@ -56,6 +56,7 @@ export default async function StoryPage({ params }: Props) {
       currentUserDocumentId={currentUserDocumentId}
       endDate={feature.endDate}
       featureDocumentId={feature.documentId}
+      images={feature.images}
       isLiked={isLiked}
       parentFeature={feature.story}
       reactions={reactions}

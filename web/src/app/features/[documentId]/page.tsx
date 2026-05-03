@@ -55,6 +55,7 @@ export default async function FeaturePage({ params }: Props) {
       content={story.content}
       currentUserDocumentId={currentUserDocumentId}
       endDate={story.endDate}
+      images={story.images}
       isLiked={isLiked}
       reactions={reactions}
       startDate={story.startDate}

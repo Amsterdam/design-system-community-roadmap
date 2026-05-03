@@ -9,6 +9,9 @@ const AppHeader = ({ currentUser, onLogout }: AppHeaderProps) => (
   <PageHeader
     brandName="Community Roadmap"
     menuItems={[
+      <PageHeader.MenuLink fixed href="/idee-delen" key="idee-delen">
+        Idee delen
+      </PageHeader.MenuLink>,
       <PageHeader.MenuLink fixed href="/zoeken" key="zoeken">
         Zoeken
       </PageHeader.MenuLink>,
