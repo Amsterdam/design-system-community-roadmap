@@ -25,16 +25,16 @@ const Card = ({ title, author, description, href, isLiked, onLike, variant = 'bi
   const isBig = variant === 'big'
 
   return (
-    <AmsCard className={clsx(styles['card'], isBig ? styles['cardBig'] : styles['cardSmall'])}>
+    <AmsCard className={clsx(styles['card'], isBig ? styles['card--big'] : styles['card--small'])}>
       <AmsCard.Heading level={3} size={isBig ? 'level-3' : 'level-4'}>
         {href ? <AmsCard.Link href={href}>{title}</AmsCard.Link> : title}
       </AmsCard.Heading>
-      <Paragraph className={styles['description']} size="small">
+      <Paragraph className={styles['card__description']} size="small">
         {description}
       </Paragraph>
-      <div className={styles['footer']}>
+      <div className={styles['card__footer']}>
         {author && (
-          <Paragraph className={styles['author']} size="small">
+          <Paragraph className={styles['card__author']} size="small">
             Idee van {author.name}
           </Paragraph>
         )}

@@ -9,24 +9,24 @@
   }
 }
 
-.cardBig {
+.card--big {
   padding-block: var(--ams-space-m);
   padding-inline: var(--ams-space-m);
 }
 
-.cardSmall {
+.card--small {
   padding-block: var(--ams-space-s);
   padding-inline: var(--ams-space-s);
 }
 
-.description {
+.card__description {
   -webkit-box-orient: vertical;
   display: -webkit-box;
   -webkit-line-clamp: 3;
   overflow: hidden;
 }
 
-.footer {
+.card__footer {
   align-items: center;
   display: flex;
   justify-content: flex-end;
@@ -35,7 +35,7 @@
   z-index: 1;
 }
 
-.author {
+.card__author {
   margin-block: 0;
   margin-inline-end: auto;
 }
