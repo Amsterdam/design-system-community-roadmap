@@ -1,8 +1,29 @@
-.layout {
-  display: flex;
+.body {
+  align-items: flex-start;
+  display: grid;
+  grid-template-columns: auto 1fr;
+  margin-block: var(--ams-menu-padding-block);
+  margin-inline: var(--ams-space-m);
+  min-block-size: 100dvh;
+
+  @media (width >= 37.5rem) {
+    margin-inline-start: var(
+      --ams-page-header-medium-padding-inline,
+      var(--ams-page-header-vi-medium-padding-inline)
+    );
+  }
+
+  @media (width >= 72.5rem) {
+    margin-inline-start: var(
+      --ams-page-header-wide-padding-inline,
+      var(--ams-page-header-vi-wide-padding-inline)
+    );
+    padding-block: var(--ams-menu-padding-block);
+    vertical-align: top;
+  }
 }
 
 .content {
   flex: 1;
-  min-inline-size: 0;
+  overflow: hidden;
 }

@@ -14,10 +14,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body>
         <Page>
           <AppHeaderClient />
-          <div className={styles['layout']}>
+          <main className={styles['body']}>
             <Navigation />
-            <main className={styles['content']}>{children}</main>
-          </div>
+            <div className={styles['content']}>{children}</div>
+          </main>
         </Page>
       </body>
     </html>
