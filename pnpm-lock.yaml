@@ -63,8 +63,8 @@ importers:
         specifier: ^10.3.5
         version: 10.3.5(eslint@9.39.4(jiti@2.6.1))(storybook@10.3.5(@testing-library/dom@10.4.1)(prettier@3.8.3)(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(typescript@5.9.3)
       globals:
-        specifier: ^17.5.0
-        version: 17.5.0
+        specifier: ^17.6.0
+        version: 17.6.0
       husky:
         specifier: ^9.1.7
         version: 9.1.7
@@ -75,20 +75,20 @@ importers:
         specifier: ^1.99.0
         version: 1.99.0
       stylelint:
-        specifier: ^17.9.1
-        version: 17.9.1(typescript@5.9.3)
+        specifier: ^17.11.1
+        version: 17.11.1(typescript@5.9.3)
       stylelint-config-standard-scss:
         specifier: ^17.0.0
-        version: 17.0.0(postcss@8.5.14)(stylelint@17.9.1(typescript@5.9.3))
+        version: 17.0.0(postcss@8.5.14)(stylelint@17.11.1(typescript@5.9.3))
       stylelint-order:
         specifier: ^8.1.1
-        version: 8.1.1(stylelint@17.9.1(typescript@5.9.3))
+        version: 8.1.1(stylelint@17.11.1(typescript@5.9.3))
       stylelint-use-logical:
         specifier: ^2.1.3
-        version: 2.1.3(stylelint@17.9.1(typescript@5.9.3))
+        version: 2.1.3(stylelint@17.11.1(typescript@5.9.3))
       stylelint-value-no-unknown-custom-properties:
         specifier: ^6.1.1
-        version: 6.1.1(stylelint@17.9.1(typescript@5.9.3))
+        version: 6.1.1(stylelint@17.11.1(typescript@5.9.3))
       typescript:
         specifier: ^5.9.3
         version: 5.9.3
@@ -5459,8 +5459,8 @@ packages:
     resolution: {integrity: sha512-oahGvuMGQlPw/ivIYBjVSrWAfWLBeku5tpPE2fOPLi+WHffIWbuh2tCjhyQhTBPMf5E9jDEH4FOmTYgYwbKwtQ==}
     engines: {node: '>=18'}
 
-  globals@17.5.0:
-    resolution: {integrity: sha512-qoV+HK2yFl/366t2/Cb3+xxPUo5BuMynomoDmiaZBIdbs+0pYbjfZU+twLhGKp4uCZ/+NbtpVepH5bGCxRyy2g==}
+  globals@17.6.0:
+    resolution: {integrity: sha512-sepffkT8stwnIYbsMBpoCHJuJM5l98FUF2AnE07hfvE0m/qp3R586hw4jF4uadbhvg1ooIdzuu7CsfD2jzCaNA==}
     engines: {node: '>=18'}
 
   globalthis@1.0.4:
@@ -7417,10 +7417,6 @@ packages:
     resolution: {integrity: sha512-pMMHxBOZKFU6HgAZ4eyGnwXF/EvPGGqUr0MnZ5+99485wwW41kW91A4LOGxSHhgugZmSChL5AlElNdwlNgcnLQ==}
     engines: {node: ^10 || ^12 || >=14}
 
-  postcss@8.5.12:
-    resolution: {integrity: sha512-W62t/Se6rA0Az3DfCL0AqJwXuKwBeYg6nOaIgzP+xZ7N5BFCI7DYi1qs6ygUYT6rvfi6t9k65UMLJC+PHZpDAA==}
-    engines: {node: ^10 || ^12 || >=14}
-
   postcss@8.5.14:
     resolution: {integrity: sha512-SoSL4+OSEtR99LHFZQiJLkT59C5B1amGO1NzTwj7TT1qCUgUO6hxOvzkOYxD+vMrXBM3XJIKzokoERdqQq/Zmg==}
     engines: {node: ^10 || ^12 || >=14}
@@ -8440,8 +8436,8 @@ packages:
     peerDependencies:
       stylelint: '>=16'
 
-  stylelint@17.9.1:
-    resolution: {integrity: sha512-THTmnAPJTrg/JhkTWZlSyrO+HUYMx6ELthIHeMyD2WOKqXIJUFQv2Yxn91bvUrZdbBJaW2dUuQdPST2wcQ6C3g==}
+  stylelint@17.11.1:
+    resolution: {integrity: sha512-+smN/HqVTggUx3iuAzOi9fPh8SrH+cJWlZrYVldXoJ06orWBhZ4Ue/QEp64oei6pVrAh4w3tG+Y12Vw7MbCFRQ==}
     engines: {node: '>=20.19.0'}
     hasBin: true
 
@@ -11904,7 +11900,7 @@ snapshots:
       '@strapi/design-system': 2.2.0(@babel/runtime@7.29.2)(@codemirror/autocomplete@6.20.1)(@codemirror/language@6.12.3)(@codemirror/lint@6.9.5)(@codemirror/search@6.7.0)(@codemirror/state@6.6.0)(@codemirror/theme-one-dark@6.1.3)(@codemirror/view@6.41.1)(@strapi/icons@2.2.0(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(styled-components@6.4.1(react-dom@18.3.1(react@18.3.1))(react@18.3.1)))(@types/react-dom@18.3.7(@types/react@18.3.28))(@types/react@18.3.28)(codemirror@5.65.21)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(styled-components@6.4.1(react-dom@18.3.1(react@18.3.1))(react@18.3.1))
       '@strapi/icons': 2.2.0(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(styled-components@6.4.1(react-dom@18.3.1(react@18.3.1))(react@18.3.1))
       '@strapi/permissions': 5.46.0
-      '@strapi/types': 5.46.0(@types/node@25.6.0)(pg@8.20.0)(typescript@5.9.3)
+      '@strapi/types': 5.46.0(@types/node@25.6.0)(pg@8.20.0)(typescript@5.4.5)
       '@strapi/typescript-utils': 5.46.0
       '@strapi/utils': 5.46.0
       '@testing-library/dom': 10.4.1
@@ -12110,7 +12106,7 @@ snapshots:
       '@strapi/database': 5.46.0(@types/node@25.6.0)(pg@8.20.0)
       '@strapi/design-system': 2.2.0(@babel/runtime@7.29.2)(@codemirror/autocomplete@6.20.1)(@codemirror/language@6.12.3)(@codemirror/lint@6.9.5)(@codemirror/search@6.7.0)(@codemirror/state@6.6.0)(@codemirror/theme-one-dark@6.1.3)(@codemirror/view@6.41.1)(@strapi/icons@2.2.0(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(styled-components@6.4.1(react-dom@18.3.1(react@18.3.1))(react@18.3.1)))(@types/react-dom@18.3.7(@types/react@18.3.28))(@types/react@18.3.28)(codemirror@5.65.21)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(styled-components@6.4.1(react-dom@18.3.1(react@18.3.1))(react@18.3.1))
       '@strapi/icons': 2.2.0(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(styled-components@6.4.1(react-dom@18.3.1(react@18.3.1))(react@18.3.1))
-      '@strapi/types': 5.46.0(@types/node@25.6.0)(pg@8.20.0)(typescript@5.9.3)
+      '@strapi/types': 5.46.0(@types/node@25.6.0)(pg@8.20.0)(typescript@5.4.5)
       '@strapi/utils': 5.46.0
       date-fns: 2.30.0
       date-fns-tz: 2.0.1(date-fns@2.30.0)
@@ -12211,7 +12207,7 @@ snapshots:
       '@strapi/generators': 5.46.0(@types/node@25.6.0)
       '@strapi/logger': 5.46.0
       '@strapi/permissions': 5.46.0
-      '@strapi/types': 5.46.0(@types/node@25.6.0)(pg@8.20.0)(typescript@5.9.3)
+      '@strapi/types': 5.46.0(@types/node@25.6.0)(pg@8.20.0)(typescript@5.4.5)
       '@strapi/typescript-utils': 5.46.0
       '@strapi/utils': 5.46.0
       '@vercel/stega': 0.1.2
@@ -12643,7 +12639,7 @@ snapshots:
       '@strapi/openapi': 5.46.0
       '@strapi/permissions': 5.46.0
       '@strapi/review-workflows': 5.46.0(4857b1b53508fedb5e230c78f4f7ebad)
-      '@strapi/types': 5.46.0(@types/node@25.6.0)(pg@8.20.0)(typescript@5.9.3)
+      '@strapi/types': 5.46.0(@types/node@25.6.0)(pg@8.20.0)(typescript@5.4.5)
       '@strapi/typescript-utils': 5.46.0
       '@strapi/upload': 5.46.0(94f528709a22184ed312d241a2bb1d0a)
       '@strapi/utils': 5.46.0
@@ -12752,6 +12748,36 @@ snapshots:
       - webpack-cli
       - webpack-dev-server
       - webpack-plugin-serve
+
+  '@strapi/types@5.46.0(@types/node@25.6.0)(pg@8.20.0)(typescript@5.4.5)':
+    dependencies:
+      '@casl/ability': 6.7.5
+      '@koa/cors': 5.0.0
+      '@koa/router': 12.0.2
+      '@strapi/database': 5.46.0(@types/node@25.6.0)(pg@8.20.0)
+      '@strapi/logger': 5.46.0
+      '@strapi/permissions': 5.46.0
+      '@strapi/utils': 5.46.0
+      commander: 8.3.0
+      json-logic-js: 2.0.5
+      koa: 2.16.4
+      koa-body: 6.0.1
+      node-schedule: 2.1.1
+      typedoc: 0.28.19(typescript@5.4.5)
+      typedoc-github-wiki-theme: 2.1.0(typedoc-plugin-markdown@4.11.0(typedoc@0.28.19(typescript@5.9.3)))
+      typedoc-plugin-markdown: 4.11.0(typedoc@0.28.19(typescript@5.9.3))
+      zod: 3.25.76
+    transitivePeerDependencies:
+      - '@types/node'
+      - better-sqlite3
+      - mysql
+      - mysql2
+      - pg
+      - pg-native
+      - sqlite3
+      - supports-color
+      - tedious
+      - typescript
 
   '@strapi/types@5.46.0(@types/node@25.6.0)(pg@8.20.0)(typescript@5.9.3)':
     dependencies:
@@ -15552,7 +15578,7 @@ snapshots:
 
   globals@14.0.0: {}
 
-  globals@17.5.0: {}
+  globals@17.6.0: {}
 
   globalthis@1.0.4:
     dependencies:
@@ -17806,9 +17832,9 @@ snapshots:
 
   postcss-resolve-nested-selector@0.1.6: {}
 
-  postcss-safe-parser@7.0.1(postcss@8.5.12):
+  postcss-safe-parser@7.0.1(postcss@8.5.14):
     dependencies:
-      postcss: 8.5.12
+      postcss: 8.5.14
 
   postcss-scss@4.0.9(postcss@8.5.14):
     dependencies:
@@ -17832,12 +17858,6 @@ snapshots:
       source-map-js: 1.2.1
 
   postcss@8.5.10:
-    dependencies:
-      nanoid: 3.3.12
-      picocolors: 1.1.1
-      source-map-js: 1.2.1
-
-  postcss@8.5.12:
     dependencies:
       nanoid: 3.3.12
       picocolors: 1.1.1
@@ -19001,39 +19021,39 @@ snapshots:
       client-only: 0.0.1
       react: 19.2.5
 
-  stylelint-config-recommended-scss@17.0.1(postcss@8.5.14)(stylelint@17.9.1(typescript@5.9.3)):
+  stylelint-config-recommended-scss@17.0.1(postcss@8.5.14)(stylelint@17.11.1(typescript@5.9.3)):
     dependencies:
       postcss-scss: 4.0.9(postcss@8.5.14)
-      stylelint: 17.9.1(typescript@5.9.3)
-      stylelint-config-recommended: 18.0.0(stylelint@17.9.1(typescript@5.9.3))
-      stylelint-scss: 7.0.0(stylelint@17.9.1(typescript@5.9.3))
+      stylelint: 17.11.1(typescript@5.9.3)
+      stylelint-config-recommended: 18.0.0(stylelint@17.11.1(typescript@5.9.3))
+      stylelint-scss: 7.0.0(stylelint@17.11.1(typescript@5.9.3))
     optionalDependencies:
       postcss: 8.5.14
 
-  stylelint-config-recommended@18.0.0(stylelint@17.9.1(typescript@5.9.3)):
+  stylelint-config-recommended@18.0.0(stylelint@17.11.1(typescript@5.9.3)):
     dependencies:
-      stylelint: 17.9.1(typescript@5.9.3)
+      stylelint: 17.11.1(typescript@5.9.3)
 
-  stylelint-config-standard-scss@17.0.0(postcss@8.5.14)(stylelint@17.9.1(typescript@5.9.3)):
+  stylelint-config-standard-scss@17.0.0(postcss@8.5.14)(stylelint@17.11.1(typescript@5.9.3)):
     dependencies:
-      stylelint: 17.9.1(typescript@5.9.3)
-      stylelint-config-recommended-scss: 17.0.1(postcss@8.5.14)(stylelint@17.9.1(typescript@5.9.3))
-      stylelint-config-standard: 40.0.0(stylelint@17.9.1(typescript@5.9.3))
+      stylelint: 17.11.1(typescript@5.9.3)
+      stylelint-config-recommended-scss: 17.0.1(postcss@8.5.14)(stylelint@17.11.1(typescript@5.9.3))
+      stylelint-config-standard: 40.0.0(stylelint@17.11.1(typescript@5.9.3))
     optionalDependencies:
       postcss: 8.5.14
 
-  stylelint-config-standard@40.0.0(stylelint@17.9.1(typescript@5.9.3)):
+  stylelint-config-standard@40.0.0(stylelint@17.11.1(typescript@5.9.3)):
     dependencies:
-      stylelint: 17.9.1(typescript@5.9.3)
-      stylelint-config-recommended: 18.0.0(stylelint@17.9.1(typescript@5.9.3))
+      stylelint: 17.11.1(typescript@5.9.3)
+      stylelint-config-recommended: 18.0.0(stylelint@17.11.1(typescript@5.9.3))
 
-  stylelint-order@8.1.1(stylelint@17.9.1(typescript@5.9.3)):
+  stylelint-order@8.1.1(stylelint@17.11.1(typescript@5.9.3)):
     dependencies:
       postcss: 8.5.10
       postcss-sorting: 10.0.0(postcss@8.5.10)
-      stylelint: 17.9.1(typescript@5.9.3)
+      stylelint: 17.11.1(typescript@5.9.3)
 
-  stylelint-scss@7.0.0(stylelint@17.9.1(typescript@5.9.3)):
+  stylelint-scss@7.0.0(stylelint@17.11.1(typescript@5.9.3)):
     dependencies:
       css-tree: 3.2.1
       is-plain-object: 5.0.0
@@ -19043,19 +19063,19 @@ snapshots:
       postcss-resolve-nested-selector: 0.1.6
       postcss-selector-parser: 7.1.1
       postcss-value-parser: 4.2.0
-      stylelint: 17.9.1(typescript@5.9.3)
+      stylelint: 17.11.1(typescript@5.9.3)
 
-  stylelint-use-logical@2.1.3(stylelint@17.9.1(typescript@5.9.3)):
+  stylelint-use-logical@2.1.3(stylelint@17.11.1(typescript@5.9.3)):
     dependencies:
-      stylelint: 17.9.1(typescript@5.9.3)
+      stylelint: 17.11.1(typescript@5.9.3)
 
-  stylelint-value-no-unknown-custom-properties@6.1.1(stylelint@17.9.1(typescript@5.9.3)):
+  stylelint-value-no-unknown-custom-properties@6.1.1(stylelint@17.11.1(typescript@5.9.3)):
     dependencies:
       postcss-value-parser: 4.2.0
       resolve: 1.22.12
-      stylelint: 17.9.1(typescript@5.9.3)
+      stylelint: 17.11.1(typescript@5.9.3)
 
-  stylelint@17.9.1(typescript@5.9.3):
+  stylelint@17.11.1(typescript@5.9.3):
     dependencies:
       '@csstools/css-calc': 3.2.0(@csstools/css-parser-algorithms@4.0.0(@csstools/css-tokenizer@4.0.0))(@csstools/css-tokenizer@4.0.0)
       '@csstools/css-parser-algorithms': 4.0.0(@csstools/css-tokenizer@4.0.0)
@@ -19078,14 +19098,13 @@ snapshots:
       html-tags: 5.1.0
       ignore: 7.0.5
       import-meta-resolve: 4.2.0
-      is-plain-object: 5.0.0
       mathml-tag-names: 4.0.0
       meow: 14.1.0
       micromatch: 4.0.8
       normalize-path: 3.0.0
       picocolors: 1.1.1
-      postcss: 8.5.12
-      postcss-safe-parser: 7.0.1(postcss@8.5.12)
+      postcss: 8.5.14
+      postcss-safe-parser: 7.0.1(postcss@8.5.14)
       postcss-selector-parser: 7.1.1
       postcss-value-parser: 4.2.0
       string-width: 8.2.1
@@ -19360,6 +19379,15 @@ snapshots:
   typedoc-plugin-markdown@4.11.0(typedoc@0.28.19(typescript@5.9.3)):
     dependencies:
       typedoc: 0.28.19(typescript@5.9.3)
+
+  typedoc@0.28.19(typescript@5.4.5):
+    dependencies:
+      '@gerrit0/mini-shiki': 3.23.0
+      lunr: 2.3.9
+      markdown-it: 14.1.1
+      minimatch: 10.2.5
+      typescript: 5.4.5
+      yaml: 2.9.0
 
   typedoc@0.28.19(typescript@5.9.3):
     dependencies:
