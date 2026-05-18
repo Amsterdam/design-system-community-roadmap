@@ -1,4 +1,4 @@
-import{n as e}from"./chunk-DnJy8xQt.js";import{m as t,t as n}from"./src-BwbOnPO6.js";var r,i,a,o,s;e((()=>{n(),r={title:`Atoms/Like Button`,component:t,argTypes:{count:{control:{min:0,type:`number`}},isLiked:{control:`boolean`},size:{control:`select`,options:[`default`,`small`]}}},i={args:{count:25,isLiked:!1,size:`default`}},a={args:{count:25,isLiked:!0,size:`default`}},o={args:{count:7,isLiked:!1,size:`small`}},i.parameters={...i.parameters,docs:{...i.parameters?.docs,source:{originalSource:`{
+import{n as e}from"./chunk-DnJy8xQt.js";import{m as t,t as n}from"./src-gCOhLKWA.js";var r,i,a,o,s;e((()=>{n(),r={title:`Atoms/Like Button`,component:t,argTypes:{count:{control:{min:0,type:`number`}},isLiked:{control:`boolean`},size:{control:`select`,options:[`default`,`small`]}}},i={args:{count:25,isLiked:!1,size:`default`}},a={args:{count:25,isLiked:!0,size:`default`}},o={args:{count:7,isLiked:!1,size:`small`}},i.parameters={...i.parameters,docs:{...i.parameters?.docs,source:{originalSource:`{
   args: {
     count: 25,
     isLiked: false,
