@@ -19,7 +19,7 @@
   },
   "dependencies": {
     "@strapi/plugin-cloud": "5.44.0",
-    "@strapi/plugin-users-permissions": "5.44.0",
+    "@strapi/plugin-users-permissions": "5.45.0",
     "@strapi/strapi": "5.44.0",
     "pg": "8.20.0",
     "react": "^18.3.1",
