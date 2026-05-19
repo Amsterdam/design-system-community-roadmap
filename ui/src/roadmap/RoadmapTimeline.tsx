@@ -191,7 +191,7 @@ const RoadmapTimeline = ({
   const majorLineIndexes = useMemo(() => {
     const indexes: number[] = []
     days.forEach((day, index) => {
-      let isMajor = false
+      let isMajor: boolean
       if (granularity === 'day') isMajor = true
       else if (granularity === 'year') isMajor = isFirstDayOfMonth(day)
       else isMajor = isMonday(day)

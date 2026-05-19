@@ -8,7 +8,6 @@ import importPlugin from 'eslint-plugin-import'
 import vitest from '@vitest/eslint-plugin'
 import * as mdx from 'eslint-plugin-mdx'
 import perfectionist from 'eslint-plugin-perfectionist'
-import react from 'eslint-plugin-react'
 import storybook from 'eslint-plugin-storybook'
 import globals from 'globals'
 import tseslint from 'typescript-eslint'
@@ -90,7 +89,6 @@ export default tseslint.config(
       import: importPlugin,
       vitest,
       perfectionist,
-      react,
     },
     languageOptions: {
       parser: tsParser,
@@ -110,7 +108,6 @@ export default tseslint.config(
       ...eslint.configs.recommended.rules,
       ...vitest.configs.recommended.rules,
       ...perfectionist.configs['recommended-natural'].rules,
-      ...react.configs.recommended.rules,
       ...tsPlugin.configs.recommended.rules,
 
       // TypeScript
@@ -210,9 +207,6 @@ export default tseslint.config(
       ],
       'perfectionist/sort-modules': 'off',
       'perfectionist/sort-union-types': 'off',
-
-      // React
-      'react/react-in-jsx-scope': 'off',
     },
   },
 
