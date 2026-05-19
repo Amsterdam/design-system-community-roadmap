@@ -34,6 +34,6 @@
     "@amsterdam/design-system-react-icons": "^2.0.0",
     "@amsterdam/design-system-tokens": "^4.0.1",
     "clsx": "^2.1.1",
-    "date-fns": "^4.1.0"
+    "date-fns": "^4.2.1"
   }
 }
