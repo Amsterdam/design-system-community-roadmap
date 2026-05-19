@@ -3,19 +3,28 @@ updates:
   - package-ecosystem: "npm"
     directory: "/"
     schedule:
-      interval: "daily"
+      interval: "weekly"
     open-pull-requests-limit: 10
     commit-message:
       prefix: "chore(deps)"
       prefix-development: "chore(deps-dev)"
+    groups:
+      npm-dependencies:
+        patterns:
+          - "*"
   - package-ecosystem: "npm"
     directory: "/cms"
     groups:
       strapi:
         patterns:
           - "@strapi/*"
+      cms-dependencies:
+        patterns:
+          - "*"
+        exclude-patterns:
+          - "@strapi/*"
     schedule:
-      interval: "daily"
+      interval: "weekly"
     open-pull-requests-limit: 10
     commit-message:
       prefix: "chore(deps)"
@@ -35,6 +44,10 @@ updates:
   - package-ecosystem: "github-actions"
     directory: "/"
     schedule:
-      interval: "daily"
+      interval: "weekly"
     commit-message:
       prefix: "chore"
+    groups:
+      github-actions:
+        patterns:
+          - "*"
