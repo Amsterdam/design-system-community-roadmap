@@ -37,7 +37,7 @@ export type IdeaDetailProps = {
   images?: StrapiImage[] | null
   isLiked: boolean
   reactions: ReactionItem[]
-  status?: string
+  status?: string | null
   title: string
   voteCount: number
 }
