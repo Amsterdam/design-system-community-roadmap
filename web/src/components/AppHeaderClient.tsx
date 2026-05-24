@@ -5,6 +5,7 @@ import { usePathname } from 'next/navigation'
 import { useEffect, useState } from 'react'
 
 import { logoutAction } from '@/app/actions/login'
+import { searchAction } from '@/app/actions/search'
 
 function getDisplayUser(): { emoji: string; name: string } | undefined {
   if (typeof document === 'undefined') return undefined
@@ -25,5 +26,5 @@ export default function AppHeaderClient() {
     setCurrentUser(getDisplayUser())
   }, [pathname])
 
-  return <AppHeader currentUser={currentUser} onLogout={logoutAction} />
+  return <AppHeader currentUser={currentUser} onLogout={logoutAction} onSearch={searchAction} />
 }

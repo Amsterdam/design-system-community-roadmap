@@ -29,7 +29,7 @@ export const ReactionSchema = z.object({
   id: z.number(),
 })
 
-export const IdeaStatusSchema = z.enum(['in_review', 'accepted', 'postponed'])
+export const IdeaStatusSchema = z.string().nullable()
 
 export const EndUserSchema = strapiBase.extend({
   emoji: z.string().optional(),
