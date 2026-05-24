@@ -18,6 +18,18 @@ const StoryWithFeaturesSchema = StorySchema.extend({
   features: z.array(NestedFeatureSchema).optional(),
 })
 
+const NestedStorySchema = z.object({
+  title: z.string(),
+  documentId: z.string(),
+  endDate: z.string().nullable().optional(),
+  id: z.number(),
+  startDate: z.string().optional(),
+})
+
+const FeatureWithStorySchema = FeatureSchema.extend({
+  story: NestedStorySchema.nullable().optional(),
+})
+
 async function fetchParsed<T>(endpoint: string, schema: z.ZodType<T>, init?: RequestInit): Promise<T> {
   const res = await client.fetch(endpoint, init)
   if (!res.ok) throw new Error(`Strapi ${res.status} on /${endpoint}`)
@@ -42,6 +54,16 @@ export const strapi = {
   },
   features: {
     findMany: (init?: RequestInit) => fetchParsed('features', strapiCollection(FeatureSchema), init),
+    findManyWithStory: (init?: RequestInit) => {
+      const params = new URLSearchParams({
+        'populate[story][fields][0]': 'id',
+        'populate[story][fields][1]': 'documentId',
+        'populate[story][fields][2]': 'title',
+        'populate[story][fields][3]': 'startDate',
+        'populate[story][fields][4]': 'endDate',
+      })
+      return fetchParsed(`features?${params}`, strapiCollection(FeatureWithStorySchema), init)
+    },
     findOne: (id: string | number, init?: RequestInit) => {
       const params = new URLSearchParams({
         ...imagePopulateParams,
@@ -53,6 +75,8 @@ export const strapi = {
         'populate[reactions][populate][end_user][fields][3]': 'isTeam',
         'populate[story][fields][0]': 'documentId',
         'populate[story][fields][1]': 'title',
+        'populate[story][fields][2]': 'startDate',
+        'populate[story][fields][3]': 'endDate',
       })
       return fetchParsed(`features/${id}?${params}`, strapiSingle(FeatureSchema), init)
     },
