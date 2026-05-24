@@ -66,11 +66,11 @@ export const InProgress: Story = {
     content:
       'Een volledig uitgewerkte Data Tabel component voor het weergeven van gestructureerde gegevens. De component ondersteunt sorteerbare kolommen, paginering, selectie van rijen en is volledig toegankelijk volgens WCAG 2.2 AA. Ontworpen voor zowel eenvoudige als complexe datatoepassingen binnen gemeente-applicaties.',
     endDate: null,
+    featureDocumentId: 'feature-dt-main',
     isLiked: false,
     reactions: mockReactions,
     startDate: '2025-04-15',
     stories: mockStories,
-    storyDocumentId: 'feature-dt-main',
     voteCount: 53,
   },
 }
@@ -81,6 +81,7 @@ export const Completed: Story = {
     content:
       'De Applicatie-layout feature biedt een standaard paginastructuur voor interne gemeente-applicaties. Inclusief navigatiebalk, zijpaneel en hoofdinhoud-zone. De layout is responsief en past zich aan op zowel desktop als tablet.',
     endDate: '2025-03-28',
+    featureDocumentId: 'feature-layout-main',
     isLiked: true,
     reactions: mockReactions.slice(0, 2),
     startDate: '2025-01-10',
@@ -98,7 +99,6 @@ export const Completed: Story = {
         startDate: '2025-02-03',
       },
     ],
-    storyDocumentId: 'feature-layout-main',
     voteCount: 38,
   },
 }
@@ -109,11 +109,11 @@ export const NoStories: Story = {
     content:
       'Documentatie en voorbeelden van veelgebruikte UI-patronen zoals lege states, foutmeldingen, laadstatussen en bevestigingsdialogen. De patronen worden beschreven als herbruikbare combinaties van bestaande componenten, zodat teams consistent gedrag kunnen implementeren.',
     endDate: null,
+    featureDocumentId: 'feature-patterns-main',
     isLiked: false,
     reactions: [],
     startDate: '2025-05-20',
     stories: [],
-    storyDocumentId: 'feature-patterns-main',
     voteCount: 22,
   },
 }
