@@ -57,7 +57,7 @@ export default async function IdeePage({ params }: Props) {
       images={idea.images}
       isLiked={isLiked}
       reactions={reactions}
-      status={idea.status}
+      status={idea.statusIdea}
       title={idea.title}
       voteCount={idea.likes?.length ?? 0}
     />

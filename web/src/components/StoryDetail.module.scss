@@ -1,3 +1,22 @@
+.story-detail__features-container {
+  margin-block-start: var(--ams-space-l);
+}
+
+.story-detail__features {
+  margin-block-start: var(--ams-space-m);
+}
+
+.story-detail__feature-content {
+  display: flex;
+  flex-direction: column;
+  gap: var(--ams-space-xs);
+  padding-block: var(--ams-space-xs);
+}
+
+.story-detail__feature-date {
+  display: flex;
+}
+
 .story-detail__details {
   display: grid;
   gap: var(--ams-space-xs) var(--ams-space-m);
