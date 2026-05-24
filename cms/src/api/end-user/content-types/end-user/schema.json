@@ -51,6 +51,12 @@
       "relation": "oneToMany",
       "target": "api::story-like.story-like",
       "mappedBy": "end_user"
+    },
+    "notifications": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::notification.notification",
+      "mappedBy": "recipient"
     }
   }
 }
