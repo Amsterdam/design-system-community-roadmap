@@ -73,8 +73,25 @@ export default function StoryDetail({
   }
 
   const handleDeleteReaction = async (reactionId: number) => {
+    setReactionLoading(true)
+    setReactionError(undefined)
+
     const result = await deleteStoryReactionAction(storyDocumentId, reactionId)
-    if (result.success) router.refresh()
+    setReactionLoading(false)
+
+    if (result.needsLogin) {
+      router.push('/inloggen')
+      return
+    }
+
+    if (result.error) {
+      setReactionError(result.error)
+      return
+    }
+
+    if (result.success) {
+      router.refresh()
+    }
   }
 
   const handleReactionSubmit = async (content: string) => {
