@@ -34,11 +34,11 @@
       "component": "feed.reaction",
       "repeatable": true
     },
-    "features": {
+    "feature": {
       "type": "relation",
-      "relation": "oneToMany",
+      "relation": "manyToOne",
       "target": "api::feature.feature",
-      "mappedBy": "story"
+      "inversedBy": "stories"
     },
     "images": {
       "type": "media",

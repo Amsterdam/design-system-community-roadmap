@@ -5,8 +5,8 @@ import { strapi } from '@/utils/strapi'
 
 export default async function Page() {
   const [{ data: allFeatures }, { data: allStories }] = await Promise.all([
-    strapi.features.findManyWithStory(),
-    strapi.stories.findMany(),
+    strapi.features.findManyWithStories(),
+    strapi.stories.findManyWithFeature(),
   ])
 
   const features: RoadmapFeature[] = allFeatures
@@ -17,24 +17,19 @@ export default async function Page() {
       endDate: f.endDate!,
       id: f.id,
       startDate: f.startDate!,
-      stories:
-        f.story && f.story.startDate
-          ? [
-              {
-                title: f.story.title,
-                documentId: f.story.documentId,
-                endDate: f.story.endDate ?? null,
-                id: f.story.id,
-                startDate: f.story.startDate,
-              },
-            ]
-          : [],
+      stories: (f.stories ?? [])
+        .filter((s) => !!s.startDate)
+        .map((s) => ({
+          title: s.title,
+          documentId: s.documentId,
+          endDate: s.endDate ?? null,
+          id: s.id,
+          startDate: s.startDate!,
+        })),
     }))
 
-  const storyIdsInFeatures = new Set(allFeatures.flatMap((f) => (f.story ? [f.story.id] : [])))
-
   const standaloneStories: RoadmapStory[] = allStories
-    .filter((s) => !storyIdsInFeatures.has(s.id) && !!s.startDate)
+    .filter((s) => !s.feature && !!s.startDate)
     .map(
       (s): RoadmapStory => ({
         title: s.title,

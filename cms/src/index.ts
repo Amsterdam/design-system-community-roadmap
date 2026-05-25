@@ -1,5 +1,6 @@
 import type { Core } from '@strapi/strapi'
 
+import cleanup from './cleanup'
 import seed from './seed'
 
 export default {
@@ -11,20 +12,27 @@ export default {
    * run jobs, or perform some special logic.
    */
   async bootstrap({ strapi }: { strapi: Core.Strapi }) {
-    if (process.env.SEED === 'true') {
+    const shouldReseed = process.env.RESEED === 'true'
+    const shouldSeed = shouldReseed || process.env.SEED === 'true'
+
+    if (!shouldSeed) return
+
+    // Suppress notification lifecycle hooks while seeding: the initial data
+    // set is not something existing users should be notified about.
+    process.env.IS_SEEDING = 'true'
+    try {
+      if (shouldReseed) {
+        await cleanup({ strapi })
+      }
+
       const ideas = await strapi.documents('api::idea.idea').findMany({ limit: 1 })
       if (ideas.length === 0) {
-        // Suppress notification lifecycle hooks while seeding: the initial data
-        // set is not something existing users should be notified about.
-        process.env.IS_SEEDING = 'true'
-        try {
-          await seed({ strapi })
-        } finally {
-          delete process.env.IS_SEEDING
-        }
+        await seed({ strapi })
       } else {
         console.log('Database already has ideas, skipping seed.')
       }
+    } finally {
+      delete process.env.IS_SEEDING
     }
   },
 

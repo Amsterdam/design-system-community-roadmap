@@ -9,6 +9,7 @@
     "deploy": "strapi deploy",
     "dev": "strapi develop",
     "develop": "strapi develop",
+    "reseed": "RESEED=true strapi develop",
     "seed": "SEED=true strapi develop",
     "start": "strapi start",
     "strapi": "strapi",

@@ -8,11 +8,11 @@ const strapiBase = z.object({
 })
 
 export const StrapiImageSchema = z.object({
-  alternativeText: z.string().nullable(),
-  height: z.number().nullable(),
-  id: z.number(),
+  alternativeText: z.string().nullable().optional(),
+  height: z.number().nullable().optional(),
+  id: z.number().optional(),
   url: z.string(),
-  width: z.number().nullable(),
+  width: z.number().nullable().optional(),
 })
 
 export const ReactionSchema = z.object({
@@ -78,6 +78,14 @@ export const NestedFeatureSchema = z.object({
   startDate: z.string().optional(),
 })
 
+export const NestedStorySchema = z.object({
+  title: z.string(),
+  documentId: z.string(),
+  endDate: z.string().nullable().optional(),
+  id: z.number(),
+  startDate: z.string().optional(),
+})
+
 export const IdeaSchema = strapiBase.extend({
   title: z.string(),
   content: z.string(),
@@ -100,22 +108,14 @@ export const FeatureSchema = strapiBase.extend({
   publishedAt: z.string().nullable().optional(),
   reactions: z.array(ReactionSchema).optional(),
   startDate: z.string().optional(),
-  story: z
-    .object({
-      title: z.string(),
-      documentId: z.string(),
-      endDate: z.string().nullable().optional(),
-      startDate: z.string().optional(),
-    })
-    .nullable()
-    .optional(),
+  stories: z.array(NestedStorySchema).optional(),
 })
 
 export const StorySchema = strapiBase.extend({
   title: z.string(),
   content: z.string(),
   endDate: z.string().nullable().optional(),
-  features: z.array(NestedFeatureSchema).optional(),
+  feature: NestedFeatureSchema.nullable().optional(),
   images: z.array(StrapiImageSchema).nullable().optional(),
   likes: z.array(PopulatedLikeSchema).optional(),
   publishedAt: z.string().nullable().optional(),
@@ -146,6 +146,7 @@ export type Notification = z.infer<typeof NotificationSchema>
 export type NotificationType = z.infer<typeof NotificationTypeSchema>
 export type PopulatedLike = z.infer<typeof PopulatedLikeSchema>
 export type NestedFeature = z.infer<typeof NestedFeatureSchema>
+export type NestedStory = z.infer<typeof NestedStorySchema>
 export type Idea = z.infer<typeof IdeaSchema>
 export type Feature = z.infer<typeof FeatureSchema>
 export type Story = z.infer<typeof StorySchema>

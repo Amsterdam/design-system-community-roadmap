@@ -45,13 +45,11 @@ export const Default: Story = {
     content:
       'Interne applicaties van de gemeente Amsterdam hebben specifieke eisen voor achtergrondkleuren die afwijken van de publiek-gerichte applicaties. In deze story worden de designkeuzes voor achtergrondkleuren vastgesteld en gedocumenteerd in het design system.',
     endDate: null,
-    features: [
-      {
-        title: 'Voorbeeld feature',
-        documentId: 'feature-layout-001',
-      },
-    ],
     isLiked: false,
+    parentFeature: {
+      title: 'Donkere Modus Ondersteuning',
+      documentId: 'feature-layout-001',
+    },
     reactions: mockReactions,
     startDate: '2025-03-01',
     storyDocumentId: 'feature-layout-001',
@@ -79,7 +77,7 @@ export const WithoutParentFeature: Story = {
     content:
       'Onderzoek naar bestaande open-source rich text editors die voldoen aan de toegankelijkheidseisen van de gemeente Amsterdam. Het doel is een onderbouwde aanbeveling te doen voor de keuze van een editor die goed integreert met het design system.',
     endDate: null,
-    features: [],
+    parentFeature: null,
     reactions: [],
     startDate: '2025-06-01',
     voteCount: 9,

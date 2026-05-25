@@ -60,7 +60,7 @@ export default async function FeaturePage({ params }: Props) {
       isLiked={isLiked}
       reactions={reactions}
       startDate={feature.startDate}
-      stories={feature.story ? [feature.story] : []}
+      stories={feature.stories ?? []}
       title={feature.title}
       voteCount={feature.likes?.length ?? 0}
     />

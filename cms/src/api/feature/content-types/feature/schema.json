@@ -52,11 +52,11 @@
       "target": "api::feature-like.feature-like",
       "mappedBy": "feature"
     },
-    "story": {
+    "stories": {
       "type": "relation",
-      "relation": "manyToOne",
+      "relation": "oneToMany",
       "target": "api::story.story",
-      "inversedBy": "features"
+      "mappedBy": "feature"
     }
   }
 }
