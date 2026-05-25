@@ -43,17 +43,25 @@ const SearchBar = ({ onSearch, placeholder = 'Zoek op ideeën, stories of featur
   useEffect(() => {
     if (!query.trim()) {
       setResults([])
+      setIsLoading(false)
       return () => {}
     }
 
+    let cancelled = false
     setIsLoading(true)
     const timer = setTimeout(async () => {
-      const found = await onSearch(query.trim())
-      setResults(found)
-      setIsLoading(false)
+      try {
+        const found = await onSearch(query.trim())
+        if (!cancelled) setResults(found)
+      } finally {
+        if (!cancelled) setIsLoading(false)
+      }
     }, 200)
 
-    return () => clearTimeout(timer)
+    return () => {
+      cancelled = true
+      clearTimeout(timer)
+    }
   }, [query, onSearch])
 
   useEffect(() => {

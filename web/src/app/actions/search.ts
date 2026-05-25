@@ -8,30 +8,32 @@ import { FeatureSchema, IdeaSchema, StorySchema, strapiCollection } from '@/util
 const RESULT_LIMIT = 5
 
 async function searchCollection(collection: 'ideas' | 'stories' | 'features', query: string) {
-  const params = new URLSearchParams({
-    'filters[$or][0][title][$containsi]': query,
-    'filters[$or][1][content][$containsi]': query,
-    'pagination[pageSize]': String(RESULT_LIMIT),
-  })
+  try {
+    const params = new URLSearchParams({
+      'filters[$or][0][title][$containsi]': query,
+      'filters[$or][1][content][$containsi]': query,
+      'pagination[pageSize]': String(RESULT_LIMIT),
+    })
 
-  const res = await client.fetch(`${collection}?${params}`)
-  if (!res.ok) return []
+    const res = await client.fetch(`${collection}?${params}`)
+    if (!res.ok) return []
 
-  const json = await res.json()
-  const schema = collection === 'ideas' ? IdeaSchema : collection === 'stories' ? StorySchema : FeatureSchema
-  const parsed = strapiCollection(schema).safeParse(json)
-  if (!parsed.success) return []
-
-  return parsed.data.data
+    const schema = collection === 'ideas' ? IdeaSchema : collection === 'stories' ? StorySchema : FeatureSchema
+    const parsed = strapiCollection(schema).safeParse(await res.json())
+    return parsed.success ? parsed.data.data : []
+  } catch {
+    return []
+  }
 }
 
 export async function searchAction(query: string): Promise<SearchResult[]> {
-  if (!query.trim()) return []
+  const trimmedQuery = query.trim()
+  if (!trimmedQuery) return []
 
   const [ideas, stories, features] = await Promise.all([
-    searchCollection('ideas', query),
-    searchCollection('stories', query),
-    searchCollection('features', query),
+    searchCollection('ideas', trimmedQuery),
+    searchCollection('stories', trimmedQuery),
+    searchCollection('features', trimmedQuery),
   ])
 
   const ideaResults: SearchResult[] = ideas.map((idea) => ({
