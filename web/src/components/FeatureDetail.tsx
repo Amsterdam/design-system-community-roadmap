@@ -10,7 +10,7 @@ import { useState } from 'react'
 import type { StrapiImage } from '@/utils/schemas'
 
 import { toggleFeatureLikeAction } from '@/app/actions/likes'
-import { addFeatureReactionAction } from '@/app/actions/reactions'
+import { addFeatureReactionAction, deleteFeatureReactionAction } from '@/app/actions/reactions'
 import { formatDateRange, getProgressStatus } from '@/utils/date'
 
 import styles from './FeatureDetail.module.scss'
@@ -26,6 +26,7 @@ type ConnectedStory = {
 export type FeatureDetailProps = {
   content: string
   currentUserDocumentId?: string
+  currentUserIsTeam?: boolean
   endDate?: string | null
   featureDocumentId: string
   images?: StrapiImage[] | null
@@ -41,6 +42,7 @@ export default function FeatureDetail({
   title,
   content,
   currentUserDocumentId,
+  currentUserIsTeam = false,
   endDate,
   featureDocumentId,
   images,
@@ -54,11 +56,14 @@ export default function FeatureDetail({
   const [reactionLoading, setReactionLoading] = useState(false)
   const [reactionError, setReactionError] = useState<string | undefined>()
 
-  const sortedStories = [...stories].sort((a, b) => {
-    if (!a.startDate && !b.startDate) return 0
-    if (!a.startDate) return 1
-    if (!b.startDate) return -1
-    return new Date(a.startDate).getTime() - new Date(b.startDate).getTime()
+  const teamReaction = reactions.find((reaction) => reaction.author?.isTeam)
+  const feedReactions = teamReaction ? reactions.filter((reaction) => reaction.id !== teamReaction.id) : reactions
+
+  const sortedStories = [...stories].sort((storyA, storyB) => {
+    if (!storyA.startDate && !storyB.startDate) return 0
+    if (!storyA.startDate) return 1
+    if (!storyB.startDate) return -1
+    return new Date(storyA.startDate).getTime() - new Date(storyB.startDate).getTime()
   })
 
   const handleLikeToggle = async (liked: boolean) => {
@@ -75,6 +80,11 @@ export default function FeatureDetail({
     }
 
     router.refresh()
+  }
+
+  const handleDeleteReaction = async (reactionId: number) => {
+    const result = await deleteFeatureReactionAction(featureDocumentId, reactionId)
+    if (result.success) router.refresh()
   }
 
   const handleReactionSubmit = async (content: string) => {
@@ -165,10 +175,20 @@ export default function FeatureDetail({
             </>
           )}
         </dl>
+        {teamReaction && (
+          <Reactions
+            onDeleteReaction={currentUserIsTeam ? handleDeleteReaction : undefined}
+            reactions={[teamReaction]}
+          />
+        )}
         <Heading level={2} size="level-4">
           Reacties
         </Heading>
-        <Reactions compact reactions={reactions} />
+        <Reactions
+          compact
+          onDeleteReaction={currentUserIsTeam ? handleDeleteReaction : undefined}
+          reactions={feedReactions}
+        />
         <AddReaction
           error={reactionError}
           isLoggedIn={!!currentUserDocumentId}

@@ -19,6 +19,7 @@ type NotifyContext = {
 type StoredReaction = {
   content: string
   end_user?: { documentId: string } | null
+  id: number
 }
 
 const titleOf = (entity: Record<string, unknown>): string => (typeof entity.title === 'string' ? entity.title : '')
@@ -116,7 +117,7 @@ async function addReaction({
       body: JSON.stringify({
         data: {
           reactions: [
-            ...existing.map((r) => ({ content: r.content, end_user: r.end_user?.documentId })),
+            ...existing.map((reaction) => ({ content: reaction.content, end_user: reaction.end_user?.documentId })),
             { content: normalizedContent, end_user: user.documentId },
           ],
         },
@@ -141,6 +142,89 @@ async function addReaction({
     console.error('[addReaction] Error:', err)
     return { error: 'Er is een onverwachte fout opgetreden.' }
   }
+}
+
+async function deleteReaction({
+  collection,
+  documentId,
+  extraParams,
+  path,
+  reactionId,
+}: {
+  collection: string
+  documentId: string
+  extraParams?: Record<string, string>
+  path: string
+  reactionId: number
+}): Promise<ActionResponse> {
+  const user = await getCurrentUser()
+  if (!user) return { needsLogin: true }
+  if (!user.isTeam) return { error: 'Geen toegang.' }
+
+  try {
+    const params = new URLSearchParams({
+      'fields[0]': 'id',
+      'populate[reactions][fields][0]': 'content',
+      'populate[reactions][populate][end_user][fields][0]': 'documentId',
+      ...extraParams,
+    })
+
+    const getRes = await client.fetch(`${collection}/${documentId}?${params}`)
+    if (!getRes.ok) return { error: 'Kon reacties niet ophalen.' }
+
+    const entity: Record<string, unknown> = (await getRes.json()).data ?? {}
+    const existing = (entity.reactions as StoredReaction[] | undefined) ?? []
+
+    const putRes = await client.fetch(`${collection}/${documentId}`, {
+      body: JSON.stringify({
+        data: {
+          reactions: existing
+            .filter((reaction) => reaction.id !== reactionId)
+            .map((reaction) => ({ content: reaction.content, end_user: reaction.end_user?.documentId })),
+        },
+      }),
+      headers: { 'Content-Type': 'application/json' },
+      method: 'PUT',
+    })
+
+    if (!putRes.ok) return { error: 'Kon reactie niet verwijderen.' }
+
+    revalidatePath(path)
+    return { success: true }
+  } catch (err) {
+    console.error('[deleteReaction] Error:', err)
+    return { error: 'Er is een onverwachte fout opgetreden.' }
+  }
+}
+
+export async function deleteIdeaReactionAction(ideaDocumentId: string, reactionId: number): Promise<ActionResponse> {
+  return deleteReaction({
+    collection: 'ideas',
+    documentId: ideaDocumentId,
+    path: `/ideeen/${ideaDocumentId}`,
+    reactionId,
+  })
+}
+
+export async function deleteFeatureReactionAction(
+  featureDocumentId: string,
+  reactionId: number,
+): Promise<ActionResponse> {
+  return deleteReaction({
+    collection: 'features',
+    documentId: featureDocumentId,
+    path: `/features/${featureDocumentId}`,
+    reactionId,
+  })
+}
+
+export async function deleteStoryReactionAction(storyDocumentId: string, reactionId: number): Promise<ActionResponse> {
+  return deleteReaction({
+    collection: 'stories',
+    documentId: storyDocumentId,
+    path: `/stories/${storyDocumentId}`,
+    reactionId,
+  })
 }
 
 export async function addIdeaReactionAction(ideaDocumentId: string, content: string): Promise<ActionResponse> {

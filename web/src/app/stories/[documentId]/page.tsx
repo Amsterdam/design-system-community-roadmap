@@ -40,6 +40,7 @@ export default async function StoryPage({ params }: Props) {
 
   const currentUser = await getCurrentUser()
   const currentUserDocumentId = currentUser?.documentId
+  const currentUserIsTeam = currentUser?.isTeam ?? false
 
   const isLiked =
     !!currentUserDocumentId && (story.likes?.some((l) => l.end_user?.documentId === currentUserDocumentId) ?? false)
@@ -54,6 +55,7 @@ export default async function StoryPage({ params }: Props) {
     <StoryDetail
       content={story.content}
       currentUserDocumentId={currentUserDocumentId}
+      currentUserIsTeam={currentUserIsTeam}
       endDate={story.endDate}
       images={story.images}
       isLiked={isLiked}

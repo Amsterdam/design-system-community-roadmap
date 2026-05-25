@@ -36,6 +36,7 @@ export default async function IdeePage({ params }: Props) {
 
   const currentUser = await getCurrentUser()
   const currentUserDocumentId = currentUser?.documentId
+  const currentUserIsTeam = currentUser?.isTeam ?? false
 
   const isLiked =
     !!currentUserDocumentId && (idea.likes?.some((l) => l.end_user?.documentId === currentUserDocumentId) ?? false)
@@ -52,6 +53,7 @@ export default async function IdeePage({ params }: Props) {
       content={idea.content}
       createdAt={idea.createdAt}
       currentUserDocumentId={currentUserDocumentId}
+      currentUserIsTeam={currentUserIsTeam}
       features={idea.features ?? []}
       ideaDocumentId={idea.documentId}
       images={idea.images}

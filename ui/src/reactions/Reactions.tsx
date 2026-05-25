@@ -13,11 +13,17 @@ export type ReactionItem = {
 
 type ReactionsProps = {
   compact?: boolean
+  onDeleteReaction?: (id: number) => void | Promise<void>
   reactions: ReactionItem[]
   teamLabel?: string
 }
 
-const Reactions = ({ compact = false, reactions, teamLabel = 'Design System team' }: ReactionsProps) => {
+const Reactions = ({
+  compact = false,
+  onDeleteReaction,
+  reactions,
+  teamLabel = 'Design System team',
+}: ReactionsProps) => {
   if (reactions.length === 0) {
     return <Paragraph>Nog geen reacties.</Paragraph>
   }
@@ -35,6 +41,16 @@ const Reactions = ({ compact = false, reactions, teamLabel = 'Design System team
               <span className={styles['reactions__author-name']}>{reaction.author?.name ?? 'Anoniem'}</span>
             )}
             {reaction.author?.isTeam && <Badge color="magenta" label={teamLabel} />}
+            {onDeleteReaction && (
+              <button
+                aria-label="Reactie verwijderen"
+                className={styles['reactions__delete']}
+                onClick={() => onDeleteReaction(reaction.id)}
+                type="button"
+              >
+                Verwijderen
+              </button>
+            )}
           </div>
         </li>
       ))}
