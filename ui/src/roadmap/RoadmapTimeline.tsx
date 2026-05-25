@@ -281,9 +281,10 @@ const RoadmapTimeline = ({
                   columnEnd={getColEnd(feature.endDate, feature.startDate)}
                   columnStart={getColStart(feature.startDate)}
                   endDate={feature.endDate}
-                  href={onFeatureNavigate ? `/features/${feature.documentId}` : undefined}
+                  href={`/features/${feature.documentId}`}
                   isDimmed={isDimmed}
                   isSelected={isSelected}
+                  onClick={onFeatureNavigate ? () => onFeatureNavigate(feature) : undefined}
                   startDate={feature.startDate}
                   title={feature.title}
                   variant="feature"

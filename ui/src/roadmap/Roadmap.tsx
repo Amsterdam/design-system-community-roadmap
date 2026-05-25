@@ -21,10 +21,9 @@ type RoadmapProps = {
 }
 
 function paddedRange(startDate: Date, endDate: Date, paddingDays: number): RoadmapViewRange {
-  const padding = paddingDays * 24 * 60 * 60 * 1000
   return {
-    start: new Date(startDate.getTime() - padding),
-    end: new Date(endDate.getTime() + padding),
+    start: addDays(startDate, -paddingDays),
+    end: addDays(endDate, paddingDays),
   }
 }
 
@@ -56,6 +55,11 @@ const Roadmap = ({
 
   const animateToRange = useCallback((target: RoadmapViewRange) => {
     if (rafRef.current !== null) cancelAnimationFrame(rafRef.current)
+
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      setRange(target)
+      return
+    }
 
     const from = rangeRef.current
     const startTime = performance.now()

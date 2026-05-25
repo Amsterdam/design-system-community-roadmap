@@ -59,7 +59,18 @@ const RoadmapItem = ({
 
   if (href) {
     return (
-      <a {...sharedProps} href={href}>
+      <a
+        {...sharedProps}
+        href={href}
+        onClick={
+          onClick
+            ? (e) => {
+                e.preventDefault()
+                onClick()
+              }
+            : undefined
+        }
+      >
         {inner}
       </a>
     )
