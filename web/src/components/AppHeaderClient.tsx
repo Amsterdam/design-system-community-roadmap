@@ -8,6 +8,7 @@ import { useCallback, useEffect, useState } from 'react'
 
 import { logoutAction } from '@/app/actions/login'
 import { getNotifications, markAllNotificationsRead, markNotificationRead } from '@/app/actions/notifications'
+import { searchAction } from '@/app/actions/search'
 
 const POLL_INTERVAL_MS = 60_000
 
@@ -79,6 +80,7 @@ export default function AppHeaderClient() {
       notifications={notifications}
       onLogout={logoutAction}
       onMarkAllNotificationsRead={handleMarkAllRead}
+      onSearch={searchAction}
       onSelectNotification={handleSelect}
     />
   )
