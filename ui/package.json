@@ -25,7 +25,7 @@
     "@types/react-dom": "^19",
     "react": "^19.2.5",
     "react-dom": "^19.2.5",
-    "typescript": "^5"
+    "typescript": "^6"
   },
   "dependencies": {
     "@amsterdam/design-system-assets": "^2.3.0",
@@ -34,6 +34,6 @@
     "@amsterdam/design-system-react-icons": "^2.0.0",
     "@amsterdam/design-system-tokens": "^4.0.1",
     "clsx": "^2.1.1",
-    "date-fns": "^4.2.1"
+    "date-fns": "^4.3.0"
   }
 }
