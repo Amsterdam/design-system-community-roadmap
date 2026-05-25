@@ -13,21 +13,21 @@
   "attributes": {
     "title": {
       "type": "string",
-      "required": true,
       "minLength": 1,
-      "maxLength": 140
+      "maxLength": 140,
+      "required": true
     },
     "content": {
       "type": "text",
-      "required": true,
       "minLength": 1,
-      "maxLength": 10000
-    },
-    "status": {
-      "type": "enumeration",
-      "enum": ["in_review", "accepted", "postponed"],
-      "default": "in_review",
+      "maxLength": 10000,
       "required": true
+    },
+    "statusIdea": {
+      "type": "enumeration",
+      "required": true,
+      "default": "in_review",
+      "enum": ["in_review", "accepted", "postponed"]
     },
     "features": {
       "type": "relation",

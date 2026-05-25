@@ -3,7 +3,7 @@ import type { Metadata } from 'next'
 
 import { notFound } from 'next/navigation'
 
-import type { Feature } from '@/utils/schemas'
+import type { Story } from '@/utils/schemas'
 
 import { getCurrentUser } from '@/app/actions/login'
 import StoryDetail from '@/components/StoryDetail'
@@ -16,7 +16,7 @@ type Props = {
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { documentId } = await params
   try {
-    const res = await strapi.features.findOne(documentId)
+    const res = await strapi.stories.findOne(documentId)
     return {
       title: res.data.title,
     }
@@ -30,10 +30,10 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 export default async function StoryPage({ params }: Props) {
   const { documentId } = await params
 
-  let feature: Feature
+  let story: Story
   try {
-    const res = await strapi.features.findOne(documentId)
-    feature = res.data
+    const res = await strapi.stories.findOne(documentId)
+    story = res.data
   } catch {
     notFound()
   }
@@ -42,9 +42,9 @@ export default async function StoryPage({ params }: Props) {
   const currentUserDocumentId = currentUser?.documentId
 
   const isLiked =
-    !!currentUserDocumentId && (feature.likes?.some((l) => l.end_user?.documentId === currentUserDocumentId) ?? false)
+    !!currentUserDocumentId && (story.likes?.some((l) => l.end_user?.documentId === currentUserDocumentId) ?? false)
 
-  const reactions: ReactionItem[] = (feature.reactions ?? []).map((r) => ({
+  const reactions: ReactionItem[] = (story.reactions ?? []).map((r) => ({
     author: r.end_user ? { isTeam: r.end_user.isTeam, name: r.end_user.name } : null,
     content: r.content,
     id: r.id,
@@ -52,17 +52,17 @@ export default async function StoryPage({ params }: Props) {
 
   return (
     <StoryDetail
-      content={feature.content}
+      content={story.content}
       currentUserDocumentId={currentUserDocumentId}
-      endDate={feature.endDate}
-      featureDocumentId={feature.documentId}
-      images={feature.images}
+      endDate={story.endDate}
+      features={story.features ?? []}
+      images={story.images}
       isLiked={isLiked}
-      parentFeature={feature.story}
       reactions={reactions}
-      startDate={feature.startDate}
-      title={feature.title}
-      voteCount={feature.likes?.length ?? 0}
+      startDate={story.startDate}
+      storyDocumentId={story.documentId}
+      title={story.title}
+      voteCount={story.likes?.length ?? 0}
     />
   )
 }

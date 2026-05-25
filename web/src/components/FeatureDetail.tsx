@@ -9,14 +9,14 @@ import { useState } from 'react'
 
 import type { StrapiImage } from '@/utils/schemas'
 
-import { toggleStoryLikeAction } from '@/app/actions/likes'
-import { addStoryReactionAction } from '@/app/actions/reactions'
+import { toggleFeatureLikeAction } from '@/app/actions/likes'
+import { addFeatureReactionAction } from '@/app/actions/reactions'
 import { formatDateRange } from '@/utils/date'
 
 import styles from './FeatureDetail.module.scss'
 import StrapiImageBlock from './StrapiImageBlock'
 
-type NestedStory = {
+type ConnectedStory = {
   documentId: string
   endDate?: string | null
   startDate?: string
@@ -27,12 +27,12 @@ export type FeatureDetailProps = {
   content: string
   currentUserDocumentId?: string
   endDate?: string | null
+  featureDocumentId: string
   images?: StrapiImage[] | null
   isLiked: boolean
   reactions: ReactionItem[]
   startDate?: string
-  stories: NestedStory[]
-  storyDocumentId: string
+  stories: ConnectedStory[]
   title: string
   voteCount: number
 }
@@ -42,12 +42,12 @@ export default function FeatureDetail({
   content,
   currentUserDocumentId,
   endDate,
+  featureDocumentId,
   images,
   isLiked,
   reactions,
   startDate,
   stories,
-  storyDocumentId,
   voteCount,
 }: FeatureDetailProps) {
   const router = useRouter()
@@ -67,7 +67,7 @@ export default function FeatureDetail({
       return
     }
 
-    const result = await toggleStoryLikeAction(storyDocumentId, liked)
+    const result = await toggleFeatureLikeAction(featureDocumentId, liked)
 
     if (result.needsLogin) {
       router.push('/inloggen')
@@ -81,7 +81,7 @@ export default function FeatureDetail({
     setReactionLoading(true)
     setReactionError(undefined)
 
-    const result = await addStoryReactionAction(storyDocumentId, content)
+    const result = await addFeatureReactionAction(featureDocumentId, content)
     setReactionLoading(false)
 
     if (result.needsLogin) {

@@ -91,58 +91,58 @@ export default async ({ strapi }: { strapi: Core.Strapi }) => {
     status: 'published',
   })
 
-  const ideaData: { content: string; status: 'in_review' | 'accepted' | 'postponed'; title: string }[] = [
+  const ideaData: { content: string; statusIdea: 'in_review' | 'accepted' | 'postponed'; title: string }[] = [
     {
       title: 'Donkere Modus',
       content:
         'Zou het mogelijk zijn om een donkere modus toe te voegen aan het design system? Veel gebruikers vragen hierom voor gebruik in de avond.',
-      status: 'accepted',
+      statusIdea: 'accepted',
     },
     {
       title: 'Gedeelde Icon Library',
       content:
         'Een centrale plek voor alle iconen die binnen de gemeente worden gebruikt, zodat we consistent blijven.',
-      status: 'in_review',
+      statusIdea: 'in_review',
     },
     {
       title: 'Auto-complete voor Adresvelden',
       content: 'Het invullen van adressen gaat nu vaak fout. Een betere auto-complete zou enorm helpen.',
-      status: 'accepted',
+      statusIdea: 'accepted',
     },
     {
       title: 'PDF Export Functionaliteit',
       content: 'Direct vanuit de browser een nette PDF genereren op basis van de ADS componenten.',
-      status: 'postponed',
+      statusIdea: 'postponed',
     },
     {
       title: 'Chat Component',
       content: 'Voor klantcontact is een standaard chat component erg gewenst.',
-      status: 'in_review',
+      statusIdea: 'in_review',
     },
     {
       title: 'Kalender Widget',
       content: 'Een uitgebreide kalender voor het plannen van afspraken bij de balie.',
-      status: 'accepted',
+      statusIdea: 'accepted',
     },
     {
       title: 'Drag and Drop Ondersteuning',
       content: 'Voor het uploaden van documenten en het sorteren van lijsten.',
-      status: 'in_review',
+      statusIdea: 'in_review',
     },
     {
       title: 'Betere TypeScript Ondersteuning',
       content: 'Sommige types in de React library zijn nu nog "any". Dit kan beter.',
-      status: 'accepted',
+      statusIdea: 'accepted',
     },
     {
       title: 'Micro-interacties voor Knoppen',
       content: 'Kleine animaties die feedback geven wanneer een gebruiker op een knop klikt.',
-      status: 'in_review',
+      statusIdea: 'in_review',
     },
     {
       title: 'Skelet Schermen (Skeleton Screens)',
       content: 'Voor een betere beleving tijdens het laden van data.',
-      status: 'accepted',
+      statusIdea: 'accepted',
     },
   ]
 

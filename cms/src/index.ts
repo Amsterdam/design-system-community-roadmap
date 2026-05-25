@@ -14,7 +14,14 @@ export default {
     if (process.env.SEED === 'true') {
       const ideas = await strapi.documents('api::idea.idea').findMany({ limit: 1 })
       if (ideas.length === 0) {
-        await seed({ strapi })
+        // Suppress notification lifecycle hooks while seeding: the initial data
+        // set is not something existing users should be notified about.
+        process.env.IS_SEEDING = 'true'
+        try {
+          await seed({ strapi })
+        } finally {
+          delete process.env.IS_SEEDING
+        }
       } else {
         console.log('Database already has ideas, skipping seed.')
       }
