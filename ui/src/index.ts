@@ -8,6 +8,7 @@ import NotificationMenu from './notifications/NotificationMenu'
 import AddReaction from './reactions/AddReaction'
 import Reactions from './reactions/Reactions'
 import Roadmap from './roadmap/Roadmap'
+import SearchBar from './search/SearchBar'
 
 export {
   AddReaction,
@@ -20,8 +21,10 @@ export {
   NotificationMenu,
   Reactions,
   Roadmap,
+  SearchBar,
 }
 export type { NotificationMenuItem } from './notifications/NotificationMenu'
 export type { ReactionItem } from './reactions/Reactions'
 export type { RoadmapFeature, RoadmapStory } from './roadmap/dateUtils'
+export type { SearchResult, SearchResultType } from './search/SearchBar'
 export default Navigation

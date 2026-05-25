@@ -105,17 +105,22 @@ export async function registerAction(name: string, emoji: string): Promise<AuthR
   if (validationError) return { error: validationError }
 
   const trimmedName = name.trim()
-  const emojiParams = new URLSearchParams({
+  const duplicateParams = new URLSearchParams({
     'filters[emoji][$eq]': emoji,
+    'filters[name][$eq]': trimmedName,
     'pagination[pageSize]': '1',
   })
 
-  const emojiCheck = await client.fetch(`end-users?${emojiParams}`)
-  if (!emojiCheck.ok) return { error: 'Er is iets misgegaan. Probeer het opnieuw.' }
+  const duplicateCheck = await client.fetch(`end-users?${duplicateParams}`)
+  if (!duplicateCheck.ok) return { error: 'Er is iets misgegaan. Probeer het opnieuw.' }
 
-  const emojiParsed = strapiCollection(EndUserSchema).safeParse(await emojiCheck.json())
-  if (emojiParsed.success && emojiParsed.data.data.length > 0) {
-    return { error: 'Deze emoji is al in gebruik. Kies een andere emoji.' }
+  const duplicateParsed = strapiCollection(EndUserSchema).safeParse(await duplicateCheck.json())
+  if (!duplicateParsed.success) {
+    console.error('[registerAction] Failed to parse duplicate check response', duplicateParsed.error)
+    return { error: 'Er is iets misgegaan. Probeer het opnieuw.' }
+  }
+  if (duplicateParsed.data.data.length > 0) {
+    return { error: 'Er bestaat al een account met deze naam en emoji. Kies een andere combinatie.' }
   }
 
   const res = await client.fetch('end-users', {
