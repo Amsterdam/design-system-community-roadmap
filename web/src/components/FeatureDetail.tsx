@@ -11,7 +11,7 @@ import type { StrapiImage } from '@/utils/schemas'
 
 import { toggleFeatureLikeAction } from '@/app/actions/likes'
 import { addFeatureReactionAction } from '@/app/actions/reactions'
-import { formatDateRange } from '@/utils/date'
+import { formatDateRange, getProgressStatus } from '@/utils/date'
 
 import styles from './FeatureDetail.module.scss'
 import StrapiImageBlock from './StrapiImageBlock'
@@ -120,7 +120,11 @@ export default function FeatureDetail({
             <div className={styles['feature-detail__stories']}>
               <ProgressList headingLevel={3}>
                 {sortedStories.map((story) => (
-                  <ProgressList.Step heading={story.title} key={story.documentId}>
+                  <ProgressList.Step
+                    heading={story.title}
+                    key={story.documentId}
+                    status={getProgressStatus(story.startDate, story.endDate)}
+                  >
                     <div className={styles['feature-detail__story-content']}>
                       <div className={styles['feature-detail__story-date']}>
                         <Badge label={formatDateRange(story.startDate, story.endDate)} />
