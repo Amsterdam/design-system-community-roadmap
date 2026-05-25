@@ -16,7 +16,6 @@
     "jsx": "react-jsx",
 
     /* Path aliases – mirrors web package so imported web components resolve */
-    "baseUrl": ".",
     "paths": {
       "@/app/actions/likes": ["./src/__mocks__/actions-likes.ts"],
       "@/app/actions/reactions": ["./src/__mocks__/actions-reactions.ts"],
