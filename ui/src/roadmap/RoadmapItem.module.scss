@@ -27,6 +27,15 @@
   z-index: 10;
 }
 
+.item--dimmed {
+  opacity: 35%;
+  transition: opacity 300ms ease;
+}
+
+.item:not(.item--dimmed) {
+  transition: opacity 300ms ease;
+}
+
 .item__title {
   color: var(--ams-color-text-inverse);
   display: block;
