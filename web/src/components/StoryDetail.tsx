@@ -10,7 +10,7 @@ import { useState } from 'react'
 import type { StrapiImage } from '@/utils/schemas'
 
 import { toggleStoryLikeAction } from '@/app/actions/likes'
-import { addStoryReactionAction } from '@/app/actions/reactions'
+import { addStoryReactionAction, deleteStoryReactionAction } from '@/app/actions/reactions'
 
 import styles from './StoryDetail.module.scss'
 import StrapiImageBlock from './StrapiImageBlock'
@@ -23,6 +23,7 @@ type ParentFeature = {
 export type StoryDetailProps = {
   content: string
   currentUserDocumentId?: string
+  currentUserIsTeam?: boolean
   endDate?: string | null
   images?: StrapiImage[] | null
   isLiked: boolean
@@ -38,6 +39,7 @@ export default function StoryDetail({
   title,
   content,
   currentUserDocumentId,
+  currentUserIsTeam = false,
   endDate,
   images,
   isLiked,
@@ -50,6 +52,9 @@ export default function StoryDetail({
   const router = useRouter()
   const [reactionLoading, setReactionLoading] = useState(false)
   const [reactionError, setReactionError] = useState<string | undefined>()
+
+  const teamReaction = reactions.find((reaction) => reaction.author?.isTeam)
+  const feedReactions = teamReaction ? reactions.filter((reaction) => reaction.id !== teamReaction.id) : reactions
 
   const handleLikeToggle = async (liked: boolean) => {
     if (!currentUserDocumentId) {
@@ -65,6 +70,28 @@ export default function StoryDetail({
     }
 
     router.refresh()
+  }
+
+  const handleDeleteReaction = async (reactionId: number) => {
+    setReactionLoading(true)
+    setReactionError(undefined)
+
+    const result = await deleteStoryReactionAction(storyDocumentId, reactionId)
+    setReactionLoading(false)
+
+    if (result.needsLogin) {
+      router.push('/inloggen')
+      return
+    }
+
+    if (result.error) {
+      setReactionError(result.error)
+      return
+    }
+
+    if (result.success) {
+      router.refresh()
+    }
   }
 
   const handleReactionSubmit = async (content: string) => {
@@ -139,10 +166,20 @@ export default function StoryDetail({
             </>
           )}
         </dl>
+        {teamReaction && (
+          <Reactions
+            onDeleteReaction={currentUserIsTeam ? handleDeleteReaction : undefined}
+            reactions={[teamReaction]}
+          />
+        )}
         <Heading level={2} size="level-4">
           Reacties
         </Heading>
-        <Reactions compact reactions={reactions} />
+        <Reactions
+          compact
+          onDeleteReaction={currentUserIsTeam ? handleDeleteReaction : undefined}
+          reactions={feedReactions}
+        />
         <AddReaction
           error={reactionError}
           isLoggedIn={!!currentUserDocumentId}

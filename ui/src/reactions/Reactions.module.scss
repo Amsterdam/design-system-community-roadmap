@@ -37,6 +37,22 @@
   font-weight: 700;
 }
 
+.reactions__delete {
+  background: none;
+  border: none;
+  color: var(--ams-color-text-secondary);
+  cursor: pointer;
+  font-size: var(--ams-typography-body-text-small-font-size);
+  margin-inline-start: auto;
+  padding-block: 0;
+  padding-inline: 0;
+  text-decoration: underline;
+
+  &:hover {
+    color: var(--ams-color-text);
+  }
+}
+
 .reactions--compact {
   gap: 0;
 

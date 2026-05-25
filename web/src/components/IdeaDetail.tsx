@@ -4,9 +4,11 @@ import type { ReactionItem } from '@design-system-community-roadmap/ui'
 
 import { Badge, Grid, Heading, Paragraph, ProgressList, StandaloneLink } from '@amsterdam/design-system-react'
 import { Reactions } from '@design-system-community-roadmap/ui'
+import { useRouter } from 'next/navigation'
 
 import type { StrapiImage } from '@/utils/schemas'
 
+import { deleteIdeaReactionAction } from '@/app/actions/reactions'
 import { formatDateRange, getProgressStatus } from '@/utils/date'
 
 import AddReaction from './AddReaction'
@@ -32,6 +34,7 @@ export type IdeaDetailProps = {
   content: string
   createdAt?: string
   currentUserDocumentId?: string
+  currentUserIsTeam?: boolean
   features: Feature[]
   ideaDocumentId: string
   images?: StrapiImage[] | null
@@ -48,6 +51,7 @@ export default function IdeaDetail({
   content,
   createdAt,
   currentUserDocumentId,
+  currentUserIsTeam = false,
   features,
   ideaDocumentId,
   images,
@@ -56,14 +60,21 @@ export default function IdeaDetail({
   status,
   voteCount,
 }: IdeaDetailProps) {
-  const teamReaction = reactions.find((r) => r.author?.isTeam)
-  const feedReactions = teamReaction ? reactions.filter((r) => r.id !== teamReaction.id) : reactions
+  const router = useRouter()
 
-  const sortedFeatures = [...features].sort((a, b) => {
-    if (!a.startDate && !b.startDate) return 0
-    if (!a.startDate) return 1
-    if (!b.startDate) return -1
-    return new Date(a.startDate).getTime() - new Date(b.startDate).getTime()
+  const teamReaction = reactions.find((reaction) => reaction.author?.isTeam)
+  const feedReactions = teamReaction ? reactions.filter((reaction) => reaction.id !== teamReaction.id) : reactions
+
+  const handleDeleteReaction = async (reactionId: number) => {
+    const result = await deleteIdeaReactionAction(ideaDocumentId, reactionId)
+    if (result.success) router.refresh()
+  }
+
+  const sortedFeatures = [...features].sort((featureA, featureB) => {
+    if (!featureA.startDate && !featureB.startDate) return 0
+    if (!featureA.startDate) return 1
+    if (!featureB.startDate) return -1
+    return new Date(featureA.startDate).getTime() - new Date(featureB.startDate).getTime()
   })
 
   return (
@@ -112,7 +123,12 @@ export default function IdeaDetail({
         )}
       </Grid.Cell>
       <Grid.Cell className="ams-prose" span={{ narrow: 4, medium: 8, wide: 5 }}>
-        {teamReaction && <Reactions reactions={[teamReaction]} />}
+        {teamReaction && (
+          <Reactions
+            onDeleteReaction={currentUserIsTeam ? handleDeleteReaction : undefined}
+            reactions={[teamReaction]}
+          />
+        )}
         <Heading level={2} size="level-4">
           Details
         </Heading>
@@ -137,7 +153,11 @@ export default function IdeaDetail({
         <Heading level={2} size="level-4">
           Reacties
         </Heading>
-        <Reactions compact reactions={feedReactions} />
+        <Reactions
+          compact
+          onDeleteReaction={currentUserIsTeam ? handleDeleteReaction : undefined}
+          reactions={feedReactions}
+        />
         <AddReaction currentUserDocumentId={currentUserDocumentId} ideaDocumentId={ideaDocumentId} />
       </Grid.Cell>
     </Grid>

@@ -40,6 +40,7 @@ export default async function FeaturePage({ params }: Props) {
 
   const currentUser = await getCurrentUser()
   const currentUserDocumentId = currentUser?.documentId
+  const currentUserIsTeam = currentUser?.isTeam ?? false
 
   const isLiked =
     !!currentUserDocumentId && (feature.likes?.some((l) => l.end_user?.documentId === currentUserDocumentId) ?? false)
@@ -54,6 +55,7 @@ export default async function FeaturePage({ params }: Props) {
     <FeatureDetail
       content={feature.content}
       currentUserDocumentId={currentUserDocumentId}
+      currentUserIsTeam={currentUserIsTeam}
       endDate={feature.endDate}
       featureDocumentId={feature.documentId}
       images={feature.images}
