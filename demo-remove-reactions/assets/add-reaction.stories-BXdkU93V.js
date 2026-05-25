@@ -1,4 +1,4 @@
-import{i as e}from"./preload-helper-xPQekRTU.js";import{m as t,t as n}from"./src-nBTQ5dN9.js";var r,i,a,o,s,c;e((()=>{n(),r={title:`Molecules/Add Reaction`,component:t,args:{onSubmit:()=>{}},argTypes:{onSubmit:{action:`submitted`}}},i={args:{isLoggedIn:!0}},a={args:{isLoggedIn:!1}},o={args:{isLoggedIn:!0,loading:!0}},s={args:{error:`Er is iets misgegaan bij het plaatsen van je reactie.`,isLoggedIn:!0}},i.parameters={...i.parameters,docs:{...i.parameters?.docs,source:{originalSource:`{
+import{i as e}from"./preload-helper-xPQekRTU.js";import{m as t,t as n}from"./src-CUrb09j9.js";var r,i,a,o,s,c;e((()=>{n(),r={title:`Molecules/Add Reaction`,component:t,args:{onSubmit:()=>{}},argTypes:{onSubmit:{action:`submitted`}}},i={args:{isLoggedIn:!0}},a={args:{isLoggedIn:!1}},o={args:{isLoggedIn:!0,loading:!0}},s={args:{error:`Er is iets misgegaan bij het plaatsen van je reactie.`,isLoggedIn:!0}},i.parameters={...i.parameters,docs:{...i.parameters?.docs,source:{originalSource:`{
   args: {
     isLoggedIn: true
   }
