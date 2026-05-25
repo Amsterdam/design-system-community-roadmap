@@ -79,7 +79,7 @@ export const WithoutParentFeature: Story = {
     content:
       'Onderzoek naar bestaande open-source rich text editors die voldoen aan de toegankelijkheidseisen van de gemeente Amsterdam. Het doel is een onderbouwde aanbeveling te doen voor de keuze van een editor die goed integreert met het design system.',
     endDate: null,
-    features: null,
+    features: [],
     reactions: [],
     startDate: '2025-06-01',
     voteCount: 9,

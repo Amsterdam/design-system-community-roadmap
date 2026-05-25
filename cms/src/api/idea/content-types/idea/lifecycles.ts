@@ -9,7 +9,7 @@ type LifecycleEvent = {
 type Idea = {
   documentId: string
   end_users?: { documentId?: string }[]
-  status?: string
+  statusIdea?: string
   title: string
 }
 
@@ -26,17 +26,17 @@ export default {
     const data = event.params.data ?? {}
     const where = event.params.where
     if (!where) return
-    if (!('status' in data)) return
+    if (!('statusIdea' in data)) return
 
     const current: Idea | null = await strapi.db.query('api::idea.idea').findOne({
       populate: { end_users: true },
       where: where,
     })
     if (!current) return
-    if (current.status === data.status) return
+    if (current.statusIdea === data.statusIdea) return
 
-    const status = typeof data.status === 'string' ? data.status : ''
-    const label = STATUS_LABELS[status] || status
+    const statusIdea = typeof data.statusIdea === 'string' ? data.statusIdea : ''
+    const label = STATUS_LABELS[statusIdea] || statusIdea
     const message = `De status van je idee '${current.title}' is gewijzigd naar '${label}'.`
     const href = `/ideeen/${current.documentId}`
 

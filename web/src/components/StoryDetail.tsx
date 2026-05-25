@@ -118,7 +118,7 @@ export default function StoryDetail({
             </Heading>
             <div className={styles['story-detail__features']}>
               {sortedFeatures.map((feature) => (
-                <span>
+                <span key={feature.documentId}>
                   <div className={styles['story-detail__feature-content']}>
                     <Heading level={4}>{feature.title}</Heading>
                     <StandaloneLink href={`/features/${feature.documentId}`}>Bekijk details</StandaloneLink>
