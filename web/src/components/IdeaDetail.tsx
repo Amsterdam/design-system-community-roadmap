@@ -7,7 +7,7 @@ import { Reactions } from '@design-system-community-roadmap/ui'
 
 import type { StrapiImage } from '@/utils/schemas'
 
-import { formatDateRange } from '@/utils/date'
+import { formatDateRange, getProgressStatus } from '@/utils/date'
 
 import AddReaction from './AddReaction'
 import styles from './IdeaDetail.module.scss'
@@ -93,7 +93,11 @@ export default function IdeaDetail({
             <div className={styles['idea-detail__stories']}>
               <ProgressList headingLevel={3}>
                 {sortedFeatures.map((feature) => (
-                  <ProgressList.Step heading={feature.title} key={feature.documentId}>
+                  <ProgressList.Step
+                    heading={feature.title}
+                    key={feature.documentId}
+                    status={getProgressStatus(feature.startDate, feature.endDate)}
+                  >
                     <div className={styles['idea-detail__story-content']}>
                       <div className={styles['idea-detail__story-date']}>
                         <Badge label={formatDateRange(feature.startDate, feature.endDate)} />

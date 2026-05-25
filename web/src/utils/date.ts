@@ -1,3 +1,10 @@
+export function getProgressStatus(start?: string, end?: string | null): 'completed' | 'current' | undefined {
+  const now = Date.now()
+  if (end && new Date(end).getTime() < now) return 'completed'
+  if (start && new Date(start).getTime() <= now) return 'current'
+  return undefined
+}
+
 export function formatDateRange(start?: string, end?: string | null): string {
   if (!start) return 'Onbekend'
   const startFormatted = new Date(start).toLocaleDateString('nl-NL', { day: 'numeric', month: 'short' })
