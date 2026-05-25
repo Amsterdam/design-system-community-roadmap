@@ -15,10 +15,8 @@ import { addStoryReactionAction } from '@/app/actions/reactions'
 import styles from './StoryDetail.module.scss'
 import StrapiImageBlock from './StrapiImageBlock'
 
-type ChildFeature = {
+type ParentFeature = {
   documentId: string
-  endDate?: string | null
-  startDate?: string
   title: string
 }
 
@@ -26,9 +24,9 @@ export type StoryDetailProps = {
   content: string
   currentUserDocumentId?: string
   endDate?: string | null
-  features: ChildFeature[]
   images?: StrapiImage[] | null
   isLiked: boolean
+  parentFeature?: ParentFeature | null
   reactions: ReactionItem[]
   startDate?: string
   storyDocumentId: string
@@ -41,9 +39,9 @@ export default function StoryDetail({
   content,
   currentUserDocumentId,
   endDate,
-  features,
   images,
   isLiked,
+  parentFeature,
   reactions,
   startDate,
   storyDocumentId,
@@ -52,13 +50,6 @@ export default function StoryDetail({
   const router = useRouter()
   const [reactionLoading, setReactionLoading] = useState(false)
   const [reactionError, setReactionError] = useState<string | undefined>()
-
-  const sortedFeatures = [...features].sort((a, b) => {
-    if (!a.startDate && !b.startDate) return 0
-    if (!a.startDate) return 1
-    if (!b.startDate) return -1
-    return new Date(a.startDate).getTime() - new Date(b.startDate).getTime()
-  })
 
   const handleLikeToggle = async (liked: boolean) => {
     if (!currentUserDocumentId) {
@@ -110,24 +101,6 @@ export default function StoryDetail({
         <Paragraph>{content}</Paragraph>
 
         <StrapiImageBlock fallbackAlt={title} images={images} />
-
-        {features.length > 0 && (
-          <div className={styles['story-detail__features-container']}>
-            <Heading level={2} size="level-4">
-              Features
-            </Heading>
-            <div className={styles['story-detail__features']}>
-              {sortedFeatures.map((feature) => (
-                <span key={feature.documentId}>
-                  <div className={styles['story-detail__feature-content']}>
-                    <Heading level={4}>{feature.title}</Heading>
-                    <StandaloneLink href={`/features/${feature.documentId}`}>Bekijk details</StandaloneLink>
-                  </div>
-                </span>
-              ))}
-            </div>
-          </div>
-        )}
       </Grid.Cell>
       <Grid.Cell className="ams-prose" span={{ narrow: 4, medium: 8, wide: 5 }}>
         <Heading level={2} size="level-4">
@@ -153,6 +126,16 @@ export default function StoryDetail({
                 <strong>Einddatum</strong>
               </dt>
               <dd>{new Date(endDate).toLocaleDateString('nl-NL')}</dd>
+            </>
+          )}
+          {parentFeature && (
+            <>
+              <dt>
+                <strong>Onderdeel van</strong>
+              </dt>
+              <dd>
+                <StandaloneLink href={`/features/${parentFeature.documentId}`}>{parentFeature.title}</StandaloneLink>
+              </dd>
             </>
           )}
         </dl>
