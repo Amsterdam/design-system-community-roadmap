@@ -1,46 +1,38 @@
 version: 2
 updates:
   - package-ecosystem: "npm"
-    directory: "/"
+    directories:
+      - "/"
+      - "/cms"
+      - "/ui"
+      - "/web"
+      - "/storybook"
     schedule:
       interval: "weekly"
     open-pull-requests-limit: 10
     commit-message:
       prefix: "chore(deps)"
       prefix-development: "chore(deps-dev)"
-    groups:
-      npm-dependencies:
-        patterns:
-          - "*"
-  - package-ecosystem: "npm"
-    directory: "/cms"
     groups:
       strapi:
         patterns:
           - "@strapi/*"
-      cms-dependencies:
+      npm-dependencies:
         patterns:
           - "*"
         exclude-patterns:
           - "@strapi/*"
-    schedule:
-      interval: "weekly"
-    open-pull-requests-limit: 10
-    commit-message:
-      prefix: "chore(deps)"
-      prefix-development: "chore(deps-dev)"
     ignore:
-      # Strapi 5.x pins React 18 and react-router-dom 6, re-evaluate when Strapi ships React 19 support
       - dependency-name: "react"
-        versions: [">=19"]
+        update-types: ["version-update:semver-major"]
       - dependency-name: "react-dom"
-        versions: [">=19"]
+        update-types: ["version-update:semver-major"]
       - dependency-name: "react-router-dom"
-        versions: [">=7"]
+        update-types: ["version-update:semver-major"]
       - dependency-name: "@types/react"
-        versions: [">=19"]
+        update-types: ["version-update:semver-major"]
       - dependency-name: "@types/react-dom"
-        versions: [">=19"]
+        update-types: ["version-update:semver-major"]
   - package-ecosystem: "github-actions"
     directory: "/"
     schedule:

@@ -2,7 +2,7 @@ name: Storybook Feature branch build and deploy
 
 on:
   push:
-    branches-ignore: [main]
+    branches: [develop]
   pull_request:
 
 permissions:
