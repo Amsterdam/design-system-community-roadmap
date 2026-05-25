@@ -115,7 +115,11 @@ export async function registerAction(name: string, emoji: string): Promise<AuthR
   if (!duplicateCheck.ok) return { error: 'Er is iets misgegaan. Probeer het opnieuw.' }
 
   const duplicateParsed = strapiCollection(EndUserSchema).safeParse(await duplicateCheck.json())
-  if (duplicateParsed.success && duplicateParsed.data.data.length > 0) {
+  if (!duplicateParsed.success) {
+    console.error('[registerAction] Failed to parse duplicate check response', duplicateParsed.error)
+    return { error: 'Er is iets misgegaan. Probeer het opnieuw.' }
+  }
+  if (duplicateParsed.data.data.length > 0) {
     return { error: 'Er bestaat al een account met deze naam en emoji. Kies een andere combinatie.' }
   }
 
