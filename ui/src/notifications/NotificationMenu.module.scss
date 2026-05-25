@@ -1,0 +1,107 @@
+.notification-menu {
+  position: relative;
+}
+
+.notification-menu__trigger {
+  align-items: center;
+  background: none;
+  border: none;
+  color: inherit;
+  cursor: pointer;
+  display: flex;
+  gap: var(--ams-space-xs);
+  padding-block: var(--ams-space-xs);
+  padding-inline: var(--ams-space-xs);
+}
+
+.notification-menu__bell {
+  font-size: 1.25rem;
+  line-height: 1;
+}
+
+.notification-menu__panel {
+  background-color: var(--ams-color-background-body);
+  border: var(--ams-border-width-s) solid var(--ams-color-separator);
+  box-shadow: 0 0.125rem 0.5rem rgb(0 0 0 / 15%);
+  color: var(--ams-color-text);
+  inline-size: min(22rem, calc(100vw - 2rem));
+  inset-block-start: calc(100% + var(--ams-space-xs));
+  inset-inline-end: 0;
+  max-block-size: 26rem;
+  overflow: auto;
+  position: absolute;
+  z-index: 10;
+}
+
+.notification-menu__header {
+  align-items: center;
+  border-block-end: var(--ams-border-width-s) solid var(--ams-color-separator);
+  display: flex;
+  gap: var(--ams-space-s);
+  justify-content: space-between;
+  padding-block: var(--ams-space-s);
+  padding-inline: var(--ams-space-m);
+}
+
+.notification-menu__action {
+  background: none;
+  border: none;
+  color: var(--ams-color-highlight-magenta);
+  cursor: pointer;
+  font-size: var(--ams-typography-body-text-small-font-size);
+  text-decoration: underline;
+}
+
+.notification-menu__list {
+  list-style: none;
+}
+
+.notification-menu__empty {
+  color: var(--ams-color-text-secondary);
+  padding-block: var(--ams-space-l);
+  padding-inline: var(--ams-space-m);
+  text-align: center;
+}
+
+.notification-menu__item {
+  border-block-end: var(--ams-border-width-s) solid var(--ams-color-separator);
+  display: flex;
+  flex-direction: column;
+  gap: var(--ams-space-xs);
+  padding-block: var(--ams-space-s);
+  padding-inline: var(--ams-space-m);
+
+  &:hover {
+    background-color: color-mix(
+      in sRGB,
+      var(--ams-color-separator) 40%,
+      var(--ams-color-background-body)
+    );
+  }
+}
+
+.notification-menu__item--unread {
+  background-color: color-mix(
+    in sRGB,
+    var(--ams-color-highlight-magenta) 8%,
+    var(--ams-color-background-body)
+  );
+}
+
+.notification-menu__time {
+  color: var(--ams-color-text-secondary);
+  font-size: var(--ams-typography-body-text-small-font-size);
+}
+
+.notification-menu__footer {
+  border-block-start: var(--ams-border-width-s) solid var(--ams-color-separator);
+  color: var(--ams-color-highlight-magenta);
+  display: block;
+  padding-block: var(--ams-space-s);
+  padding-inline: var(--ams-space-m);
+  text-align: center;
+
+  &:hover {
+    text-decoration: underline;
+  }
+}

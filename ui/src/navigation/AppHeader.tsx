@@ -2,18 +2,30 @@
 
 import { PageHeader } from '@amsterdam/design-system-react'
 
+import type { NotificationMenuItem } from '../notifications/NotificationMenu'
 import type { SearchResult } from '../search/SearchBar'
 
+import NotificationMenu from '../notifications/NotificationMenu'
 import SearchBar from '../search/SearchBar'
 import styles from './AppHeader.module.scss'
 
 type AppHeaderProps = {
   currentUser?: { emoji: string; name: string }
+  notifications?: NotificationMenuItem[]
   onLogout?: () => void
+  onMarkAllNotificationsRead?: () => void
   onSearch?: (query: string) => Promise<SearchResult[]>
+  onSelectNotification?: (item: NotificationMenuItem) => void
 }
 
-const AppHeader = ({ currentUser, onLogout, onSearch }: AppHeaderProps) => (
+const AppHeader = ({
+  currentUser,
+  notifications = [],
+  onLogout,
+  onMarkAllNotificationsRead,
+  onSearch,
+  onSelectNotification,
+}: AppHeaderProps) => (
   <PageHeader
     brandName="Community Roadmap"
     menuItems={[
@@ -32,6 +44,12 @@ const AppHeader = ({ currentUser, onLogout, onSearch }: AppHeaderProps) => (
       </PageHeader.MenuLink>,
       ...(currentUser
         ? [
+            <NotificationMenu
+              key="notificaties"
+              notifications={notifications}
+              onMarkAllRead={onMarkAllNotificationsRead}
+              onSelect={onSelectNotification}
+            />,
             <PageHeader.MenuLink href="/uitloggen" key="uitloggen" onClick={onLogout}>
               {currentUser.emoji} {currentUser.name}
             </PageHeader.MenuLink>,

@@ -41,6 +41,24 @@ export const EndUserSchema = strapiBase.extend({
   story_likes: z.array(z.any()).optional(),
 })
 
+export const NotificationTypeSchema = z.enum([
+  'comment_on_feature',
+  'comment_on_idea',
+  'comment_on_story',
+  'idea_promoted',
+  'idea_status_changed',
+  'story_added',
+  'story_completed',
+  'story_updated',
+])
+
+export const NotificationSchema = strapiBase.extend({
+  href: z.string().nullable().optional(),
+  message: z.string(),
+  read: z.boolean(),
+  type: NotificationTypeSchema,
+})
+
 export const PopulatedLikeSchema = z.object({
   documentId: z.string(),
   end_user: z
@@ -69,7 +87,7 @@ export const IdeaSchema = strapiBase.extend({
   likes: z.array(PopulatedLikeSchema).optional(),
   publishedAt: z.string().nullable().optional(),
   reactions: z.array(ReactionSchema).optional(),
-  status: IdeaStatusSchema.optional(),
+  statusIdea: IdeaStatusSchema.optional(),
 })
 
 export const FeatureSchema = strapiBase.extend({
@@ -86,6 +104,8 @@ export const FeatureSchema = strapiBase.extend({
     .object({
       title: z.string(),
       documentId: z.string(),
+      endDate: z.string().nullable().optional(),
+      startDate: z.string().optional(),
     })
     .nullable()
     .optional(),
@@ -122,6 +142,8 @@ export type StrapiImage = z.infer<typeof StrapiImageSchema>
 export type Reaction = z.infer<typeof ReactionSchema>
 export type IdeaStatus = z.infer<typeof IdeaStatusSchema>
 export type EndUser = z.infer<typeof EndUserSchema>
+export type Notification = z.infer<typeof NotificationSchema>
+export type NotificationType = z.infer<typeof NotificationTypeSchema>
 export type PopulatedLike = z.infer<typeof PopulatedLikeSchema>
 export type NestedFeature = z.infer<typeof NestedFeatureSchema>
 export type Idea = z.infer<typeof IdeaSchema>

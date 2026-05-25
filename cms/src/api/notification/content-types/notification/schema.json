@@ -1,0 +1,49 @@
+{
+  "kind": "collectionType",
+  "collectionName": "notifications",
+  "info": {
+    "singularName": "notification",
+    "pluralName": "notifications",
+    "displayName": "Notification"
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "recipient": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::end-user.end-user",
+      "inversedBy": "notifications"
+    },
+    "type": {
+      "type": "enumeration",
+      "enum": [
+        "comment_on_idea",
+        "comment_on_feature",
+        "comment_on_story",
+        "idea_status_changed",
+        "idea_promoted",
+        "story_added",
+        "story_completed",
+        "story_updated"
+      ],
+      "required": true
+    },
+    "message": {
+      "type": "text",
+      "required": true,
+      "minLength": 1,
+      "maxLength": 500
+    },
+    "href": {
+      "type": "string"
+    },
+    "read": {
+      "type": "boolean",
+      "required": true,
+      "default": false
+    }
+  }
+}

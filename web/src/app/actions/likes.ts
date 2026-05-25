@@ -91,7 +91,7 @@ export async function toggleStoryLikeAction(storyDocumentId: string, isLiked: bo
     documentId: storyDocumentId,
     entityField: 'story',
     isLiked,
-    revalidatePaths: ['/', '/roadmap', `/features/${storyDocumentId}`],
+    revalidatePaths: ['/', '/roadmap', `/stories/${storyDocumentId}`],
     schema: StoryLikeSchema,
   })
 }
@@ -102,7 +102,7 @@ export async function toggleFeatureLikeAction(featureDocumentId: string, isLiked
     documentId: featureDocumentId,
     entityField: 'feature',
     isLiked,
-    revalidatePaths: ['/', '/roadmap', `/stories/${featureDocumentId}`],
+    revalidatePaths: ['/', '/roadmap', `/features/${featureDocumentId}`],
     schema: FeatureLikeSchema,
   })
 }

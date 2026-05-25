@@ -4,43 +4,44 @@ import RoadmapPage from '@/components/RoadmapPage'
 import { strapi } from '@/utils/strapi'
 
 export default async function Page() {
-  const [{ data: stories }, { data: allFeatures }] = await Promise.all([
-    strapi.stories.findManyWithFeatures(),
-    strapi.features.findMany(),
+  const [{ data: allFeatures }, { data: allStories }] = await Promise.all([
+    strapi.features.findManyWithStory(),
+    strapi.stories.findMany(),
   ])
 
-  const features: RoadmapFeature[] = stories
-    .filter((s) => !!s.endDate && !!s.startDate)
-    .map((s) => ({
-      title: s.title,
-      documentId: s.documentId,
-      endDate: s.endDate!,
-      id: s.id,
-      startDate: s.startDate!,
-      stories: (s.features ?? [])
-        .filter((f) => !!f.startDate)
-        .map(
-          (f): RoadmapStory => ({
-            title: f.title,
-            documentId: f.documentId,
-            endDate: f.endDate ?? null,
-            id: f.id,
-            startDate: f.startDate!,
-          }),
-        ),
+  const features: RoadmapFeature[] = allFeatures
+    .filter((f) => !!f.endDate && !!f.startDate)
+    .map((f) => ({
+      title: f.title,
+      documentId: f.documentId,
+      endDate: f.endDate!,
+      id: f.id,
+      startDate: f.startDate!,
+      stories:
+        f.story && f.story.startDate
+          ? [
+              {
+                title: f.story.title,
+                documentId: f.story.documentId,
+                endDate: f.story.endDate ?? null,
+                id: f.story.id,
+                startDate: f.story.startDate,
+              },
+            ]
+          : [],
     }))
 
-  const featureIdsInStories = new Set(stories.flatMap((s) => (s.features ?? []).map((f) => f.id)))
+  const storyIdsInFeatures = new Set(allFeatures.flatMap((f) => (f.story ? [f.story.id] : [])))
 
-  const standaloneStories: RoadmapStory[] = allFeatures
-    .filter((f) => !featureIdsInStories.has(f.id) && !!f.startDate)
+  const standaloneStories: RoadmapStory[] = allStories
+    .filter((s) => !storyIdsInFeatures.has(s.id) && !!s.startDate)
     .map(
-      (f): RoadmapStory => ({
-        title: f.title,
-        documentId: f.documentId,
-        endDate: f.endDate ?? null,
-        id: f.id,
-        startDate: f.startDate!,
+      (s): RoadmapStory => ({
+        title: s.title,
+        documentId: s.documentId,
+        endDate: s.endDate ?? null,
+        id: s.id,
+        startDate: s.startDate!,
       }),
     )
 

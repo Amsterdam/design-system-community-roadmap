@@ -3,7 +3,7 @@
 import { Menu } from '@amsterdam/design-system-react'
 import { LightBulbIcon, MapIcon } from '@amsterdam/design-system-react-icons'
 import { clsx } from 'clsx'
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useRef } from 'react'
 
 import styles from './Navigation.module.scss'
 
@@ -12,15 +12,13 @@ const navItems = [
   { href: '/roadmap', icon: <MapIcon />, id: 'roadmap', label: 'Roadmap', shortcut: ['C', 'R'] },
 ]
 
-const Navigation = () => {
-  const [active, setActive] = useState(navItems[0].id)
+type NavigationProps = {
+  pathname?: string
+}
+
+const Navigation = ({ pathname }: NavigationProps) => {
   const pendingKey = useRef<string | null>(null)
   const pendingTimer = useRef<ReturnType<typeof setTimeout> | undefined>(undefined)
-
-  useEffect(() => {
-    const match = navItems.find((item) => item.href === window.location.pathname)
-    if (match) setActive(match.id)
-  }, [])
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -43,7 +41,6 @@ const Navigation = () => {
       pendingKey.current = null
       const match = navItems.find((item) => item.shortcut[1] === key)
       if (match) {
-        setActive(match.id)
         window.location.href = match.href
       }
     }
@@ -58,7 +55,7 @@ const Navigation = () => {
   return (
     <Menu className={styles['navigation']} inWideWindow>
       {navItems.map((item) => {
-        const isActive = active === item.id
+        const isActive = pathname === item.href
         return (
           <Menu.Link
             aria-current={isActive ? 'page' : undefined}
@@ -66,7 +63,6 @@ const Navigation = () => {
             href={item.href}
             icon={item.icon}
             key={item.id}
-            onClick={() => setActive(item.id)}
           >
             <span className={styles['navigation__label']}>{item.label}</span>
             <span

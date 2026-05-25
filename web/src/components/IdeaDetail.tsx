@@ -88,7 +88,7 @@ export default function IdeaDetail({
         {features.length > 0 && (
           <div className={styles['idea-detail__stories-container']}>
             <Heading level={2} size="level-4">
-              Stories
+              Features
             </Heading>
             <div className={styles['idea-detail__stories']}>
               <ProgressList headingLevel={3}>
@@ -98,7 +98,7 @@ export default function IdeaDetail({
                       <div className={styles['idea-detail__story-date']}>
                         <Badge label={formatDateRange(feature.startDate, feature.endDate)} />
                       </div>
-                      <StandaloneLink href={`/stories/${feature.documentId}`}>Bekijk details</StandaloneLink>
+                      <StandaloneLink href={`/features/${feature.documentId}`}>Bekijk details</StandaloneLink>
                     </div>
                   </ProgressList.Step>
                 ))}
