@@ -1,6 +1,7 @@
 'use client'
 
-import { useCallback, useRef, useState } from 'react'
+import { addDays } from 'date-fns'
+import { useCallback, useEffect, useRef, useState } from 'react'
 
 import type { RoadmapFeature, RoadmapStory, RoadmapViewRange } from './dateUtils'
 
@@ -14,11 +15,26 @@ type SelectedItem = { id: number; type: 'feature' } | { id: number; type: 'story
 type RoadmapProps = {
   features: RoadmapFeature[]
   initialRange?: RoadmapViewRange
+  onFeatureNavigate?: (feature: RoadmapFeature) => void
   onStoryNavigate?: (story: RoadmapStory) => void
   standaloneStories?: RoadmapStory[]
 }
 
-const Roadmap = ({ features, initialRange, onStoryNavigate, standaloneStories = [] }: RoadmapProps) => {
+function paddedRange(startDate: Date, endDate: Date, paddingDays: number): RoadmapViewRange {
+  const padding = paddingDays * 24 * 60 * 60 * 1000
+  return {
+    start: new Date(startDate.getTime() - padding),
+    end: new Date(endDate.getTime() + padding),
+  }
+}
+
+const Roadmap = ({
+  features,
+  initialRange,
+  onFeatureNavigate,
+  onStoryNavigate,
+  standaloneStories = [],
+}: RoadmapProps) => {
   const resolvedInitialRange = useRef(initialRange ?? getDefaultRangeForFeatures(features, standaloneStories)).current
 
   const [range, setRange] = useState<RoadmapViewRange>(resolvedInitialRange)
@@ -28,8 +44,32 @@ const Roadmap = ({ features, initialRange, onStoryNavigate, standaloneStories = 
   const granularity = getGranularity(range)
   const days = getDays(range)
 
-  const zoom = useCallback((factor: number, pivotDate: Date) => {
-    setRange((previousRange) => zoomRange(previousRange, factor, pivotDate))
+  const rangeRef = useRef(range)
+  rangeRef.current = range
+  const rafRef = useRef<number | null>(null)
+
+  useEffect(() => {
+    return () => {
+      if (rafRef.current !== null) cancelAnimationFrame(rafRef.current)
+    }
+  }, [])
+
+  const animateToRange = useCallback((target: RoadmapViewRange) => {
+    if (rafRef.current !== null) cancelAnimationFrame(rafRef.current)
+
+    const from = rangeRef.current
+    const startTime = performance.now()
+
+    const tick = (now: number) => {
+      const t = Math.min((now - startTime) / 400, 1)
+      setRange({
+        start: new Date(from.start.getTime() + (target.start.getTime() - from.start.getTime()) * t),
+        end: new Date(from.end.getTime() + (target.end.getTime() - from.end.getTime()) * t),
+      })
+      rafRef.current = t < 1 ? requestAnimationFrame(tick) : null
+    }
+
+    rafRef.current = requestAnimationFrame(tick)
   }, [])
 
   const pan = useCallback((daysCount: number) => {
@@ -38,92 +78,45 @@ const Roadmap = ({ features, initialRange, onStoryNavigate, standaloneStories = 
 
   const selectFeature = useCallback(
     (feature: RoadmapFeature) => {
-      const isDeselecting = selectedItem?.type === 'feature' && selectedItem.id === feature.id
-
-      if (isDeselecting) {
+      if (selectedItem?.type === 'feature' && selectedItem.id === feature.id) {
         setSelectedItem(null)
-        setRange(resolvedInitialRange)
+        animateToRange(resolvedInitialRange)
         return
       }
 
       setSelectedItem({ id: feature.id, type: 'feature' })
       setExpandedFeatureIds([feature.id])
-
-      const startDate = new Date(feature.startDate)
-      const endDate = new Date(feature.endDate)
-      const paddingMilliseconds = 3 * 24 * 60 * 60 * 1000
-      setRange({
-        start: new Date(startDate.getTime() - paddingMilliseconds),
-        end: new Date(endDate.getTime() + paddingMilliseconds),
-      })
+      animateToRange(paddedRange(new Date(feature.startDate), new Date(feature.endDate), 3))
     },
-    [resolvedInitialRange, selectedItem],
+    [animateToRange, resolvedInitialRange, selectedItem],
   )
 
   const selectStory = useCallback(
     (story: RoadmapStory) => {
-      const isDeselecting = selectedItem?.type === 'story' && selectedItem.id === story.id
-
-      if (isDeselecting) {
+      if (selectedItem?.type === 'story' && selectedItem.id === story.id) {
         setSelectedItem(null)
-        setRange(resolvedInitialRange)
+        animateToRange(resolvedInitialRange)
         return
       }
 
       setSelectedItem({ id: story.id, type: 'story' })
 
       const startDate = new Date(story.startDate)
-      const endDate = story.endDate ? new Date(story.endDate) : new Date(startDate.getTime() + 7 * 24 * 60 * 60 * 1000)
-      const paddingMilliseconds = 2 * 24 * 60 * 60 * 1000
-      setRange({
-        start: new Date(startDate.getTime() - paddingMilliseconds),
-        end: new Date(endDate.getTime() + paddingMilliseconds),
-      })
+      const endDate = story.endDate ? new Date(story.endDate) : addDays(startDate, 7)
+      animateToRange(paddedRange(startDate, endDate, 2))
     },
-    [resolvedInitialRange, selectedItem],
+    [animateToRange, resolvedInitialRange, selectedItem],
   )
-
-  const toggleFeature = useCallback((id: number) => {
-    setExpandedFeatureIds((previousIds) => {
-      if (previousIds.includes(id)) {
-        return []
-      }
-      return [id]
-    })
-  }, [])
 
   const setFeaturesExpanded = useCallback((ids: number[], expanded: boolean) => {
     setExpandedFeatureIds((previousIds) => {
-      let nextIds = [...previousIds]
-      if (expanded) {
-        ids.forEach((id) => {
-          if (!nextIds.includes(id)) {
-            nextIds.push(id)
-          }
-        })
-      } else {
-        nextIds = nextIds.filter((id) => !ids.includes(id))
-      }
-      return nextIds
+      const idSet = new Set(previousIds)
+      ids.forEach((id) => (expanded ? idSet.add(id) : idSet.delete(id)))
+      return [...idSet]
     })
   }, [])
 
   const roadmapRef = useRef<HTMLDivElement>(null)
-
-  const handleFeatureClick = useCallback(
-    (feature: RoadmapFeature) => {
-      selectFeature(feature)
-    },
-    [selectFeature],
-  )
-
-  const handleStoryClick = useCallback(
-    (story: RoadmapStory) => {
-      selectStory(story)
-      onStoryNavigate?.(story)
-    },
-    [selectStory, onStoryNavigate],
-  )
 
   const handleHeaderHeightChange = useCallback((height: number) => {
     roadmapRef.current?.style.setProperty('--roadmap-header-height', `${height}px`)
@@ -134,9 +127,12 @@ const Roadmap = ({ features, initialRange, onStoryNavigate, standaloneStories = 
       <RoadmapSidebar
         expandedFeatureIds={expandedFeatureIds}
         features={features}
-        onFeatureClick={handleFeatureClick}
-        onStoryClick={handleStoryClick}
-        onToggleFeature={toggleFeature}
+        onFeatureClick={selectFeature}
+        onStoryClick={(story) => {
+          selectStory(story)
+          onStoryNavigate?.(story)
+        }}
+        onToggleFeature={(id) => setExpandedFeatureIds((prev) => (prev.includes(id) ? [] : [id]))}
         selectedId={selectedItem}
         standaloneStories={standaloneStories}
       />
@@ -146,12 +142,14 @@ const Roadmap = ({ features, initialRange, onStoryNavigate, standaloneStories = 
           expandedFeatureIds={expandedFeatureIds}
           features={features}
           granularity={granularity}
-          onFeatureClick={handleFeatureClick}
+          onFeatureNavigate={onFeatureNavigate}
           onHeaderHeightChange={handleHeaderHeightChange}
           onPan={pan}
-          onStoryClick={handleStoryClick}
-          onToggleFeature={toggleFeature}
-          onZoom={zoom}
+          onStoryClick={(story) => {
+            selectStory(story)
+            onStoryNavigate?.(story)
+          }}
+          onZoom={(factor, pivotDate) => setRange((previousRange) => zoomRange(previousRange, factor, pivotDate))}
           selectedId={selectedItem}
           setFeaturesExpanded={setFeaturesExpanded}
           standaloneStories={standaloneStories}

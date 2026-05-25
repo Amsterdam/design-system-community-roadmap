@@ -10,6 +10,8 @@ type RoadmapItemProps = {
   columnEnd: number
   columnStart: number
   endDate: string | null
+  href?: string
+  isDimmed?: boolean
   isSelected?: boolean
   onClick?: () => void
   startDate: string
@@ -22,6 +24,8 @@ const RoadmapItem = ({
   columnEnd,
   columnStart,
   endDate,
+  href,
+  isDimmed,
   isSelected,
   onClick,
   startDate,
@@ -36,22 +40,34 @@ const RoadmapItem = ({
 
   const accessibleLabel = `${variant === 'feature' ? 'Feature' : 'Story'}: ${title}. Van ${formattedStartDate} tot ${formattedEndDate}.`
 
+  const sharedProps = {
+    'aria-label': accessibleLabel,
+    className: clsx(
+      styles['item'],
+      variant === 'feature' ? styles['item--feature'] : styles['item--story'],
+      isSelected && styles['item--selected'],
+      isDimmed && styles['item--dimmed'],
+    ),
+    style: { gridColumn: `${columnStart} / ${columnEnd}` },
+  }
+
+  const inner = (
+    <span aria-hidden="true" className={styles['item__title']}>
+      {title}
+    </span>
+  )
+
+  if (href) {
+    return (
+      <a {...sharedProps} href={href}>
+        {inner}
+      </a>
+    )
+  }
+
   return (
-    <button
-      aria-label={accessibleLabel}
-      aria-pressed={isSelected}
-      className={clsx(
-        styles['item'],
-        variant === 'feature' ? styles['item--feature'] : styles['item--story'],
-        isSelected && styles['item--selected'],
-      )}
-      onClick={onClick}
-      style={{ gridColumn: `${columnStart} / ${columnEnd}` }}
-      type="button"
-    >
-      <span aria-hidden="true" className={styles['item__title']}>
-        {title}
-      </span>
+    <button {...sharedProps} aria-pressed={isSelected} onClick={onClick} type="button">
+      {inner}
     </button>
   )
 }

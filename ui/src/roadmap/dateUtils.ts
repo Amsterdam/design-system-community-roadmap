@@ -10,7 +10,6 @@ import {
   isFirstDayOfMonth,
   isMonday,
   max,
-  min,
   startOfDay,
   startOfMonth,
   startOfYear,
@@ -47,7 +46,6 @@ export const GRANULARITY_THRESHOLDS = {
   week: 60,
 }
 
-// Determines the time detail level based on range length
 export function getGranularity(range: RoadmapViewRange): RoadmapGranularity {
   const daysCount = differenceInCalendarDays(range.end, range.start)
   if (daysCount <= GRANULARITY_THRESHOLDS.day) return 'day'
@@ -60,7 +58,6 @@ export function getDays(range: RoadmapViewRange): Date[] {
   return eachDayOfInterval({ start: range.start, end: range.end })
 }
 
-// Calculates grid index for a date relative to start
 export function getDayIndex(date: Date | string, rangeStart: Date): number {
   const normalizedDate = typeof date === 'string' ? startOfDay(new Date(date)) : startOfDay(date)
   return differenceInCalendarDays(normalizedDate, rangeStart) + 1
@@ -78,56 +75,35 @@ type TimelineBand = {
   start: number
 }
 
-// Groups days into month blocks for the top header
 export function getMonthBands(days: Date[]): TimelineBand[] {
   if (days.length === 0) return []
 
-  const months = eachMonthOfInterval({ start: days[0], end: days[days.length - 1] })
-
-  return months.map((monthStart) => {
-    const monthEnd = endOfMonth(monthStart)
+  return eachMonthOfInterval({ start: days[0], end: days[days.length - 1] }).map((monthStart) => {
     const start = Math.max(1, differenceInCalendarDays(startOfMonth(monthStart), days[0]) + 1)
-    const end = Math.min(days.length, differenceInCalendarDays(monthEnd, days[0]) + 1)
-
-    return {
-      end: end + 1,
-      label: format(monthStart, 'MMMM yyyy', { locale: nl }),
-      start,
-    }
+    const end = Math.min(days.length, differenceInCalendarDays(endOfMonth(monthStart), days[0]) + 1)
+    return { end: end + 1, label: format(monthStart, 'MMMM yyyy', { locale: nl }), start }
   })
 }
 
-// Groups days into year blocks for the top header
 export function getYearBands(days: Date[]): TimelineBand[] {
   if (days.length === 0) return []
 
-  const years = eachYearOfInterval({ start: days[0], end: days[days.length - 1] })
-
-  return years.map((yearStart) => {
-    const yearEnd = endOfYear(yearStart)
+  return eachYearOfInterval({ start: days[0], end: days[days.length - 1] }).map((yearStart) => {
     const start = Math.max(1, differenceInCalendarDays(startOfYear(yearStart), days[0]) + 1)
-    const end = Math.min(days.length, differenceInCalendarDays(yearEnd, days[0]) + 1)
-
-    return {
-      end: end + 1,
-      label: format(yearStart, 'yyyy', { locale: nl }),
-      start,
-    }
+    const end = Math.min(days.length, differenceInCalendarDays(endOfYear(yearStart), days[0]) + 1)
+    return { end: end + 1, label: format(yearStart, 'yyyy', { locale: nl }), start }
   })
 }
 
-// Formats labels like 'ma 1', 'W12', or 'J' (Jan)
 export function formatDayLabel(date: Date, granularity: RoadmapGranularity): string {
   if (granularity === 'day') return format(date, 'EEE d', { locale: nl })
-  if (granularity === 'year') return format(date, 'MMM', { locale: nl }).charAt(0)
+  if (granularity === 'year') return format(date, 'MMM', { locale: nl }).slice(0, 3)
   return `W${format(date, 'I')}`
 }
 
-// Filters labels to show only on key dates (Mondays/1sts)
 export function shouldShowDayLabel(granularity: RoadmapGranularity, date: Date): boolean {
   if (granularity === 'year') return isFirstDayOfMonth(date)
-  if (granularity === 'month') return isMonday(date)
-  if (granularity === 'week') return isMonday(date)
+  if (granularity === 'month' || granularity === 'week') return isMonday(date)
   return true
 }
 
@@ -137,38 +113,25 @@ export function getDefaultRange(): RoadmapViewRange {
   return { start, end }
 }
 
-// Calculates initial view to fit all features
 export function getDefaultRangeForFeatures(
   features: RoadmapFeature[],
   standaloneStories: RoadmapStory[],
 ): RoadmapViewRange {
   const baseRange = getDefaultRange()
 
-  const allStartDates: Date[] = []
-  const allEndDates: Date[] = []
+  const allEndDates: Date[] = [
+    ...features.map((feature) => new Date(feature.endDate)),
+    ...features.flatMap((feature) =>
+      feature.stories.flatMap((story) => (story.endDate ? [new Date(story.endDate)] : [])),
+    ),
+    ...standaloneStories.flatMap((story) => (story.endDate ? [new Date(story.endDate)] : [])),
+  ]
 
-  for (const feature of features) {
-    allStartDates.push(new Date(feature.startDate))
-    allEndDates.push(new Date(feature.endDate))
-    for (const story of feature.stories) {
-      allStartDates.push(new Date(story.startDate))
-      if (story.endDate) allEndDates.push(new Date(story.endDate))
-    }
-  }
-  for (const story of standaloneStories) {
-    allStartDates.push(new Date(story.startDate))
-    if (story.endDate) allEndDates.push(new Date(story.endDate))
-  }
+  if (allEndDates.length === 0) return baseRange
 
-  if (allStartDates.length === 0) return baseRange
-
-  return {
-    start: min([baseRange.start, ...allStartDates]),
-    end: max([baseRange.end, ...allEndDates]),
-  }
+  return { start: baseRange.start, end: max([baseRange.end, ...allEndDates]) }
 }
 
-// Calculates new range centered on pivotDate
 export function zoomRange(range: RoadmapViewRange, factor: number, pivotDate: Date): RoadmapViewRange {
   const pivotIndex = differenceInCalendarDays(pivotDate, range.start)
   const totalDays = differenceInCalendarDays(range.end, range.start)

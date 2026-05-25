@@ -1,7 +1,7 @@
 'use client'
 
 import { clsx } from 'clsx'
-import { format, isFirstDayOfMonth, isMonday, isToday } from 'date-fns'
+import { format, isToday } from 'date-fns'
 import { nl } from 'date-fns/locale'
 import { useEffect, useMemo, useRef, useState } from 'react'
 
@@ -16,11 +16,10 @@ type RoadmapTimelineProps = {
   expandedFeatureIds: number[]
   features: RoadmapFeature[]
   granularity: RoadmapGranularity
-  onFeatureClick: (feature: RoadmapFeature) => void
+  onFeatureNavigate?: (feature: RoadmapFeature) => void
   onHeaderHeightChange: (height: number) => void
   onPan: (daysCount: number) => void
   onStoryClick: (story: RoadmapStory) => void
-  onToggleFeature: (id: number) => void
   onZoom: (factor: number, pivotDate: Date) => void
   selectedId: { id: number; type: 'feature' | 'story' } | null
   setFeaturesExpanded: (ids: number[], expanded: boolean) => void
@@ -32,7 +31,7 @@ const RoadmapTimeline = ({
   expandedFeatureIds,
   features,
   granularity,
-  onFeatureClick,
+  onFeatureNavigate,
   onHeaderHeightChange,
   onPan,
   onStoryClick,
@@ -67,14 +66,14 @@ const RoadmapTimeline = ({
     const shouldBeExpanded = granularity === 'day' || granularity === 'week'
     const wasExpanded = prevGranularityRef.current === 'day' || prevGranularityRef.current === 'week'
 
-    if (shouldBeExpanded !== wasExpanded) {
+    if (shouldBeExpanded !== wasExpanded && selectedId?.type !== 'feature') {
       setFeaturesExpanded(
-        features.map((f) => f.id),
+        features.map((feature) => feature.id),
         shouldBeExpanded,
       )
     }
     prevGranularityRef.current = granularity
-  }, [granularity, features, setFeaturesExpanded])
+  }, [granularity, features, selectedId, setFeaturesExpanded])
 
   // Native wheel listener for non-passive zooming and horizontal panning
   useEffect(() => {
@@ -172,8 +171,12 @@ const RoadmapTimeline = ({
     return () => observer.disconnect()
   }, [onHeaderHeightChange])
 
-  const useYearBands = granularity === 'month' || granularity === 'year'
-  const timelineBands = useYearBands ? getYearBands(days) : getMonthBands(days)
+  const todayIndex = useMemo(() => {
+    const index = days.findIndex((day) => isToday(day))
+    return index >= 0 ? index : null
+  }, [days])
+
+  const timelineBands = granularity === 'month' || granularity === 'year' ? getYearBands(days) : getMonthBands(days)
   const rangeStart = days[0]
 
   const getColStart = (dateStr: string) => clampToRange(getDayIndex(new Date(dateStr), rangeStart), dayCount)
@@ -182,23 +185,10 @@ const RoadmapTimeline = ({
     return clampToRange(getDayIndex(new Date(dateStr), rangeStart) + 1, dayCount)
   }
 
-  const showDayLabel = (day: Date) => {
-    if (columnWidthPixels < 2 && granularity !== 'year') return false
-    return shouldShowDayLabel(granularity, day)
-  }
-
-  // Identify Mondays or first-of-months for vertical grid lines
-  const majorLineIndexes = useMemo(() => {
-    const indexes: number[] = []
-    days.forEach((day, index) => {
-      let isMajor: boolean
-      if (granularity === 'day') isMajor = true
-      else if (granularity === 'year') isMajor = isFirstDayOfMonth(day)
-      else isMajor = isMonday(day)
-      if (isMajor) indexes.push(index)
-    })
-    return indexes
-  }, [days, granularity])
+  const majorLineIndexes = useMemo(
+    () => days.flatMap((day, index) => (shouldShowDayLabel(granularity, day) ? [index] : [])),
+    [days, granularity],
+  )
 
   return (
     <section
@@ -231,7 +221,7 @@ const RoadmapTimeline = ({
           {days.map((day, index) => {
             const label = formatDayLabel(day, granularity)
             const isDayToday = isToday(day)
-            const show = showDayLabel(day)
+            const show = (columnWidthPixels >= 2 || granularity === 'year') && shouldShowDayLabel(granularity, day)
             const isMajor = majorLineIndexes.includes(index)
 
             if (!show && !isMajor) return null
@@ -271,9 +261,18 @@ const RoadmapTimeline = ({
           ))}
         </div>
 
+        {todayIndex !== null && (
+          <div
+            aria-hidden="true"
+            className={styles['timeline__today-line']}
+            style={{ '--today-col-index': todayIndex } as React.CSSProperties}
+          />
+        )}
+
         {features.map((feature) => {
           const isExpanded = expandedFeatureIds.includes(feature.id)
           const isSelected = selectedId?.type === 'feature' && selectedId.id === feature.id
+          const isDimmed = selectedId?.type === 'feature' && selectedId.id !== feature.id
 
           return (
             <div className={styles['timeline__feature-group']} key={feature.id} role="rowgroup">
@@ -282,8 +281,9 @@ const RoadmapTimeline = ({
                   columnEnd={getColEnd(feature.endDate, feature.startDate)}
                   columnStart={getColStart(feature.startDate)}
                   endDate={feature.endDate}
+                  href={onFeatureNavigate ? `/features/${feature.documentId}` : undefined}
+                  isDimmed={isDimmed}
                   isSelected={isSelected}
-                  onClick={() => onFeatureClick(feature)}
                   startDate={feature.startDate}
                   title={feature.title}
                   variant="feature"

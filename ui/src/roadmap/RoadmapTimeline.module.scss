@@ -1,6 +1,7 @@
 .wrapper {
-  --roadmap-day-count: 7;
   --roadmap-col-width: 100px;
+  --roadmap-day-count: 7;
+  --today-col-index: -1;
 }
 
 .timeline__header,
@@ -130,6 +131,18 @@
     var(--ams-color-separator);
   grid-row: 1 / -1;
   opacity: 30%;
+}
+
+.timeline__today-line {
+  border-inline-start: var(--ams-border-width-m) solid var(--ams-color-text);
+  inset-block: 0;
+  inset-inline-start: calc(
+    (var(--today-col-index) + 0.5) * var(--roadmap-col-width)
+  );
+  opacity: 25%;
+  pointer-events: none;
+  position: absolute;
+  z-index: 2;
 }
 
 .timeline__feature-group {
