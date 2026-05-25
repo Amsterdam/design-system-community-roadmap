@@ -1,7 +1,7 @@
 export function getProgressStatus(start?: string, end?: string | null): 'completed' | 'current' | undefined {
-  const now = Date.now()
-  if (end && new Date(end).getTime() < now) return 'completed'
-  if (start && new Date(start).getTime() <= now) return 'current'
+  const today = new Intl.DateTimeFormat('en-CA', { timeZone: 'Europe/Amsterdam' }).format(new Date())
+  if (end && end < today) return 'completed'
+  if (start && start <= today) return 'current'
   return undefined
 }
 
