@@ -43,19 +43,5 @@
     "stylelint-value-no-unknown-custom-properties": "^6.1.1",
     "typescript": "^5.9.3",
     "typescript-eslint": "^8.59.4"
-  },
-  "pnpm": {
-    "overrides": {
-      "cms>react": "^18.3.1",
-      "cms>react-dom": "^18.3.1",
-      "zod": "^3.25.76",
-      "lodash": "^4.18.1"
-    },
-    "peerDependencyRules": {
-      "allowedVersions": {
-        "codemirror": "5",
-        "typescript": "5"
-      }
-    }
   }
 }
