@@ -37,10 +37,14 @@ const Reactions = ({
         >
           <Paragraph className={styles['reactions__content']}>{reaction.content}</Paragraph>
           <div className={styles['reactions__author']}>
-            {!reaction.author?.isTeam && (
-              <span className={styles['reactions__author-name']}>{reaction.author?.name ?? 'Anoniem'}</span>
+            {reaction.author?.isTeam ? (
+              <>
+                <span className={styles['reactions__author-name']}>{reaction.author.name || 'Anoniem'}</span>
+                <Badge color="magenta" label={teamLabel} />
+              </>
+            ) : (
+              <span className={styles['reactions__author-name']}>{reaction.author?.name || 'Anoniem'}</span>
             )}
-            {reaction.author?.isTeam && <Badge color="magenta" label={teamLabel} />}
             {onDeleteReaction && (
               <button
                 aria-label="Reactie verwijderen"

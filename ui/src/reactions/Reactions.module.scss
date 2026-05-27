@@ -37,6 +37,10 @@
   font-weight: 700;
 }
 
+.reactions__item--team .reactions__author-name {
+  color: var(--ams-color-text);
+}
+
 .reactions__delete {
   background: none;
   border: none;
@@ -51,6 +55,10 @@
   &:hover {
     color: var(--ams-color-text);
   }
+}
+
+.reactions__item--team .reactions__delete {
+  color: var(--ams-color-text);
 }
 
 .reactions--compact {
@@ -72,6 +80,14 @@
     border-inline-start: var(--ams-border-width-xl) solid
       var(--ams-color-highlight-magenta);
     padding-inline-start: var(--ams-space-s);
+
+    .reactions__author-name {
+      color: var(--ams-color-text-secondary);
+    }
+
+    .reactions__delete {
+      color: var(--ams-color-text-secondary);
+    }
   }
 
   .reactions__content {
