@@ -9,6 +9,7 @@
     "build": "storybook build"
   },
   "dependencies": {
+    "@amsterdam/design-system-react": "^4.1.0",
     "@design-system-community-roadmap/ui": "workspace:*",
     "date-fns": "^4.3.0",
     "react": "^19.2.5",
