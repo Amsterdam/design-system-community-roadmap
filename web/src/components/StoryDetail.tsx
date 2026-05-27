@@ -5,6 +5,7 @@ import type { EditModalFieldErrors, ReactionItem } from '@design-system-communit
 import {
   ActionGroup,
   Badge,
+  DescriptionList,
   Dialog,
   Grid,
   Heading,
@@ -178,7 +179,7 @@ export default function StoryDetail({
   return (
     <Grid gapVertical="large">
       <Grid.Cell className="ams-prose" span={{ narrow: 4, medium: 8, wide: 7 }}>
-        <div className={styles['story-detail__header']}>
+        <div className={styles['story-detail__title-row']}>
           <Heading level={1} size="level-2">
             {title}
           </Heading>
@@ -199,49 +200,43 @@ export default function StoryDetail({
         <StrapiImageBlock fallbackAlt={title} images={images} />
       </Grid.Cell>
       <Grid.Cell className="ams-prose" span={{ narrow: 4, medium: 8, wide: 5 }}>
-        <Heading level={2} size="level-4">
+        <Heading level={2} size="level-3">
           Details
         </Heading>
-        <dl className={styles['story-detail__details']}>
-          <dt>
-            <strong>Status</strong>
-          </dt>
-          <dd>
+        <DescriptionList>
+          <DescriptionList.Term>Status</DescriptionList.Term>
+          <DescriptionList.Description>
             <Badge
               color={endDate && new Date(endDate) < new Date() ? 'lime' : 'azure'}
               label={endDate && new Date(endDate) < new Date() ? 'Voltooid' : 'In uitvoering'}
             />
-          </dd>
-          <dt>
-            <strong>Startdatum</strong>
-          </dt>
-          <dd>{startDate ? new Date(startDate).toLocaleDateString('nl-NL') : 'Onbekend'}</dd>
+          </DescriptionList.Description>
+          <DescriptionList.Term>Startdatum</DescriptionList.Term>
+          <DescriptionList.Description>
+            {startDate ? new Date(startDate).toLocaleDateString('nl-NL') : 'Onbekend'}
+          </DescriptionList.Description>
           {endDate && (
             <>
-              <dt>
-                <strong>Einddatum</strong>
-              </dt>
-              <dd>{new Date(endDate).toLocaleDateString('nl-NL')}</dd>
+              <DescriptionList.Term>Einddatum</DescriptionList.Term>
+              <DescriptionList.Description>{new Date(endDate).toLocaleDateString('nl-NL')}</DescriptionList.Description>
             </>
           )}
           {parentFeature && (
             <>
-              <dt>
-                <strong>Onderdeel van</strong>
-              </dt>
-              <dd>
+              <DescriptionList.Term>Onderdeel van</DescriptionList.Term>
+              <DescriptionList.Description>
                 <StandaloneLink href={`/features/${parentFeature.documentId}`}>{parentFeature.title}</StandaloneLink>
-              </dd>
+              </DescriptionList.Description>
             </>
           )}
-        </dl>
+        </DescriptionList>
         {teamReaction && (
           <Reactions
             onDeleteReaction={currentUserIsTeam ? handleDeleteReaction : undefined}
             reactions={[teamReaction]}
           />
         )}
-        <Heading level={2} size="level-4">
+        <Heading level={2} size="level-3">
           Reacties
         </Heading>
         <Reactions

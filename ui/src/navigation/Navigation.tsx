@@ -13,10 +13,11 @@ const navItems = [
 ]
 
 type NavigationProps = {
+  className?: string
   pathname?: string
 }
 
-const Navigation = ({ pathname }: NavigationProps) => {
+const Navigation = ({ className, pathname }: NavigationProps) => {
   const pendingKey = useRef<string | null>(null)
   const pendingTimer = useRef<ReturnType<typeof setTimeout> | undefined>(undefined)
 
@@ -53,7 +54,7 @@ const Navigation = ({ pathname }: NavigationProps) => {
   }, [])
 
   return (
-    <Menu className={styles['navigation']} inWideWindow>
+    <Menu className={clsx(styles['navigation'], className)} inWideWindow>
       {navItems.map((item) => {
         const isActive = pathname === item.href
         return (

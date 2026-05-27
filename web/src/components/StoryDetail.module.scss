@@ -1,21 +1,6 @@
-.story-detail__details {
-  display: grid;
-  gap: var(--ams-space-xs) var(--ams-space-m);
-  grid-template-columns: max-content 1fr;
-
-  dt,
-  dd {
-    margin-block: 0;
-    margin-inline: 0;
-    padding-block: 0;
-    padding-inline: 0;
-  }
-}
-
-.story-detail__header {
-  align-items: flex-start;
+.story-detail__title-row {
+  align-items: center;
   display: flex;
   gap: var(--ams-space-m);
   justify-content: space-between;
-  margin-block-end: var(--ams-space-m);
 }
