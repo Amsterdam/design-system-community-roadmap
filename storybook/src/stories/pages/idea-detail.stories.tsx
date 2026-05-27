@@ -22,7 +22,7 @@ const mockReactions: ReactionItem[] = [
 ]
 
 const teamReaction: ReactionItem = {
-  author: { isTeam: true, name: 'Amsterdam Design System Team' },
+  author: { isTeam: true, name: 'Evi' },
   content: 'Bedankt voor dit idee! We nemen het mee in onze volgende planningssessie en komen hier snel op terug.',
   id: 99,
 }

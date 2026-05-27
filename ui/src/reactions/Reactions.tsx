@@ -18,6 +18,11 @@ type ReactionsProps = {
   teamLabel?: string
 }
 
+const firstNameOf = (fullName: string): string => {
+  const withoutEmoji = fullName.replace(/\p{Emoji_Presentation}/gu, '').trim()
+  return withoutEmoji.split(/\s+/)[0] ?? fullName
+}
+
 const Reactions = ({
   compact = false,
   onDeleteReaction,
@@ -37,10 +42,14 @@ const Reactions = ({
         >
           <Paragraph className={styles['reactions__content']}>{reaction.content}</Paragraph>
           <div className={styles['reactions__author']}>
-            {!reaction.author?.isTeam && (
+            {reaction.author?.isTeam ? (
+              <>
+                <span className={styles['reactions__author-name']}>{firstNameOf(reaction.author.name)}</span>
+                <Badge color="magenta" label={teamLabel} />
+              </>
+            ) : (
               <span className={styles['reactions__author-name']}>{reaction.author?.name ?? 'Anoniem'}</span>
             )}
-            {reaction.author?.isTeam && <Badge color="magenta" label={teamLabel} />}
             {onDeleteReaction && (
               <button
                 aria-label="Reactie verwijderen"

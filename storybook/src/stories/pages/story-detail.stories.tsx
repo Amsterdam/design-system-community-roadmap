@@ -15,7 +15,7 @@ const mockReactions: ReactionItem[] = [
     id: 2,
   },
   {
-    author: { isTeam: true, name: 'Amsterdam Design System Team' },
+    author: { isTeam: true, name: 'Evi' },
     content: 'We verwachten dit eind Q2 te releasen. Bedankt voor jullie geduld!',
     id: 3,
   },

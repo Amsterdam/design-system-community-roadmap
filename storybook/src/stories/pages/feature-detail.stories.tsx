@@ -15,7 +15,7 @@ const mockReactions: ReactionItem[] = [
     id: 2,
   },
   {
-    author: { isTeam: true, name: 'Amsterdam Design System Team' },
+    author: { isTeam: true, name: 'Evi' },
     content: 'De designfase is gestart. We delen de Figma-link zodra de eerste versie klaar is.',
     id: 3,
   },
