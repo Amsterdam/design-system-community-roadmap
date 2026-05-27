@@ -9,20 +9,7 @@
   }
 }
 
-.card--big {
-  padding-block: var(--ams-space-m);
-  padding-inline: var(--ams-space-m);
-}
-
-.card--small {
-  padding-block: var(--ams-space-s);
-  padding-inline: var(--ams-space-s);
-}
-
 .card__description {
-  -webkit-box-orient: vertical;
-  display: -webkit-box;
-  -webkit-line-clamp: 3;
   overflow: hidden;
 }
 

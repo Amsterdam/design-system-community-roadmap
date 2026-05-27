@@ -14,24 +14,6 @@ const meta = {
 export default meta
 type Story = StoryObj<typeof meta>
 
-export const Big: Story = {
-  args: {
-    title: 'Multi Select',
-    description: 'In een component wil ik meerdere opties tegelijkertijd kunnen selecteren.',
-    isLiked: false,
-    voteCount: 25,
-  },
-}
-
-export const Small: Story = {
-  args: {
-    title: 'Loading UI',
-    description: 'Hoe laat ik zien dat data nog wordt opgehaald in mijn applicatie?',
-    isLiked: false,
-    voteCount: 7,
-  },
-}
-
 export const PreLiked: Story = {
   args: {
     title: 'Status Badge',
