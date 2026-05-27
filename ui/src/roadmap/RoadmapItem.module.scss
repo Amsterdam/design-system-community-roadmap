@@ -11,6 +11,13 @@
   overflow: hidden;
   padding-inline: var(--ams-space-s);
   text-align: start;
+  transition: opacity 150ms cubic-bezier(0.2, 0, 0, 1);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .item {
+    transition: none;
+  }
 }
 
 .item--feature {
@@ -29,11 +36,6 @@
 
 .item--dimmed {
   opacity: 35%;
-  transition: opacity 300ms ease;
-}
-
-.item:not(.item--dimmed) {
-  transition: opacity 300ms ease;
 }
 
 .item__title {
