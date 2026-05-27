@@ -1,7 +1,6 @@
-.story-detail__header {
-  align-items: flex-start;
+.story-detail__title-row {
+  align-items: center;
   display: flex;
   gap: var(--ams-space-m);
   justify-content: space-between;
-  margin-block-end: var(--ams-space-m);
 }

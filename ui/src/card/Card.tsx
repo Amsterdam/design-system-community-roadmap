@@ -19,9 +19,7 @@ type CardProps = {
 
 const Card = ({ title, author, description, href, isLiked, onLike, voteCount }: CardProps) => (
   <AmsCard className={styles['card']}>
-    <AmsCard.Heading level={2} size="level-3">
-      {href ? <AmsCard.Link href={href}>{title}</AmsCard.Link> : title}
-    </AmsCard.Heading>
+    <AmsCard.Heading level={2}>{href ? <AmsCard.Link href={href}>{title}</AmsCard.Link> : title}</AmsCard.Heading>
     <Paragraph className={styles['card__description']} size="small">
       {description}
     </Paragraph>

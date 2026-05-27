@@ -63,16 +63,9 @@ export default function NotificationsClient(props: NotificationsClientProps) {
   return (
     <Grid gapVertical="large">
       <Grid.Cell className="ams-prose" span={{ narrow: 4, medium: 8, wide: 8 }}>
-        <div className={styles['notifications__header']}>
-          <Heading level={1} size="level-2">
-            Meldingen
-          </Heading>
-          {unreadCount > 0 && (
-            <Button onClick={handleMarkAllRead} type="button" variant="tertiary">
-              Alles als gelezen markeren
-            </Button>
-          )}
-        </div>
+        <Heading level={1} size="level-2">
+          Meldingen
+        </Heading>
 
         {notifications.length === 0 && <Paragraph>Je hebt nog geen meldingen.</Paragraph>}
 
@@ -98,6 +91,12 @@ export default function NotificationsClient(props: NotificationsClientProps) {
               </li>
             ))}
           </ul>
+        )}
+
+        {unreadCount > 0 && (
+          <Button onClick={handleMarkAllRead} type="button" variant="tertiary">
+            Alles als gelezen markeren
+          </Button>
         )}
       </Grid.Cell>
     </Grid>

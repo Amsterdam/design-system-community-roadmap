@@ -120,7 +120,7 @@ export default function FeatureDetail({
   return (
     <Grid gapVertical="large">
       <Grid.Cell className="ams-prose" span={{ narrow: 4, medium: 8, wide: 7 }}>
-        <div className={styles['feature-detail__header']}>
+        <div className={styles['feature-detail__title-row']}>
           <Heading level={1} size="level-2">
             {title}
           </Heading>
@@ -131,29 +131,25 @@ export default function FeatureDetail({
         <StrapiImageBlock fallbackAlt={title} images={images} />
 
         {stories.length > 0 && (
-          <div className={styles['feature-detail__stories-container']}>
+          <>
             <Heading level={2} size="level-3">
               Stories
             </Heading>
-            <div className={styles['feature-detail__stories']}>
-              <ProgressList headingLevel={3}>
-                {sortedStories.map((story) => (
-                  <ProgressList.Step
-                    heading={story.title}
-                    key={story.documentId}
-                    status={getProgressStatus(story.startDate, story.endDate)}
-                  >
-                    <div className={styles['feature-detail__story-content']}>
-                      <div className={styles['feature-detail__story-date']}>
-                        <Badge label={formatDateRange(story.startDate, story.endDate)} />
-                      </div>
-                      <StandaloneLink href={`/stories/${story.documentId}`}>Bekijk details</StandaloneLink>
-                    </div>
-                  </ProgressList.Step>
-                ))}
-              </ProgressList>
-            </div>
-          </div>
+            <ProgressList headingLevel={3}>
+              {sortedStories.map((story) => (
+                <ProgressList.Step
+                  heading={story.title}
+                  key={story.documentId}
+                  status={getProgressStatus(story.startDate, story.endDate)}
+                >
+                  <div className={styles['feature-detail__story-content']}>
+                    <Badge label={formatDateRange(story.startDate, story.endDate)} />
+                    <StandaloneLink href={`/stories/${story.documentId}`}>Bekijk details</StandaloneLink>
+                  </div>
+                </ProgressList.Step>
+              ))}
+            </ProgressList>
+          </>
         )}
       </Grid.Cell>
       <Grid.Cell className="ams-prose" span={{ narrow: 4, medium: 8, wide: 5 }}>

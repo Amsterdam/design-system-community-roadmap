@@ -119,7 +119,7 @@ export default function StoryDetail({
   return (
     <Grid gapVertical="large">
       <Grid.Cell className="ams-prose" span={{ narrow: 4, medium: 8, wide: 7 }}>
-        <div className={styles['story-detail__header']}>
+        <div className={styles['story-detail__title-row']}>
           <Heading level={1} size="level-2">
             {title}
           </Heading>
