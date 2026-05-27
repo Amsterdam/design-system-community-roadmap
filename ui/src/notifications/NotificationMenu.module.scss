@@ -43,15 +43,6 @@
   padding-inline: var(--ams-space-m);
 }
 
-.notification-menu__action {
-  background: none;
-  border: none;
-  color: var(--ams-color-highlight-magenta);
-  cursor: pointer;
-  font-size: var(--ams-typography-body-text-small-font-size);
-  text-decoration: underline;
-}
-
 .notification-menu__list {
   list-style: none;
 }

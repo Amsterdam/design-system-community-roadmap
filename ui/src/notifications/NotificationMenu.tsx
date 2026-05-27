@@ -1,6 +1,6 @@
 'use client'
 
-import { Badge } from '@amsterdam/design-system-react'
+import { Badge, Button } from '@amsterdam/design-system-react'
 import { clsx } from 'clsx'
 import { useEffect, useRef, useState } from 'react'
 
@@ -89,9 +89,9 @@ const NotificationMenu = ({ notifications, onMarkAllRead, onSelect }: Notificati
           <div className={styles['notification-menu__header']}>
             <strong>Meldingen</strong>
             {unreadCount > 0 && onMarkAllRead && (
-              <button className={styles['notification-menu__action']} onClick={onMarkAllRead} type="button">
+              <Button onClick={onMarkAllRead} type="button" variant="tertiary">
                 Alles als gelezen markeren
-              </button>
+              </Button>
             )}
           </div>
 

@@ -2,7 +2,15 @@
 
 import type { ReactionItem } from '@design-system-community-roadmap/ui'
 
-import { Badge, Grid, Heading, Paragraph, ProgressList, StandaloneLink } from '@amsterdam/design-system-react'
+import {
+  Badge,
+  DescriptionList,
+  Grid,
+  Heading,
+  Paragraph,
+  ProgressList,
+  StandaloneLink,
+} from '@amsterdam/design-system-react'
 import { AddReaction, LikeButton, Reactions } from '@design-system-community-roadmap/ui'
 import { useRouter } from 'next/navigation'
 import { useState } from 'react'
@@ -112,7 +120,7 @@ export default function FeatureDetail({
   return (
     <Grid gapVertical="large">
       <Grid.Cell className="ams-prose" span={{ narrow: 4, medium: 8, wide: 7 }}>
-        <div className={styles['feature-detail__header']}>
+        <div className={styles['feature-detail__title-row']}>
           <Heading level={1} size="level-2">
             {title}
           </Heading>
@@ -123,65 +131,57 @@ export default function FeatureDetail({
         <StrapiImageBlock fallbackAlt={title} images={images} />
 
         {stories.length > 0 && (
-          <div className={styles['feature-detail__stories-container']}>
-            <Heading level={2} size="level-4">
+          <>
+            <Heading level={2} size="level-3">
               Stories
             </Heading>
-            <div className={styles['feature-detail__stories']}>
-              <ProgressList headingLevel={3}>
-                {sortedStories.map((story) => (
-                  <ProgressList.Step
-                    heading={story.title}
-                    key={story.documentId}
-                    status={getProgressStatus(story.startDate, story.endDate)}
-                  >
-                    <div className={styles['feature-detail__story-content']}>
-                      <div className={styles['feature-detail__story-date']}>
-                        <Badge label={formatDateRange(story.startDate, story.endDate)} />
-                      </div>
-                      <StandaloneLink href={`/stories/${story.documentId}`}>Bekijk details</StandaloneLink>
-                    </div>
-                  </ProgressList.Step>
-                ))}
-              </ProgressList>
-            </div>
-          </div>
+            <ProgressList headingLevel={3}>
+              {sortedStories.map((story) => (
+                <ProgressList.Step
+                  heading={story.title}
+                  key={story.documentId}
+                  status={getProgressStatus(story.startDate, story.endDate)}
+                >
+                  <div className={styles['feature-detail__story-content']}>
+                    <Badge label={formatDateRange(story.startDate, story.endDate)} />
+                    <StandaloneLink href={`/stories/${story.documentId}`}>Bekijk details</StandaloneLink>
+                  </div>
+                </ProgressList.Step>
+              ))}
+            </ProgressList>
+          </>
         )}
       </Grid.Cell>
       <Grid.Cell className="ams-prose" span={{ narrow: 4, medium: 8, wide: 5 }}>
-        <Heading level={2} size="level-4">
+        <Heading level={2} size="level-3">
           Details
         </Heading>
-        <dl className={styles['feature-detail__details']}>
-          <dt>
-            <strong>Status</strong>
-          </dt>
-          <dd>
+        <DescriptionList>
+          <DescriptionList.Term>Status</DescriptionList.Term>
+          <DescriptionList.Description>
             <Badge
               color={endDate && new Date(endDate) < new Date() ? 'lime' : 'azure'}
               label={endDate && new Date(endDate) < new Date() ? 'Voltooid' : 'In uitvoering'}
             />
-          </dd>
-          <dt>
-            <strong>Startdatum</strong>
-          </dt>
-          <dd>{startDate ? new Date(startDate).toLocaleDateString('nl-NL') : 'Onbekend'}</dd>
+          </DescriptionList.Description>
+          <DescriptionList.Term>Startdatum</DescriptionList.Term>
+          <DescriptionList.Description>
+            {startDate ? new Date(startDate).toLocaleDateString('nl-NL') : 'Onbekend'}
+          </DescriptionList.Description>
           {endDate && (
             <>
-              <dt>
-                <strong>Einddatum</strong>
-              </dt>
-              <dd>{new Date(endDate).toLocaleDateString('nl-NL')}</dd>
+              <DescriptionList.Term>Einddatum</DescriptionList.Term>
+              <DescriptionList.Description>{new Date(endDate).toLocaleDateString('nl-NL')}</DescriptionList.Description>
             </>
           )}
-        </dl>
+        </DescriptionList>
         {teamReaction && (
           <Reactions
             onDeleteReaction={currentUserIsTeam ? handleDeleteReaction : undefined}
             reactions={[teamReaction]}
           />
         )}
-        <Heading level={2} size="level-4">
+        <Heading level={2} size="level-3">
           Reacties
         </Heading>
         <Reactions

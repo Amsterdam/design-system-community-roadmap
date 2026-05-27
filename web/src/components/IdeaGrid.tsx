@@ -46,21 +46,20 @@ export default function IdeaGrid({ currentUserDocumentId, ideas }: IdeaGridProps
   }
 
   return (
-    <Grid gapVertical="none">
+    <Grid gapVertical="large">
       <Grid.Cell span="all">
         <Heading level={1} size="level-2">
           Ideeën
         </Heading>
       </Grid.Cell>
 
-      {sortedIdeas.map((idea, index) => {
-        const isTopThree = index < 3
+      {sortedIdeas.map((idea) => {
         const isLiked =
           !!currentUserDocumentId &&
           (idea.likes?.some((l) => l.end_user?.documentId === currentUserDocumentId) ?? false)
 
         return (
-          <Grid.Cell key={idea.id} span={{ narrow: 4, medium: 4, wide: isTopThree ? 4 : 3 }}>
+          <Grid.Cell key={idea.id} span={{ narrow: 4, medium: 4, wide: 4 }}>
             <Card
               author={idea.end_users?.[0]}
               description={idea.content}
@@ -68,7 +67,6 @@ export default function IdeaGrid({ currentUserDocumentId, ideas }: IdeaGridProps
               isLiked={isLiked}
               onLike={(liked) => handleLike(idea.documentId, liked)}
               title={idea.title}
-              variant={isTopThree ? 'big' : 'small'}
               voteCount={idea.likes?.length ?? 0}
             />
           </Grid.Cell>

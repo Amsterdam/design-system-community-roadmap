@@ -2,7 +2,7 @@
 
 import type { FormEvent, ReactNode } from 'react'
 
-import { Button, ErrorMessage, Field, FieldSet, Label, TextInput } from '@amsterdam/design-system-react'
+import { Alert, Button, ErrorMessage, Field, FieldSet, Label, TextInput } from '@amsterdam/design-system-react'
 import { useState } from 'react'
 
 import EmojiPicker from './EmojiPicker'
@@ -77,9 +77,9 @@ const LoginForm = ({
       </FieldSet>
 
       {error && (
-        <p className={styles['login-form__server-error']} role="alert">
+        <Alert heading="Er is een fout opgetreden" headingLevel={2} severity="error">
           {error}
-        </p>
+        </Alert>
       )}
 
       <Button disabled={loading} type="submit" variant="primary">

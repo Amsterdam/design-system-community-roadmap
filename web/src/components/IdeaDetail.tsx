@@ -2,7 +2,15 @@
 
 import type { ReactionItem } from '@design-system-community-roadmap/ui'
 
-import { Badge, Grid, Heading, Paragraph, ProgressList, StandaloneLink } from '@amsterdam/design-system-react'
+import {
+  Badge,
+  DescriptionList,
+  Grid,
+  Heading,
+  Paragraph,
+  ProgressList,
+  StandaloneLink,
+} from '@amsterdam/design-system-react'
 import { Reactions } from '@design-system-community-roadmap/ui'
 import { useRouter } from 'next/navigation'
 
@@ -80,7 +88,7 @@ export default function IdeaDetail({
   return (
     <Grid gapVertical="large">
       <Grid.Cell className="ams-prose" span={{ narrow: 4, medium: 8, wide: 7 }}>
-        <div className={styles['idea-detail__header']}>
+        <div className={styles['idea-detail__title-row']}>
           <Heading level={1} size="level-2">
             {title}
           </Heading>
@@ -97,29 +105,25 @@ export default function IdeaDetail({
         <StrapiImageBlock fallbackAlt={title} images={images} />
 
         {features.length > 0 && (
-          <div className={styles['idea-detail__stories-container']}>
-            <Heading level={2} size="level-4">
+          <>
+            <Heading level={2} size="level-3">
               Features
             </Heading>
-            <div className={styles['idea-detail__stories']}>
-              <ProgressList headingLevel={3}>
-                {sortedFeatures.map((feature) => (
-                  <ProgressList.Step
-                    heading={feature.title}
-                    key={feature.documentId}
-                    status={getProgressStatus(feature.startDate, feature.endDate)}
-                  >
-                    <div className={styles['idea-detail__story-content']}>
-                      <div className={styles['idea-detail__story-date']}>
-                        <Badge label={formatDateRange(feature.startDate, feature.endDate)} />
-                      </div>
-                      <StandaloneLink href={`/features/${feature.documentId}`}>Bekijk details</StandaloneLink>
-                    </div>
-                  </ProgressList.Step>
-                ))}
-              </ProgressList>
-            </div>
-          </div>
+            <ProgressList headingLevel={3}>
+              {sortedFeatures.map((feature) => (
+                <ProgressList.Step
+                  heading={feature.title}
+                  key={feature.documentId}
+                  status={getProgressStatus(feature.startDate, feature.endDate)}
+                >
+                  <div className={styles['idea-detail__story-content']}>
+                    <Badge label={formatDateRange(feature.startDate, feature.endDate)} />
+                    <StandaloneLink href={`/features/${feature.documentId}`}>Bekijk details</StandaloneLink>
+                  </div>
+                </ProgressList.Step>
+              ))}
+            </ProgressList>
+          </>
         )}
       </Grid.Cell>
       <Grid.Cell className="ams-prose" span={{ narrow: 4, medium: 8, wide: 5 }}>
@@ -129,28 +133,26 @@ export default function IdeaDetail({
             reactions={[teamReaction]}
           />
         )}
-        <Heading level={2} size="level-4">
+        <Heading level={2} size="level-3">
           Details
         </Heading>
-        <dl className={styles['idea-detail__details']}>
-          <dt>
-            <strong>Status</strong>
-          </dt>
-          <dd>{status ? (statusLabels[status] ?? status) : 'Onbekend'}</dd>
+        <DescriptionList>
+          <DescriptionList.Term>Status</DescriptionList.Term>
+          <DescriptionList.Description>
+            {status ? (statusLabels[status] ?? status) : 'Onbekend'}
+          </DescriptionList.Description>
           {authorName && (
             <>
-              <dt>
-                <strong>Ingediend door</strong>
-              </dt>
-              <dd>{authorName}</dd>
+              <DescriptionList.Term>Ingediend door</DescriptionList.Term>
+              <DescriptionList.Description>{authorName}</DescriptionList.Description>
             </>
           )}
-          <dt>
-            <strong>Aangemaakt</strong>
-          </dt>
-          <dd>{createdAt ? new Date(createdAt).toLocaleDateString('nl-NL') : 'Onbekend'}</dd>
-        </dl>
-        <Heading level={2} size="level-4">
+          <DescriptionList.Term>Aangemaakt</DescriptionList.Term>
+          <DescriptionList.Description>
+            {createdAt ? new Date(createdAt).toLocaleDateString('nl-NL') : 'Onbekend'}
+          </DescriptionList.Description>
+        </DescriptionList>
+        <Heading level={2} size="level-3">
           Reacties
         </Heading>
         <Reactions
