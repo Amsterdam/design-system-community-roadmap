@@ -2,7 +2,15 @@
 
 import type { ReactionItem } from '@design-system-community-roadmap/ui'
 
-import { Badge, Grid, Heading, Paragraph, ProgressList, StandaloneLink } from '@amsterdam/design-system-react'
+import {
+  Badge,
+  DescriptionList,
+  Grid,
+  Heading,
+  Paragraph,
+  ProgressList,
+  StandaloneLink,
+} from '@amsterdam/design-system-react'
 import { AddReaction, LikeButton, Reactions } from '@design-system-community-roadmap/ui'
 import { useRouter } from 'next/navigation'
 import { useState } from 'react'
@@ -152,29 +160,25 @@ export default function FeatureDetail({
         <Heading level={2} size="level-4">
           Details
         </Heading>
-        <dl className={styles['feature-detail__details']}>
-          <dt>
-            <strong>Status</strong>
-          </dt>
-          <dd>
+        <DescriptionList>
+          <DescriptionList.Term>Status</DescriptionList.Term>
+          <DescriptionList.Description>
             <Badge
               color={endDate && new Date(endDate) < new Date() ? 'lime' : 'azure'}
               label={endDate && new Date(endDate) < new Date() ? 'Voltooid' : 'In uitvoering'}
             />
-          </dd>
-          <dt>
-            <strong>Startdatum</strong>
-          </dt>
-          <dd>{startDate ? new Date(startDate).toLocaleDateString('nl-NL') : 'Onbekend'}</dd>
+          </DescriptionList.Description>
+          <DescriptionList.Term>Startdatum</DescriptionList.Term>
+          <DescriptionList.Description>
+            {startDate ? new Date(startDate).toLocaleDateString('nl-NL') : 'Onbekend'}
+          </DescriptionList.Description>
           {endDate && (
             <>
-              <dt>
-                <strong>Einddatum</strong>
-              </dt>
-              <dd>{new Date(endDate).toLocaleDateString('nl-NL')}</dd>
+              <DescriptionList.Term>Einddatum</DescriptionList.Term>
+              <DescriptionList.Description>{new Date(endDate).toLocaleDateString('nl-NL')}</DescriptionList.Description>
             </>
           )}
-        </dl>
+        </DescriptionList>
         {teamReaction && (
           <Reactions
             onDeleteReaction={currentUserIsTeam ? handleDeleteReaction : undefined}

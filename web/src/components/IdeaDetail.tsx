@@ -2,7 +2,15 @@
 
 import type { ReactionItem } from '@design-system-community-roadmap/ui'
 
-import { Badge, Grid, Heading, Paragraph, ProgressList, StandaloneLink } from '@amsterdam/design-system-react'
+import {
+  Badge,
+  DescriptionList,
+  Grid,
+  Heading,
+  Paragraph,
+  ProgressList,
+  StandaloneLink,
+} from '@amsterdam/design-system-react'
 import { Reactions } from '@design-system-community-roadmap/ui'
 import { useRouter } from 'next/navigation'
 
@@ -132,24 +140,22 @@ export default function IdeaDetail({
         <Heading level={2} size="level-4">
           Details
         </Heading>
-        <dl className={styles['idea-detail__details']}>
-          <dt>
-            <strong>Status</strong>
-          </dt>
-          <dd>{status ? (statusLabels[status] ?? status) : 'Onbekend'}</dd>
+        <DescriptionList>
+          <DescriptionList.Term>Status</DescriptionList.Term>
+          <DescriptionList.Description>
+            {status ? (statusLabels[status] ?? status) : 'Onbekend'}
+          </DescriptionList.Description>
           {authorName && (
             <>
-              <dt>
-                <strong>Ingediend door</strong>
-              </dt>
-              <dd>{authorName}</dd>
+              <DescriptionList.Term>Ingediend door</DescriptionList.Term>
+              <DescriptionList.Description>{authorName}</DescriptionList.Description>
             </>
           )}
-          <dt>
-            <strong>Aangemaakt</strong>
-          </dt>
-          <dd>{createdAt ? new Date(createdAt).toLocaleDateString('nl-NL') : 'Onbekend'}</dd>
-        </dl>
+          <DescriptionList.Term>Aangemaakt</DescriptionList.Term>
+          <DescriptionList.Description>
+            {createdAt ? new Date(createdAt).toLocaleDateString('nl-NL') : 'Onbekend'}
+          </DescriptionList.Description>
+        </DescriptionList>
         <Heading level={2} size="level-4">
           Reacties
         </Heading>

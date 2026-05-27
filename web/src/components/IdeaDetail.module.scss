@@ -17,20 +17,6 @@
   display: flex;
 }
 
-.idea-detail__details {
-  display: grid;
-  gap: var(--ams-space-xs) var(--ams-space-m);
-  grid-template-columns: max-content 1fr;
-
-  dt,
-  dd {
-    margin-block: 0;
-    margin-inline: 0;
-    padding-block: 0;
-    padding-inline: 0;
-  }
-}
-
 .idea-detail__header {
   align-items: flex-start;
   display: flex;

@@ -1,6 +1,6 @@
 'use client'
 
-import { Badge, Grid, Heading, Paragraph } from '@amsterdam/design-system-react'
+import { Badge, Button, Grid, Heading, Paragraph } from '@amsterdam/design-system-react'
 import { useRouter } from 'next/navigation'
 import { useState } from 'react'
 
@@ -68,9 +68,9 @@ export default function NotificationsClient(props: NotificationsClientProps) {
             Meldingen
           </Heading>
           {unreadCount > 0 && (
-            <button className={styles['notifications__mark-all']} onClick={handleMarkAllRead} type="button">
+            <Button onClick={handleMarkAllRead} type="button" variant="tertiary">
               Alles als gelezen markeren
-            </button>
+            </Button>
           )}
         </div>
 
