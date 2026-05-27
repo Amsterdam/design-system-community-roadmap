@@ -63,14 +63,16 @@ const Roadmap = ({
 
     const from = rangeRef.current
     const startTime = performance.now()
+    const duration = 160
 
     const tick = (now: number) => {
-      const t = Math.min((now - startTime) / 400, 1)
+      const progress = Math.min((now - startTime) / duration, 1)
+      const easedProgress = 1 - Math.pow(1 - progress, 3)
       setRange({
-        start: new Date(from.start.getTime() + (target.start.getTime() - from.start.getTime()) * t),
-        end: new Date(from.end.getTime() + (target.end.getTime() - from.end.getTime()) * t),
+        start: new Date(from.start.getTime() + (target.start.getTime() - from.start.getTime()) * easedProgress),
+        end: new Date(from.end.getTime() + (target.end.getTime() - from.end.getTime()) * easedProgress),
       })
-      rafRef.current = t < 1 ? requestAnimationFrame(tick) : null
+      rafRef.current = progress < 1 ? requestAnimationFrame(tick) : null
     }
 
     rafRef.current = requestAnimationFrame(tick)
