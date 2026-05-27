@@ -5,12 +5,12 @@ import StoryDetail from '@/components/StoryDetail'
 
 const mockReactions: ReactionItem[] = [
   {
-    author: { name: 'Emma Bakker' },
+    author: { name: 'Emma' },
     content: 'Wanneer is dit beschikbaar in de npm package?',
     id: 1,
   },
   {
-    author: { name: 'Joost van Dam' },
+    author: { name: 'Joost' },
     content: 'De Figma-bestanden zijn al bijgewerkt, top!',
     id: 2,
   },

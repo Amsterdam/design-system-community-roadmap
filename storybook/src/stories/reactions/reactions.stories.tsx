@@ -16,17 +16,17 @@ type Story = StoryObj<typeof meta>
 
 const mockReactions = [
   {
-    author: { name: 'Jan de Vries' },
+    author: { name: 'Jan' },
     content: 'Dit is een erg goed idee! Ik zou dit graag in de volgende versie zien.',
     id: 1,
   },
   {
-    author: { isTeam: true, name: 'Emma Bakker' },
+    author: { isTeam: true, name: 'Emma' },
     content: 'We zijn hier al mee bezig als onderdeel van de nieuwe toegankelijkheidsrichtlijnen.',
     id: 2,
   },
   {
-    author: { name: 'Pieter Post' },
+    author: { name: 'Pieter' },
     content: 'Kan dit ook gebruikt worden in combinatie met andere componenten?',
     id: 3,
   },

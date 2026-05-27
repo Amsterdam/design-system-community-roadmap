@@ -5,12 +5,12 @@ import FeatureDetail from '@/components/FeatureDetail'
 
 const mockReactions: ReactionItem[] = [
   {
-    author: { name: 'Lieke Smit' },
+    author: { name: 'Lieke' },
     content: 'Fijn om te zien dat dit op de planning staat. Wij wachten hier al lang op.',
     id: 1,
   },
   {
-    author: { name: 'Bart Hendriks' },
+    author: { name: 'Bart' },
     content: 'Zijn er al Figma-bestanden beschikbaar voor de nieuwe tabelopmaak?',
     id: 2,
   },

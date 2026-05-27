@@ -5,17 +5,17 @@ import IdeaDetail from '@/components/IdeaDetail'
 
 const mockReactions: ReactionItem[] = [
   {
-    author: { name: 'Jan de Vries' },
+    author: { name: 'Jan' },
     content: 'Dit is een erg goed idee! Wij lopen hier al tijden tegenaan.',
     id: 1,
   },
   {
-    author: { name: 'Sophie Meijer' },
+    author: { name: 'Sophie' },
     content: 'Zou dit ook werken voor mobiele schermformaten?',
     id: 2,
   },
   {
-    author: { name: 'Piet Klaassen' },
+    author: { name: 'Piet' },
     content: 'Helemaal mee eens, dit mist nu echt in het design system.',
     id: 3,
   },
@@ -63,7 +63,7 @@ type Story = StoryObj<typeof meta>
 export const Default: Story = {
   args: {
     title: 'Multi Select Component',
-    authorName: 'Jan de Vries',
+    authorName: 'Jan',
     content:
       'In een formulier wil ik meerdere opties tegelijkertijd kunnen selecteren. Het huidige design system biedt alleen een enkelvoudige selectie aan via de Select component. Een Multi Select component zou formulieren een stuk gebruiksvriendelijker maken, zeker voor gevallen zoals het filteren van meerdere categorieën.',
     createdAt: '2025-01-15T10:30:00Z',
