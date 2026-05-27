@@ -110,12 +110,12 @@ export async function updateFeatureAction(
   if (!trimmedStartDate) {
     fieldErrors.startDate = 'Vul een startdatum in.'
   } else if (!DATE_PATTERN.test(trimmedStartDate)) {
-    fieldErrors.startDate = 'Voer een geldige datum in (dd-mm-yyyy).'
+    fieldErrors.startDate = 'Voer een geldige datum in.'
   }
 
   if (trimmedEndDate) {
     if (!DATE_PATTERN.test(trimmedEndDate)) {
-      fieldErrors.endDate = 'Voer een geldige datum in (dd-mm-yyyy).'
+      fieldErrors.endDate = 'Voer een geldige datum in.'
     } else if (trimmedStartDate && trimmedEndDate < trimmedStartDate) {
       fieldErrors.endDate = 'Einddatum moet op of na de startdatum liggen.'
     }
@@ -174,13 +174,13 @@ export async function updateStoryAction(
   if (!trimmedStartDate) {
     fieldErrors.startDate = 'Vul een startdatum in.'
   } else if (!DATE_PATTERN.test(trimmedStartDate)) {
-    fieldErrors.startDate = 'Voer een geldige datum in (dd-mm-yyyy).'
+    fieldErrors.startDate = 'Voer een geldige datum in.'
   }
 
   if (!trimmedEndDate) {
     fieldErrors.endDate = 'Vul een einddatum in.'
   } else if (!DATE_PATTERN.test(trimmedEndDate)) {
-    fieldErrors.endDate = 'Voer een geldige datum in (dd-mm-yyyy).'
+    fieldErrors.endDate = 'Voer een geldige datum in.'
   }
 
   if (!fieldErrors.startDate && !fieldErrors.endDate) {
