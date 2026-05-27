@@ -106,7 +106,7 @@ export default function IdeaDetail({
 
         {features.length > 0 && (
           <div className={styles['idea-detail__stories-container']}>
-            <Heading level={2} size="level-4">
+            <Heading level={2} size="level-3">
               Features
             </Heading>
             <div className={styles['idea-detail__stories']}>
@@ -137,7 +137,7 @@ export default function IdeaDetail({
             reactions={[teamReaction]}
           />
         )}
-        <Heading level={2} size="level-4">
+        <Heading level={2} size="level-3">
           Details
         </Heading>
         <DescriptionList>
@@ -156,7 +156,7 @@ export default function IdeaDetail({
             {createdAt ? new Date(createdAt).toLocaleDateString('nl-NL') : 'Onbekend'}
           </DescriptionList.Description>
         </DescriptionList>
-        <Heading level={2} size="level-4">
+        <Heading level={2} size="level-3">
           Reacties
         </Heading>
         <Reactions

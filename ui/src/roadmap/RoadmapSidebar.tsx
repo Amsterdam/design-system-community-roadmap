@@ -29,7 +29,7 @@ const RoadmapSidebar = ({
 }: RoadmapSidebarProps) => (
   <nav aria-label="Roadmap features en stories" className={styles['sidebar']}>
     <header className={styles['sidebar__header']}>
-      <Heading className={styles['sidebar__header-title']} level={2} size="level-5">
+      <Heading className={styles['sidebar__header-title']} level={2} size="level-3">
         Features
       </Heading>
     </header>

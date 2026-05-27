@@ -130,7 +130,7 @@ export default function StoryDetail({
         <StrapiImageBlock fallbackAlt={title} images={images} />
       </Grid.Cell>
       <Grid.Cell className="ams-prose" span={{ narrow: 4, medium: 8, wide: 5 }}>
-        <Heading level={2} size="level-4">
+        <Heading level={2} size="level-3">
           Details
         </Heading>
         <DescriptionList>
@@ -166,7 +166,7 @@ export default function StoryDetail({
             reactions={[teamReaction]}
           />
         )}
-        <Heading level={2} size="level-4">
+        <Heading level={2} size="level-3">
           Reacties
         </Heading>
         <Reactions

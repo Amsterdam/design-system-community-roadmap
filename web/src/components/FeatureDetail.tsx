@@ -132,7 +132,7 @@ export default function FeatureDetail({
 
         {stories.length > 0 && (
           <div className={styles['feature-detail__stories-container']}>
-            <Heading level={2} size="level-4">
+            <Heading level={2} size="level-3">
               Stories
             </Heading>
             <div className={styles['feature-detail__stories']}>
@@ -157,7 +157,7 @@ export default function FeatureDetail({
         )}
       </Grid.Cell>
       <Grid.Cell className="ams-prose" span={{ narrow: 4, medium: 8, wide: 5 }}>
-        <Heading level={2} size="level-4">
+        <Heading level={2} size="level-3">
           Details
         </Heading>
         <DescriptionList>
@@ -185,7 +185,7 @@ export default function FeatureDetail({
             reactions={[teamReaction]}
           />
         )}
-        <Heading level={2} size="level-4">
+        <Heading level={2} size="level-3">
           Reacties
         </Heading>
         <Reactions
