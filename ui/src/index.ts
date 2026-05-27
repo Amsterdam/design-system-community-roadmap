@@ -1,4 +1,5 @@
 import Card from './card/Card'
+import EditModal from './edit-modal/EditModal'
 import LikeButton from './like-button/LikeButton'
 import EmojiPicker from './login/EmojiPicker'
 import LoginForm from './login/LoginForm'
@@ -14,6 +15,7 @@ export {
   AddReaction,
   AppHeader,
   Card,
+  EditModal,
   EmojiPicker,
   LikeButton,
   LoginForm,
@@ -23,6 +25,7 @@ export {
   Roadmap,
   SearchBar,
 }
+export type { EditModalFieldErrors, EditModalProps } from './edit-modal/EditModal'
 export type { NotificationMenuItem } from './notifications/NotificationMenu'
 export type { ReactionItem } from './reactions/Reactions'
 export type { RoadmapFeature, RoadmapStory } from './roadmap/dateUtils'

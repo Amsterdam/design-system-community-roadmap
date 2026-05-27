@@ -132,6 +132,9 @@ importers:
 
   storybook:
     dependencies:
+      '@amsterdam/design-system-react':
+        specifier: ^4.1.0
+        version: 4.1.0(@amsterdam/design-system-css@4.1.0(@amsterdam/design-system-assets@2.3.0)(@amsterdam/design-system-tokens@4.0.1))(react-dom@19.2.5(react@19.2.5))(react@19.2.5)
       '@design-system-community-roadmap/ui':
         specifier: workspace:*
         version: link:../ui
@@ -242,6 +245,9 @@ importers:
       '@amsterdam/design-system-react':
         specifier: ^4.1.0
         version: 4.1.0(@amsterdam/design-system-css@4.1.0(@amsterdam/design-system-assets@2.3.0)(@amsterdam/design-system-tokens@4.0.1))(react-dom@19.2.6(react@19.2.6))(react@19.2.6)
+      '@amsterdam/design-system-react-icons':
+        specifier: ^2.0.0
+        version: 2.0.0(react-dom@19.2.6(react@19.2.6))(react@19.2.6)
       '@design-system-community-roadmap/ui':
         specifier: workspace:*
         version: link:../ui
@@ -268,11 +274,11 @@ importers:
         specifier: ^25
         version: 25.6.0
       '@types/react':
-        specifier: ^18
-        version: 18.3.28
+        specifier: ^19
+        version: 19.2.14
       '@types/react-dom':
         specifier: ^19
-        version: 19.2.3(@types/react@18.3.28)
+        version: 19.2.3(@types/react@19.2.14)
       babel-plugin-react-compiler:
         specifier: 1.0.0
         version: 1.0.0
@@ -13741,10 +13747,6 @@ snapshots:
   '@types/range-parser@1.2.7': {}
 
   '@types/react-dom@18.3.7(@types/react@18.3.28)':
-    dependencies:
-      '@types/react': 18.3.28
-
-  '@types/react-dom@19.2.3(@types/react@18.3.28)':
     dependencies:
       '@types/react': 18.3.28
 

@@ -1,21 +1,27 @@
 'use client'
 
-import type { ReactionItem } from '@design-system-community-roadmap/ui'
+import type { EditModalFieldErrors, ReactionItem } from '@design-system-community-roadmap/ui'
 
 import {
+  ActionGroup,
   Badge,
   DescriptionList,
+  Dialog,
   Grid,
   Heading,
+  IconButton,
   Paragraph,
   ProgressList,
   StandaloneLink,
 } from '@amsterdam/design-system-react'
-import { Reactions } from '@design-system-community-roadmap/ui'
+import { DocumentWithPencilIcon } from '@amsterdam/design-system-react-icons'
+import { EditModal, Reactions } from '@design-system-community-roadmap/ui'
 import { useRouter } from 'next/navigation'
+import { useState } from 'react'
 
 import type { StrapiImage } from '@/utils/schemas'
 
+import { updateIdeaAction } from '@/app/actions/edits'
 import { deleteIdeaReactionAction } from '@/app/actions/reactions'
 import { formatDateRange, getProgressStatus } from '@/utils/date'
 
@@ -69,6 +75,53 @@ export default function IdeaDetail({
   voteCount,
 }: IdeaDetailProps) {
   const router = useRouter()
+  const [editLoading, setEditLoading] = useState(false)
+  const [editError, setEditError] = useState<string | undefined>()
+  const [editFieldErrors, setEditFieldErrors] = useState<EditModalFieldErrors | undefined>()
+
+  const editModalId = `edit-modal-idea-${ideaDocumentId}`
+
+  const handleEditSubmit = async (values: {
+    content: string
+    endDate?: string
+    startDate?: string
+    statusIdea?: string
+    title: string
+  }): Promise<boolean> => {
+    setEditLoading(true)
+    setEditError(undefined)
+    setEditFieldErrors(undefined)
+
+    const result = await updateIdeaAction(ideaDocumentId, {
+      title: values.title,
+      content: values.content,
+      statusIdea: values.statusIdea ?? 'in_review',
+    })
+
+    setEditLoading(false)
+
+    if (result.needsLogin) {
+      router.push('/inloggen')
+      return false
+    }
+
+    if (result.error) {
+      setEditError(result.error)
+      return false
+    }
+
+    if (result.fieldErrors) {
+      setEditFieldErrors(result.fieldErrors)
+      return false
+    }
+
+    if (result.success) {
+      router.refresh()
+      return true
+    }
+
+    return false
+  }
 
   const teamReaction = reactions.find((reaction) => reaction.author?.isTeam)
   const feedReactions = teamReaction ? reactions.filter((reaction) => reaction.id !== teamReaction.id) : reactions
@@ -92,13 +145,23 @@ export default function IdeaDetail({
           <Heading level={1} size="level-2">
             {title}
           </Heading>
-          <IdeaLikeButton
-            currentUserDocumentId={currentUserDocumentId}
-            ideaDocumentId={ideaDocumentId}
-            isLiked={isLiked}
-            size="large"
-            voteCount={voteCount}
-          />
+          <ActionGroup>
+            <IdeaLikeButton
+              currentUserDocumentId={currentUserDocumentId}
+              ideaDocumentId={ideaDocumentId}
+              isLiked={isLiked}
+              size="large"
+              voteCount={voteCount}
+            />
+            {currentUserIsTeam && (
+              <IconButton
+                label="Idee bewerken"
+                onClick={() => Dialog.open(`#${editModalId}`)}
+                svg={DocumentWithPencilIcon}
+                type="button"
+              />
+            )}
+          </ActionGroup>
         </div>
         <Paragraph>{content}</Paragraph>
 
@@ -162,6 +225,19 @@ export default function IdeaDetail({
         />
         <AddReaction currentUserDocumentId={currentUserDocumentId} ideaDocumentId={ideaDocumentId} />
       </Grid.Cell>
+      <EditModal
+        error={editError}
+        fieldErrors={editFieldErrors}
+        id={editModalId}
+        initialValues={{ title, content, statusIdea: status ?? 'in_review' }}
+        loading={editLoading}
+        onClose={() => {
+          setEditError(undefined)
+          setEditFieldErrors(undefined)
+        }}
+        onSubmit={handleEditSubmit}
+        type="idea"
+      />
     </Grid>
   )
 }
