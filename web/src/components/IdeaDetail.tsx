@@ -21,7 +21,7 @@ import { useState } from 'react'
 
 import type { StrapiImage } from '@/utils/schemas'
 
-import { updateIdeaAction } from '@/app/actions/edits'
+import { deleteIdeaAction, updateIdeaAction } from '@/app/actions/edits'
 import { deleteIdeaReactionAction } from '@/app/actions/reactions'
 import { formatDateRange, getProgressStatus } from '@/utils/date'
 
@@ -82,6 +82,8 @@ export default function IdeaDetail({
   const [editLoading, setEditLoading] = useState(false)
   const [editError, setEditError] = useState<string | undefined>()
   const [editFieldErrors, setEditFieldErrors] = useState<EditModalFieldErrors | undefined>()
+  const [deleteLoading, setDeleteLoading] = useState(false)
+  const [deleteError, setDeleteError] = useState<string | undefined>()
 
   const editModalId = `edit-modal-idea-${ideaDocumentId}`
 
@@ -121,6 +123,32 @@ export default function IdeaDetail({
 
     if (result.success) {
       router.refresh()
+      return true
+    }
+
+    return false
+  }
+
+  const handleDelete = async (): Promise<boolean> => {
+    setDeleteLoading(true)
+    setDeleteError(undefined)
+
+    const result = await deleteIdeaAction(ideaDocumentId)
+
+    setDeleteLoading(false)
+
+    if (result.needsLogin) {
+      router.push('/inloggen')
+      return false
+    }
+
+    if (result.error) {
+      setDeleteError(result.error)
+      return false
+    }
+
+    if (result.success) {
+      router.push('/')
       return true
     }
 
@@ -176,20 +204,32 @@ export default function IdeaDetail({
             <Heading level={2} size="level-3">
               Features
             </Heading>
-            <ProgressList headingLevel={3}>
-              {sortedFeatures.map((feature) => (
-                <ProgressList.Step
-                  heading={feature.title}
-                  key={feature.documentId}
-                  status={getProgressStatus(feature.startDate, feature.endDate)}
-                >
-                  <div className={styles['idea-detail__story-content']}>
-                    <Badge label={formatDateRange(feature.startDate, feature.endDate)} />
-                    <StandaloneLink href={`/features/${feature.documentId}`}>Bekijk details</StandaloneLink>
-                  </div>
-                </ProgressList.Step>
-              ))}
-            </ProgressList>
+            {sortedFeatures.length === 1 ? (
+              <>
+                <Heading level={3} size="level-4">
+                  {sortedFeatures[0].title}
+                </Heading>
+                <div className={styles['idea-detail__story-content']}>
+                  <Badge label={formatDateRange(sortedFeatures[0].startDate, sortedFeatures[0].endDate)} />
+                  <StandaloneLink href={`/features/${sortedFeatures[0].documentId}`}>Bekijk details</StandaloneLink>
+                </div>
+              </>
+            ) : (
+              <ProgressList headingLevel={3}>
+                {sortedFeatures.map((feature) => (
+                  <ProgressList.Step
+                    heading={feature.title}
+                    key={feature.documentId}
+                    status={getProgressStatus(feature.startDate, feature.endDate)}
+                  >
+                    <div className={styles['idea-detail__story-content']}>
+                      <Badge label={formatDateRange(feature.startDate, feature.endDate)} />
+                      <StandaloneLink href={`/features/${feature.documentId}`}>Bekijk details</StandaloneLink>
+                    </div>
+                  </ProgressList.Step>
+                ))}
+              </ProgressList>
+            )}
           </>
         )}
       </Grid.Cell>
@@ -232,6 +272,8 @@ export default function IdeaDetail({
       {canEdit && (
         <EditModal
           canEditStatus={currentUserIsTeam}
+          deleteError={deleteError}
+          deleteLoading={deleteLoading}
           error={editError}
           fieldErrors={editFieldErrors}
           id={editModalId}
@@ -240,7 +282,9 @@ export default function IdeaDetail({
           onClose={() => {
             setEditError(undefined)
             setEditFieldErrors(undefined)
+            setDeleteError(undefined)
           }}
+          onDelete={handleDelete}
           onSubmit={handleEditSubmit}
           type="idea"
         />

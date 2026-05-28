@@ -1,21 +1,20 @@
 'use client'
 
-import { PageHeader } from '@amsterdam/design-system-react'
+import { Menu, PageHeader } from '@amsterdam/design-system-react'
 
 import type { NotificationMenuItem } from '../notifications/NotificationMenu'
-import type { SearchResult } from '../search/SearchBar'
 
 import NotificationMenu from '../notifications/NotificationMenu'
-import SearchBar from '../search/SearchBar'
-import styles from './AppHeader.module.scss'
+import { navItems } from './navItems'
 
 type AppHeaderProps = {
-  currentUser?: { emoji: string; name: string }
+  currentUser?: { name: string }
   notifications?: NotificationMenuItem[]
   onLogout?: () => void
   onMarkAllNotificationsRead?: () => void
-  onSearch?: (query: string) => Promise<SearchResult[]>
   onSelectNotification?: (item: NotificationMenuItem) => void
+  pathname?: string
+  showShareIdea?: boolean
 }
 
 const AppHeader = ({
@@ -23,25 +22,20 @@ const AppHeader = ({
   notifications = [],
   onLogout,
   onMarkAllNotificationsRead,
-  onSearch,
   onSelectNotification,
+  pathname,
+  showShareIdea = true,
 }: AppHeaderProps) => (
   <PageHeader
     brandName="Community Roadmap"
     menuItems={[
-      ...(onSearch
+      ...(showShareIdea
         ? [
-            <li
-              className={`ams-page-header__menu-item ams-page-header__menu-item--fixed ${styles['app-header__search-item']}`}
-              key="search"
-            >
-              <SearchBar onSearch={onSearch} placeholder="Zoeken" />
-            </li>,
+            <PageHeader.MenuLink fixed href="/idee-delen" key="idee-delen">
+              Idee delen
+            </PageHeader.MenuLink>,
           ]
         : []),
-      <PageHeader.MenuLink fixed href="/idee-delen" key="idee-delen">
-        Idee delen
-      </PageHeader.MenuLink>,
       ...(currentUser
         ? [
             <NotificationMenu
@@ -50,8 +44,11 @@ const AppHeader = ({
               onMarkAllRead={onMarkAllNotificationsRead}
               onSelect={onSelectNotification}
             />,
+            <PageHeader.MenuLink href="/profiel" key="profiel">
+              {currentUser.name}
+            </PageHeader.MenuLink>,
             <PageHeader.MenuLink href="/uitloggen" key="uitloggen" onClick={onLogout}>
-              {currentUser.emoji} {currentUser.name}
+              Uitloggen
             </PageHeader.MenuLink>,
           ]
         : [
@@ -60,7 +57,19 @@ const AppHeader = ({
             </PageHeader.MenuLink>,
           ]),
     ]}
-  />
+    noMenuButtonOnWideWindow
+  >
+    <Menu>
+      {navItems.map((item) => {
+        const isActive = pathname === item.href
+        return (
+          <Menu.Link aria-current={isActive ? 'page' : undefined} href={item.href} icon={item.icon} key={item.id}>
+            {item.label}
+          </Menu.Link>
+        )
+      })}
+    </Menu>
+  </PageHeader>
 )
 
 export default AppHeader

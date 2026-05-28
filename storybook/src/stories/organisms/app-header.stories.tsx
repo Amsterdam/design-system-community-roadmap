@@ -17,14 +17,14 @@ export const LoggedOut: Story = {}
 
 export const LoggedIn: Story = {
   args: {
-    currentUser: { emoji: '🦊', name: 'Jan de Vries' },
+    currentUser: { name: 'Jan de Vries' },
     onLogout: () => {},
   },
 }
 
 export const LoggedInLongName: Story = {
   args: {
-    currentUser: { emoji: '🐼', name: 'Wilhelmina van den Berg' },
+    currentUser: { name: 'Wilhelmina van den Berg' },
     onLogout: () => {},
   },
 }

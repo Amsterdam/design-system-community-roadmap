@@ -1,16 +1,11 @@
 'use client'
 
 import { Menu } from '@amsterdam/design-system-react'
-import { LightBulbIcon, MapIcon } from '@amsterdam/design-system-react-icons'
 import { clsx } from 'clsx'
 import { useEffect, useRef } from 'react'
 
 import styles from './Navigation.module.scss'
-
-const navItems = [
-  { href: '/', icon: <LightBulbIcon />, id: 'ideeen', label: 'Ideeën', shortcut: ['C', 'I'] },
-  { href: '/roadmap', icon: <MapIcon />, id: 'roadmap', label: 'Roadmap', shortcut: ['C', 'R'] },
-]
+import { navItems } from './navItems'
 
 type NavigationProps = {
   className?: string

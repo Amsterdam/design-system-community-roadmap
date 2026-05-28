@@ -3,8 +3,10 @@
 import type { RoadmapFeature, RoadmapStory } from '@design-system-community-roadmap/ui'
 
 import { Grid, Heading } from '@amsterdam/design-system-react'
-import { Roadmap } from '@design-system-community-roadmap/ui'
+import { Roadmap, SearchBar } from '@design-system-community-roadmap/ui'
 import { useRouter } from 'next/navigation'
+
+import { searchRoadmapAction } from '@/app/actions/search'
 
 type RoadmapPageProps = {
   features: RoadmapFeature[]
@@ -15,11 +17,14 @@ export default function RoadmapPage({ features, standaloneStories }: RoadmapPage
   const router = useRouter()
 
   return (
-    <Grid gapVertical="none">
-      <Grid.Cell span="all">
+    <Grid gapVertical="large">
+      <Grid.Cell span={{ narrow: 4, medium: 4, wide: 6 }}>
         <Heading level={1} size="level-2">
           Roadmap
         </Heading>
+      </Grid.Cell>
+      <Grid.Cell span={{ narrow: 4, medium: 4, wide: 6 }}>
+        <SearchBar onSearch={searchRoadmapAction} placeholder="Zoek features en stories" />
       </Grid.Cell>
       <Grid.Cell span="all">
         <Roadmap

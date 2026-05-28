@@ -8,16 +8,20 @@ import { useCallback, useEffect, useState } from 'react'
 
 import { logoutAction } from '@/app/actions/login'
 import { getNotifications, markAllNotificationsRead, markNotificationRead } from '@/app/actions/notifications'
-import { searchAction } from '@/app/actions/search'
 
 const POLL_INTERVAL_MS = 60_000
 
-function getDisplayUser(): { emoji: string; name: string } | undefined {
+function pathAllowsShareIdea(pathname: string): boolean {
+  return pathname === '/' || pathname.startsWith('/ideeen')
+}
+
+function getDisplayUser(): { name: string } | undefined {
   if (typeof document === 'undefined') return undefined
   const match = document.cookie.match(/(?:^|;\s*)ams-community-user-display=([^;]*)/)
   if (!match) return undefined
   try {
-    return JSON.parse(decodeURIComponent(match[1]))
+    const parsed = JSON.parse(decodeURIComponent(match[1]))
+    return typeof parsed?.name === 'string' ? { name: parsed.name } : undefined
   } catch {
     return undefined
   }
@@ -26,7 +30,7 @@ function getDisplayUser(): { emoji: string; name: string } | undefined {
 export default function AppHeaderClient() {
   const pathname = usePathname()
   const router = useRouter()
-  const [currentUser, setCurrentUser] = useState<{ emoji: string; name: string } | undefined>(undefined)
+  const [currentUser, setCurrentUser] = useState<{ name: string } | undefined>(undefined)
   const [notifications, setNotifications] = useState<NotificationMenuItem[]>([])
 
   const refresh = useCallback(async () => {
@@ -80,8 +84,9 @@ export default function AppHeaderClient() {
       notifications={notifications}
       onLogout={logoutAction}
       onMarkAllNotificationsRead={handleMarkAllRead}
-      onSearch={searchAction}
       onSelectNotification={handleSelect}
+      pathname={pathname}
+      showShareIdea={pathAllowsShareIdea(pathname)}
     />
   )
 }

@@ -1,6 +1,8 @@
 .card {
   block-size: 100%;
   inline-size: 100%;
+  padding-block: var(--ams-space-s);
+  padding-inline: var(--ams-space-s);
   transition: box-shadow 0.2s ease;
 
   &:hover {

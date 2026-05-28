@@ -55,7 +55,7 @@ const SESSION_COOKIE = 'ams-community-user'
 const DISPLAY_COOKIE = 'ams-community-user-display'
 const COOKIE_MAX_AGE = 60 * 60 * 24 * 30
 
-async function setSessionCookies(documentId: string, name: string, emoji: string) {
+async function setSessionCookies(documentId: string, name: string) {
   const cookieStore = await cookies()
   const secure = process.env.NODE_ENV === 'production'
   cookieStore.set(SESSION_COOKIE, documentId, {
@@ -65,7 +65,7 @@ async function setSessionCookies(documentId: string, name: string, emoji: string
     sameSite: 'lax',
     secure,
   })
-  cookieStore.set(DISPLAY_COOKIE, JSON.stringify({ emoji, name }), {
+  cookieStore.set(DISPLAY_COOKIE, JSON.stringify({ name }), {
     httpOnly: false,
     maxAge: COOKIE_MAX_AGE,
     path: '/',
@@ -96,7 +96,7 @@ export async function loginAction(name: string, emoji: string): Promise<AuthResu
   }
 
   const match = parsed.data.data[0]
-  await setSessionCookies(match.documentId, match.name, match.emoji ?? emoji)
+  await setSessionCookies(match.documentId, match.name)
   return redirect('/')
 }
 
@@ -143,7 +143,7 @@ export async function registerAction(name: string, emoji: string): Promise<AuthR
   }
 
   const newUser = parsed.data.data
-  await setSessionCookies(newUser.documentId, newUser.name, newUser.emoji ?? emoji)
+  await setSessionCookies(newUser.documentId, newUser.name)
   return redirect('/')
 }
 
