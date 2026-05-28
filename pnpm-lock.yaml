@@ -242,12 +242,21 @@ importers:
 
   web:
     dependencies:
+      '@amsterdam/design-system-assets':
+        specifier: ^2.3.0
+        version: 2.3.0
+      '@amsterdam/design-system-css':
+        specifier: ^4.1.0
+        version: 4.1.0(@amsterdam/design-system-assets@2.3.0)(@amsterdam/design-system-tokens@4.0.1)
       '@amsterdam/design-system-react':
         specifier: ^4.1.0
         version: 4.1.0(@amsterdam/design-system-css@4.1.0(@amsterdam/design-system-assets@2.3.0)(@amsterdam/design-system-tokens@4.0.1))(react-dom@19.2.6(react@19.2.6))(react@19.2.6)
       '@amsterdam/design-system-react-icons':
         specifier: ^2.0.0
         version: 2.0.0(react-dom@19.2.6(react@19.2.6))(react@19.2.6)
+      '@amsterdam/design-system-tokens':
+        specifier: ^4.0.1
+        version: 4.0.1
       '@design-system-community-roadmap/ui':
         specifier: workspace:*
         version: link:../ui
