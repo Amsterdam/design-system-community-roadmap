@@ -9,11 +9,8 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "@amsterdam/design-system-assets": "^2.3.0",
-    "@amsterdam/design-system-css": "^4.1.0",
     "@amsterdam/design-system-react": "^4.1.0",
     "@amsterdam/design-system-react-icons": "^2.0.0",
-    "@amsterdam/design-system-tokens": "^4.0.1",
     "@design-system-community-roadmap/ui": "workspace:*",
     "@strapi/client": "^1.6.1",
     "clsx": "^2.1.1",
