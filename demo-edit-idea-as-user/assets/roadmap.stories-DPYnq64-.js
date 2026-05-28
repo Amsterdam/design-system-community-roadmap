@@ -1,0 +1,12 @@
+import{i as e}from"./preload-helper-usAeo7Bx.js";import{t}from"./jsx-runtime-O9QVJvLM.js";import{a as n,c as r,r as i,s as a,t as o,u as s}from"./src-Dl0THF0s.js";var c,l,u,d,f,p,m,h,g;e((()=>{o(),n(),c=t(),l=new Date,u=e=>r(e,`yyyy-MM-dd`),d=[{title:`Applicatie-layout`,documentId:`feature-1`,endDate:u(s(l,30)),id:1,startDate:u(a(l,5)),stories:[{title:`[Design] Achtergrond-kleur voor interne applicaties`,documentId:`story-1-1`,endDate:u(s(l,8)),id:11,startDate:u(a(l,3))},{title:`[Code] Geneste items en actieve weergave Menu`,documentId:`story-1-3`,endDate:u(s(l,30)),id:13,startDate:u(s(l,17))}]},{title:`Data tabel`,documentId:`feature-2`,endDate:u(s(l,55)),id:2,startDate:u(s(l,15)),stories:[{title:`[Design] Tabel varianten`,documentId:`story-2-1`,endDate:u(s(l,35)),id:21,startDate:u(s(l,15))},{title:`[Code] Sorteerbare kolommen`,documentId:`story-2-2`,endDate:u(s(l,55)),id:22,startDate:u(s(l,36))}]},{title:`Patronen`,documentId:`feature-3`,endDate:u(s(l,45)),id:3,startDate:u(s(l,20)),stories:[]},{title:`Form Control Design`,documentId:`feature-4`,endDate:u(s(l,80)),id:4,startDate:u(s(l,40)),stories:[{title:`[Design] Form layout richtlijnen`,documentId:`story-4-1`,endDate:u(s(l,60)),id:41,startDate:u(s(l,40))}]}],f={title:`Organisms/Roadmap`,component:i,args:{features:d,standaloneStories:[{title:`Testen`,documentId:`story-standalone-1`,endDate:u(s(l,25)),id:101,startDate:u(s(l,10))},{title:`Rich Text editor onderzoek`,documentId:`story-standalone-2`,endDate:null,id:102,startDate:u(s(l,50))}]},parameters:{layout:`fullscreen`}},p={},m={play:async()=>{},render:e=>(0,c.jsx)(i,{...e,features:d.map((e,t)=>t===0?{...e}:e)})},h={args:{standaloneStories:[]}},p.parameters={...p.parameters,docs:{...p.parameters?.docs,source:{originalSource:`{}`,...p.parameters?.docs?.source}}},m.parameters={...m.parameters,docs:{...m.parameters?.docs,source:{originalSource:`{
+  play: async () => {},
+  render: args => {
+    return <Roadmap {...args} features={mockFeatures.map((f, i) => i === 0 ? {
+      ...f
+    } : f)} />;
+  }
+}`,...m.parameters?.docs?.source}}},h.parameters={...h.parameters,docs:{...h.parameters?.docs,source:{originalSource:`{
+  args: {
+    standaloneStories: []
+  }
+}`,...h.parameters?.docs?.source}}},g=[`Default`,`WithExpandedFeature`,`FeaturesOnly`]}))();export{p as Default,h as FeaturesOnly,m as WithExpandedFeature,g as __namedExportsOrder,f as default};
