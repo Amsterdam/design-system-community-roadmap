@@ -44,6 +44,7 @@ type Feature = {
 }
 
 export type IdeaDetailProps = {
+  authorDocumentId?: string
   authorName?: string
   content: string
   createdAt?: string
@@ -61,6 +62,7 @@ export type IdeaDetailProps = {
 
 export default function IdeaDetail({
   title,
+  authorDocumentId,
   authorName,
   content,
   createdAt,
@@ -74,6 +76,8 @@ export default function IdeaDetail({
   status,
   voteCount,
 }: IdeaDetailProps) {
+  const isAuthor = !!authorDocumentId && !!currentUserDocumentId && authorDocumentId === currentUserDocumentId
+  const canEdit = currentUserIsTeam || isAuthor
   const router = useRouter()
   const [editLoading, setEditLoading] = useState(false)
   const [editError, setEditError] = useState<string | undefined>()
@@ -95,7 +99,7 @@ export default function IdeaDetail({
     const result = await updateIdeaAction(ideaDocumentId, {
       title: values.title,
       content: values.content,
-      statusIdea: values.statusIdea ?? 'in_review',
+      ...(currentUserIsTeam ? { statusIdea: values.statusIdea ?? 'in_review' } : {}),
     })
 
     setEditLoading(false)
@@ -153,7 +157,7 @@ export default function IdeaDetail({
               size="large"
               voteCount={voteCount}
             />
-            {currentUserIsTeam && (
+            {canEdit && (
               <IconButton
                 label="Idee bewerken"
                 onClick={() => Dialog.open(`#${editModalId}`)}
@@ -225,19 +229,22 @@ export default function IdeaDetail({
         />
         <AddReaction currentUserDocumentId={currentUserDocumentId} ideaDocumentId={ideaDocumentId} />
       </Grid.Cell>
-      <EditModal
-        error={editError}
-        fieldErrors={editFieldErrors}
-        id={editModalId}
-        initialValues={{ title, content, statusIdea: status ?? 'in_review' }}
-        loading={editLoading}
-        onClose={() => {
-          setEditError(undefined)
-          setEditFieldErrors(undefined)
-        }}
-        onSubmit={handleEditSubmit}
-        type="idea"
-      />
+      {canEdit && (
+        <EditModal
+          canEditStatus={currentUserIsTeam}
+          error={editError}
+          fieldErrors={editFieldErrors}
+          id={editModalId}
+          initialValues={{ title, content, statusIdea: status ?? 'in_review' }}
+          loading={editLoading}
+          onClose={() => {
+            setEditError(undefined)
+            setEditFieldErrors(undefined)
+          }}
+          onSubmit={handleEditSubmit}
+          type="idea"
+        />
+      )}
     </Grid>
   )
 }
