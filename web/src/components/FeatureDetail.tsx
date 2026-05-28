@@ -21,7 +21,7 @@ import { useState } from 'react'
 
 import type { StrapiImage } from '@/utils/schemas'
 
-import { updateFeatureAction } from '@/app/actions/edits'
+import { deleteFeatureAction, updateFeatureAction } from '@/app/actions/edits'
 import { toggleFeatureLikeAction } from '@/app/actions/likes'
 import { addFeatureReactionAction, deleteFeatureReactionAction } from '@/app/actions/reactions'
 import { formatDateRange, getProgressStatus } from '@/utils/date'
@@ -71,6 +71,8 @@ export default function FeatureDetail({
   const [editLoading, setEditLoading] = useState(false)
   const [editError, setEditError] = useState<string | undefined>()
   const [editFieldErrors, setEditFieldErrors] = useState<EditModalFieldErrors | undefined>()
+  const [deleteLoading, setDeleteLoading] = useState(false)
+  const [deleteError, setDeleteError] = useState<string | undefined>()
 
   const editModalId = `edit-modal-feature-${featureDocumentId}`
 
@@ -111,6 +113,32 @@ export default function FeatureDetail({
 
     if (result.success) {
       router.refresh()
+      return true
+    }
+
+    return false
+  }
+
+  const handleDelete = async (): Promise<boolean> => {
+    setDeleteLoading(true)
+    setDeleteError(undefined)
+
+    const result = await deleteFeatureAction(featureDocumentId)
+
+    setDeleteLoading(false)
+
+    if (result.needsLogin) {
+      router.push('/inloggen')
+      return false
+    }
+
+    if (result.error) {
+      setDeleteError(result.error)
+      return false
+    }
+
+    if (result.success) {
+      router.push('/roadmap')
       return true
     }
 
@@ -198,20 +226,32 @@ export default function FeatureDetail({
             <Heading level={2} size="level-3">
               Stories
             </Heading>
-            <ProgressList headingLevel={3}>
-              {sortedStories.map((story) => (
-                <ProgressList.Step
-                  heading={story.title}
-                  key={story.documentId}
-                  status={getProgressStatus(story.startDate, story.endDate)}
-                >
-                  <div className={styles['feature-detail__story-content']}>
-                    <Badge label={formatDateRange(story.startDate, story.endDate)} />
-                    <StandaloneLink href={`/stories/${story.documentId}`}>Bekijk details</StandaloneLink>
-                  </div>
-                </ProgressList.Step>
-              ))}
-            </ProgressList>
+            {sortedStories.length === 1 ? (
+              <>
+                <Heading level={3} size="level-4">
+                  {sortedStories[0].title}
+                </Heading>
+                <div className={styles['feature-detail__story-content']}>
+                  <Badge label={formatDateRange(sortedStories[0].startDate, sortedStories[0].endDate)} />
+                  <StandaloneLink href={`/stories/${sortedStories[0].documentId}`}>Bekijk details</StandaloneLink>
+                </div>
+              </>
+            ) : (
+              <ProgressList headingLevel={3}>
+                {sortedStories.map((story) => (
+                  <ProgressList.Step
+                    heading={story.title}
+                    key={story.documentId}
+                    status={getProgressStatus(story.startDate, story.endDate)}
+                  >
+                    <div className={styles['feature-detail__story-content']}>
+                      <Badge label={formatDateRange(story.startDate, story.endDate)} />
+                      <StandaloneLink href={`/stories/${story.documentId}`}>Bekijk details</StandaloneLink>
+                    </div>
+                  </ProgressList.Step>
+                ))}
+              </ProgressList>
+            )}
           </>
         )}
       </Grid.Cell>
@@ -259,19 +299,25 @@ export default function FeatureDetail({
           onSubmit={handleReactionSubmit}
         />
       </Grid.Cell>
-      <EditModal
-        error={editError}
-        fieldErrors={editFieldErrors}
-        id={editModalId}
-        initialValues={{ title, content, endDate: endDate ?? '', startDate: startDate ?? '' }}
-        loading={editLoading}
-        onClose={() => {
-          setEditError(undefined)
-          setEditFieldErrors(undefined)
-        }}
-        onSubmit={handleEditSubmit}
-        type="feature"
-      />
+      {currentUserIsTeam && (
+        <EditModal
+          deleteError={deleteError}
+          deleteLoading={deleteLoading}
+          error={editError}
+          fieldErrors={editFieldErrors}
+          id={editModalId}
+          initialValues={{ title, content, endDate: endDate ?? '', startDate: startDate ?? '' }}
+          loading={editLoading}
+          onClose={() => {
+            setEditError(undefined)
+            setEditFieldErrors(undefined)
+            setDeleteError(undefined)
+          }}
+          onDelete={handleDelete}
+          onSubmit={handleEditSubmit}
+          type="feature"
+        />
+      )}
     </Grid>
   )
 }

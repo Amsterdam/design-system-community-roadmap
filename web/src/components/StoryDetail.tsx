@@ -20,7 +20,7 @@ import { useState } from 'react'
 
 import type { StrapiImage } from '@/utils/schemas'
 
-import { updateStoryAction } from '@/app/actions/edits'
+import { deleteStoryAction, updateStoryAction } from '@/app/actions/edits'
 import { toggleStoryLikeAction } from '@/app/actions/likes'
 import { addStoryReactionAction, deleteStoryReactionAction } from '@/app/actions/reactions'
 
@@ -67,8 +67,36 @@ export default function StoryDetail({
   const [editLoading, setEditLoading] = useState(false)
   const [editError, setEditError] = useState<string | undefined>()
   const [editFieldErrors, setEditFieldErrors] = useState<EditModalFieldErrors | undefined>()
+  const [deleteLoading, setDeleteLoading] = useState(false)
+  const [deleteError, setDeleteError] = useState<string | undefined>()
 
   const editModalId = `edit-modal-story-${storyDocumentId}`
+
+  const handleDelete = async (): Promise<boolean> => {
+    setDeleteLoading(true)
+    setDeleteError(undefined)
+
+    const result = await deleteStoryAction(storyDocumentId)
+
+    setDeleteLoading(false)
+
+    if (result.needsLogin) {
+      router.push('/inloggen')
+      return false
+    }
+
+    if (result.error) {
+      setDeleteError(result.error)
+      return false
+    }
+
+    if (result.success) {
+      router.push('/roadmap')
+      return true
+    }
+
+    return false
+  }
 
   const handleEditSubmit = async (values: {
     content: string
@@ -251,19 +279,25 @@ export default function StoryDetail({
           onSubmit={handleReactionSubmit}
         />
       </Grid.Cell>
-      <EditModal
-        error={editError}
-        fieldErrors={editFieldErrors}
-        id={editModalId}
-        initialValues={{ title, content, endDate: endDate ?? '', startDate: startDate ?? '' }}
-        loading={editLoading}
-        onClose={() => {
-          setEditError(undefined)
-          setEditFieldErrors(undefined)
-        }}
-        onSubmit={handleEditSubmit}
-        type="story"
-      />
+      {currentUserIsTeam && (
+        <EditModal
+          deleteError={deleteError}
+          deleteLoading={deleteLoading}
+          error={editError}
+          fieldErrors={editFieldErrors}
+          id={editModalId}
+          initialValues={{ title, content, endDate: endDate ?? '', startDate: startDate ?? '' }}
+          loading={editLoading}
+          onClose={() => {
+            setEditError(undefined)
+            setEditFieldErrors(undefined)
+            setDeleteError(undefined)
+          }}
+          onDelete={handleDelete}
+          onSubmit={handleEditSubmit}
+          type="story"
+        />
+      )}
     </Grid>
   )
 }

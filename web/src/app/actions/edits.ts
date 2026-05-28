@@ -20,6 +20,12 @@ export type EditResponse = {
   success?: boolean
 }
 
+export type DeleteResponse = {
+  error?: string
+  needsLogin?: boolean
+  success?: boolean
+}
+
 const VALID_STATUSES = ['in_review', 'accepted', 'postponed'] as const
 const DATE_PATTERN = /^\d{4}-\d{2}-\d{2}$/
 
@@ -226,6 +232,89 @@ export async function updateStoryAction(
     }
   } catch (error) {
     console.error('[updateStoryAction] Error:', error)
+    return { error: 'Er is iets misgegaan. Probeer het opnieuw.' }
+  }
+
+  revalidatePath('/')
+  revalidatePath('/roadmap')
+  revalidatePath(`/stories/${documentId}`)
+
+  return { success: true }
+}
+
+export async function deleteIdeaAction(documentId: string): Promise<DeleteResponse> {
+  const user = await getCurrentUser()
+  if (!user) return { needsLogin: true }
+
+  if (!user.isTeam) {
+    let isAuthor: boolean
+    try {
+      const ideaResponse = await strapi.ideas.findOne(documentId)
+      isAuthor = ideaResponse.data.end_users?.some((author) => author.documentId === user.documentId) ?? false
+    } catch (error) {
+      console.error('[deleteIdeaAction] Failed to load idea for ownership check:', error)
+      return { error: 'Er is iets misgegaan. Probeer het opnieuw.' }
+    }
+    if (!isAuthor) return { error: 'Geen toegang.' }
+  }
+
+  try {
+    const response = await client.fetch(`ideas/${documentId}`, { method: 'DELETE' })
+    if (!response.ok && response.status !== 204) {
+      const body = await response.text().catch(() => '')
+      console.error('[deleteIdeaAction] Failed', response.status, body)
+      return { error: 'Er is iets misgegaan. Probeer het opnieuw.' }
+    }
+  } catch (error) {
+    console.error('[deleteIdeaAction] Error:', error)
+    return { error: 'Er is iets misgegaan. Probeer het opnieuw.' }
+  }
+
+  revalidatePath('/')
+  revalidatePath('/profiel')
+  revalidatePath(`/ideeen/${documentId}`)
+
+  return { success: true }
+}
+
+export async function deleteFeatureAction(documentId: string): Promise<DeleteResponse> {
+  const user = await getCurrentUser()
+  if (!user) return { needsLogin: true }
+  if (!user.isTeam) return { error: 'Geen toegang.' }
+
+  try {
+    const response = await client.fetch(`features/${documentId}`, { method: 'DELETE' })
+    if (!response.ok && response.status !== 204) {
+      const body = await response.text().catch(() => '')
+      console.error('[deleteFeatureAction] Failed', response.status, body)
+      return { error: 'Er is iets misgegaan. Probeer het opnieuw.' }
+    }
+  } catch (error) {
+    console.error('[deleteFeatureAction] Error:', error)
+    return { error: 'Er is iets misgegaan. Probeer het opnieuw.' }
+  }
+
+  revalidatePath('/')
+  revalidatePath('/roadmap')
+  revalidatePath(`/features/${documentId}`)
+
+  return { success: true }
+}
+
+export async function deleteStoryAction(documentId: string): Promise<DeleteResponse> {
+  const user = await getCurrentUser()
+  if (!user) return { needsLogin: true }
+  if (!user.isTeam) return { error: 'Geen toegang.' }
+
+  try {
+    const response = await client.fetch(`stories/${documentId}`, { method: 'DELETE' })
+    if (!response.ok && response.status !== 204) {
+      const body = await response.text().catch(() => '')
+      console.error('[deleteStoryAction] Failed', response.status, body)
+      return { error: 'Er is iets misgegaan. Probeer het opnieuw.' }
+    }
+  } catch (error) {
+    console.error('[deleteStoryAction] Error:', error)
     return { error: 'Er is iets misgegaan. Probeer het opnieuw.' }
   }
 

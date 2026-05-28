@@ -2,7 +2,16 @@
 
 import type { FormEvent, ReactNode } from 'react'
 
-import { Alert, Button, ErrorMessage, Field, FieldSet, Label, TextInput } from '@amsterdam/design-system-react'
+import {
+  Alert,
+  Button,
+  ErrorMessage,
+  Field,
+  FieldSet,
+  Label,
+  Paragraph,
+  TextInput,
+} from '@amsterdam/design-system-react'
 import { useState } from 'react'
 
 import EmojiPicker from './EmojiPicker'
@@ -72,6 +81,9 @@ const LoginForm = ({
       </Field>
 
       <FieldSet invalid={!!emojiError} legend="Kies jouw emoji">
+        <Paragraph className={styles['login-form__emoji-description']} size="small">
+          Je emoji vormt samen met je voornaam je inlog. Houd hem voor jezelf.
+        </Paragraph>
         {emojiError && <ErrorMessage id="login-emoji-error">{emojiError}</ErrorMessage>}
         <EmojiPicker emojis={emojis} onChange={setEmoji} takenEmojis={takenEmojis} value={emoji} />
       </FieldSet>

@@ -1,12 +1,13 @@
 'use client'
 
 import { Grid, Heading } from '@amsterdam/design-system-react'
-import { Card } from '@design-system-community-roadmap/ui'
+import { Card, SearchBar } from '@design-system-community-roadmap/ui'
 import { useRouter } from 'next/navigation'
 
 import type { Idea } from '@/utils/schemas'
 
 import { toggleIdeaLikeAction } from '@/app/actions/likes'
+import { searchIdeasAction } from '@/app/actions/search'
 
 type IdeaGridProps = {
   currentUserDocumentId?: string
@@ -47,10 +48,13 @@ export default function IdeaGrid({ currentUserDocumentId, ideas }: IdeaGridProps
 
   return (
     <Grid gapVertical="large">
-      <Grid.Cell span="all">
+      <Grid.Cell span={{ narrow: 4, medium: 4, wide: 6 }}>
         <Heading level={1} size="level-2">
           Ideeën
         </Heading>
+      </Grid.Cell>
+      <Grid.Cell span={{ narrow: 4, medium: 4, wide: 6 }}>
+        <SearchBar onSearch={searchIdeasAction} placeholder="Zoek tussen de ideeën" />
       </Grid.Cell>
 
       {sortedIdeas.map((idea) => {

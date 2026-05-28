@@ -26,23 +26,29 @@ async function searchCollection(collection: 'ideas' | 'stories' | 'features', qu
   }
 }
 
-export async function searchAction(query: string): Promise<SearchResult[]> {
+export async function searchIdeasAction(query: string): Promise<SearchResult[]> {
   const trimmedQuery = query.trim()
   if (!trimmedQuery) return []
 
-  const [ideas, stories, features] = await Promise.all([
-    searchCollection('ideas', trimmedQuery),
-    searchCollection('stories', trimmedQuery),
-    searchCollection('features', trimmedQuery),
-  ])
+  const ideas = await searchCollection('ideas', trimmedQuery)
 
-  const ideaResults: SearchResult[] = ideas.map((idea) => ({
+  return ideas.map((idea) => ({
     title: idea.title,
     description: idea.content,
     href: `/ideeen/${idea.documentId}`,
     id: idea.documentId,
     type: 'idea',
   }))
+}
+
+export async function searchRoadmapAction(query: string): Promise<SearchResult[]> {
+  const trimmedQuery = query.trim()
+  if (!trimmedQuery) return []
+
+  const [stories, features] = await Promise.all([
+    searchCollection('stories', trimmedQuery),
+    searchCollection('features', trimmedQuery),
+  ])
 
   const storyResults: SearchResult[] = stories.map((story) => ({
     title: story.title,
@@ -60,5 +66,5 @@ export async function searchAction(query: string): Promise<SearchResult[]> {
     type: 'feature',
   }))
 
-  return [...ideaResults, ...storyResults, ...featureResults]
+  return [...featureResults, ...storyResults]
 }

@@ -12,8 +12,13 @@
   cursor: pointer;
   display: flex;
   font-size: var(--ams-icon-font-size);
-  padding-block: 0;
-  padding-inline: 0;
+  justify-content: center;
+  margin-block: calc(var(--ams-space-s) * -1);
+  margin-inline: calc(var(--ams-space-s) * -1);
+  min-block-size: 2.75rem;
+  min-inline-size: 2.75rem;
+  padding-block: var(--ams-space-s);
+  padding-inline: var(--ams-space-s);
   transition:
     color 0.15s ease,
     transform 0.1s ease;
