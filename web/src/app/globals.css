@@ -9,7 +9,7 @@ body {
 }
 
 body {
-  font-family: "Amsterdam Sans", "Arial", sans-serif;
+  font-family: var(--ams-typography-font-family);
   min-block-size: 100%;
 }
 
