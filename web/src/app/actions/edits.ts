@@ -3,6 +3,7 @@
 import { revalidatePath } from 'next/cache'
 
 import { client } from '@/utils/fetch'
+import { strapi } from '@/utils/strapi'
 
 import { getCurrentUser } from './login'
 
@@ -42,11 +43,22 @@ function validateTitleAndContent(title: string, content: string): { content?: st
 
 export async function updateIdeaAction(
   documentId: string,
-  input: { content: string; statusIdea: string; title: string },
+  input: { content: string; statusIdea?: string; title: string },
 ): Promise<EditResponse> {
   const user = await getCurrentUser()
   if (!user) return { needsLogin: true }
-  if (!user.isTeam) return { error: 'Geen toegang.' }
+
+  if (!user.isTeam) {
+    let isAuthor: boolean
+    try {
+      const ideaResponse = await strapi.ideas.findOne(documentId)
+      isAuthor = ideaResponse.data.end_users?.some((author) => author.documentId === user.documentId) ?? false
+    } catch (error) {
+      console.error('[updateIdeaAction] Failed to load idea for ownership check:', error)
+      return { error: 'Er is iets misgegaan. Probeer het opnieuw.' }
+    }
+    if (!isAuthor) return { error: 'Geen toegang.' }
+  }
 
   const trimmedTitle = input.title.trim()
   const trimmedContent = input.content.trim()
@@ -55,8 +67,10 @@ export async function updateIdeaAction(
     ...validateTitleAndContent(trimmedTitle, trimmedContent),
   }
 
-  if (!VALID_STATUSES.includes(input.statusIdea as (typeof VALID_STATUSES)[number])) {
-    fieldErrors.statusIdea = 'Ongeldige status.'
+  if (user.isTeam) {
+    if (!input.statusIdea || !VALID_STATUSES.includes(input.statusIdea as (typeof VALID_STATUSES)[number])) {
+      fieldErrors.statusIdea = 'Ongeldige status.'
+    }
   }
 
   if (Object.keys(fieldErrors).length > 0) return { fieldErrors }
@@ -67,7 +81,7 @@ export async function updateIdeaAction(
         data: {
           title: trimmedTitle,
           content: trimmedContent,
-          statusIdea: input.statusIdea,
+          ...(user.isTeam ? { statusIdea: input.statusIdea } : {}),
         },
       }),
       headers: { 'Content-Type': 'application/json' },

@@ -30,6 +30,7 @@ export type EditModalFieldErrors = {
 }
 
 export type EditModalProps = {
+  canEditStatus?: boolean
   error?: string
   fieldErrors?: EditModalFieldErrors
   id: string
@@ -59,6 +60,7 @@ const headingPerType: Record<EditModalProps['type'], string> = {
 }
 
 const EditModal = ({
+  canEditStatus = true,
   error,
   fieldErrors,
   id,
@@ -68,6 +70,7 @@ const EditModal = ({
   onSubmit,
   type,
 }: EditModalProps) => {
+  const showStatusField = type === 'idea' && canEditStatus
   const dialogRef = useRef<HTMLDialogElement>(null)
 
   const [title, setTitle] = useState(initialValues.title)
@@ -106,7 +109,7 @@ const EditModal = ({
     const shouldClose = await onSubmit({
       title: title.trim(),
       content: content.trim(),
-      ...(type === 'idea' ? { statusIdea } : {}),
+      ...(showStatusField ? { statusIdea } : {}),
       ...(type !== 'idea' ? { endDate: endDate.trim(), startDate: startDate.trim() } : {}),
     })
     if (shouldClose) {
@@ -169,7 +172,7 @@ const EditModal = ({
           />
         </Field>
 
-        {type === 'idea' && (
+        {showStatusField && (
           <Field invalid={!!statusIdeaError}>
             <Label htmlFor={`${id}-status`}>Status</Label>
             {statusIdeaError && <ErrorMessage id={statusIdeaErrorId}>{statusIdeaError}</ErrorMessage>}

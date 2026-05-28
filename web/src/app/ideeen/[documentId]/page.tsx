@@ -49,6 +49,7 @@ export default async function IdeePage({ params }: Props) {
 
   return (
     <IdeaDetail
+      authorDocumentId={idea.end_users?.[0]?.documentId}
       authorName={idea.end_users?.[0]?.name}
       content={idea.content}
       createdAt={idea.createdAt}
