@@ -1,12 +1,14 @@
 import type { RoadmapFeature, RoadmapStory } from '@design-system-community-roadmap/ui'
 
+import { getCurrentUser } from '@/app/actions/login'
 import RoadmapPage from '@/components/RoadmapPage'
 import { strapi } from '@/utils/strapi'
 
 export default async function Page() {
-  const [{ data: allFeatures }, { data: allStories }] = await Promise.all([
+  const [{ data: allFeatures }, { data: allStories }, currentUser] = await Promise.all([
     strapi.features.findManyWithStories(),
     strapi.stories.findManyWithFeature(),
+    getCurrentUser(),
   ])
 
   const features: RoadmapFeature[] = allFeatures
@@ -40,5 +42,11 @@ export default async function Page() {
       }),
     )
 
-  return <RoadmapPage features={features} standaloneStories={standaloneStories} />
+  return (
+    <RoadmapPage
+      currentUserIsTeam={currentUser?.isTeam ?? false}
+      features={features}
+      standaloneStories={standaloneStories}
+    />
+  )
 }

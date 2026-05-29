@@ -8,6 +8,7 @@ import {
   IdeaLikeSchema,
   IdeaSchema,
   NestedFeatureSchema,
+  NestedIdeaSchema,
   NestedStorySchema,
   StoryLikeSchema,
   StorySchema,
@@ -18,6 +19,8 @@ import {
 const FeatureWithStoriesSchema = FeatureSchema.extend({
   stories: NestedStorySchema.array().optional(),
 })
+
+const FeatureSelectOptionSchema = NestedFeatureSchema
 
 const StoryWithFeatureSchema = StorySchema.extend({
   feature: NestedFeatureSchema.nullable().optional(),
@@ -47,6 +50,17 @@ export const strapi = {
   },
   features: {
     findMany: (init?: RequestInit) => fetchParsed('features', strapiCollection(FeatureSchema), init),
+    findManyForSelect: (init?: RequestInit) => {
+      const params = new URLSearchParams({
+        'fields[0]': 'documentId',
+        'fields[1]': 'title',
+        'fields[2]': 'startDate',
+        'fields[3]': 'endDate',
+        'pagination[pageSize]': '100',
+        'sort[0]': 'startDate:asc',
+      })
+      return fetchParsed(`features?${params}`, strapiCollection(FeatureSelectOptionSchema), init)
+    },
     findManyWithStories: (init?: RequestInit) => {
       const params = new URLSearchParams({
         'populate[stories][fields][0]': 'id',
@@ -60,6 +74,9 @@ export const strapi = {
     findOne: (id: string | number, init?: RequestInit) => {
       const params = new URLSearchParams({
         ...imagePopulateParams,
+        'populate[idea][fields][0]': 'documentId',
+        'populate[idea][fields][1]': 'title',
+        'populate[idea][fields][2]': 'id',
         'populate[likes][populate][end_user][fields][0]': 'documentId',
         'populate[likes][populate][end_user][fields][1]': 'name',
         'populate[reactions][populate][end_user][fields][0]': 'id',
@@ -91,6 +108,15 @@ export const strapi = {
         'populate[likes][populate][end_user][fields][0]': 'documentId',
       })
       return fetchParsed('ideas?' + params, strapiCollection(IdeaSchema), init)
+    },
+    findManyForSelect: (init?: RequestInit) => {
+      const params = new URLSearchParams({
+        'fields[0]': 'documentId',
+        'fields[1]': 'title',
+        'pagination[pageSize]': '100',
+        'sort[0]': 'createdAt:desc',
+      })
+      return fetchParsed(`ideas?${params}`, strapiCollection(NestedIdeaSchema), init)
     },
     findOne: (id: string | number, init?: RequestInit) => {
       const params = new URLSearchParams({

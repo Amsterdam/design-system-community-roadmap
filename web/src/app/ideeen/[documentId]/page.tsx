@@ -47,6 +47,13 @@ export default async function IdeePage({ params }: Props) {
     id: r.id,
   }))
 
+  const featureOptions = currentUserIsTeam
+    ? (await strapi.features.findManyForSelect()).data.map((feature) => ({
+        title: feature.title,
+        documentId: feature.documentId,
+      }))
+    : undefined
+
   return (
     <IdeaDetail
       authorDocumentId={idea.end_users?.[0]?.documentId}
@@ -55,6 +62,7 @@ export default async function IdeePage({ params }: Props) {
       createdAt={idea.createdAt}
       currentUserDocumentId={currentUserDocumentId}
       currentUserIsTeam={currentUserIsTeam}
+      featureOptions={featureOptions}
       features={idea.features ?? []}
       ideaDocumentId={idea.documentId}
       images={idea.images}

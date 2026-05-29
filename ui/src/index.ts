@@ -25,7 +25,12 @@ export {
   Roadmap,
   SearchBar,
 }
-export type { EditModalFieldErrors, EditModalProps } from './edit-modal/EditModal'
+export type {
+  EditModalFeatureOption,
+  EditModalFieldErrors,
+  EditModalIdeaOption,
+  EditModalProps,
+} from './edit-modal/EditModal'
 export type { NotificationMenuItem } from './notifications/NotificationMenu'
 export type { ReactionItem } from './reactions/Reactions'
 export type { RoadmapFeature, RoadmapStory } from './roadmap/dateUtils'

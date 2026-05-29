@@ -51,6 +51,15 @@ export default async function FeaturePage({ params }: Props) {
     id: r.id,
   }))
 
+  const linkedIdea = feature.idea ? { title: feature.idea.title, documentId: feature.idea.documentId } : null
+
+  const ideaOptions = currentUserIsTeam
+    ? (await strapi.ideas.findManyForSelect()).data.map((idea) => ({
+        title: idea.title,
+        documentId: idea.documentId,
+      }))
+    : undefined
+
   return (
     <FeatureDetail
       content={feature.content}
@@ -58,8 +67,10 @@ export default async function FeaturePage({ params }: Props) {
       currentUserIsTeam={currentUserIsTeam}
       endDate={feature.endDate}
       featureDocumentId={feature.documentId}
+      ideaOptions={ideaOptions}
       images={feature.images}
       isLiked={isLiked}
+      linkedIdea={linkedIdea}
       reactions={reactions}
       startDate={feature.startDate}
       stories={feature.stories ?? []}

@@ -30,16 +30,30 @@ export type EditModalFieldErrors = {
   title?: string
 }
 
+export type EditModalIdeaOption = {
+  documentId: string
+  title: string
+}
+
+export type EditModalFeatureOption = {
+  documentId: string
+  title: string
+}
+
 export type EditModalProps = {
   canEditStatus?: boolean
   deleteError?: string
   deleteLoading?: boolean
   error?: string
+  featureOptions?: EditModalFeatureOption[]
   fieldErrors?: EditModalFieldErrors
   id: string
+  ideaOptions?: EditModalIdeaOption[]
   initialValues: {
     content: string
     endDate?: string
+    featureDocumentId?: string
+    ideaDocumentId?: string
     startDate?: string
     statusIdea?: string
     title: string
@@ -50,6 +64,8 @@ export type EditModalProps = {
   onSubmit: (values: {
     content: string
     endDate?: string
+    featureDocumentId?: string
+    ideaDocumentId?: string
     startDate?: string
     statusIdea?: string
     title: string
@@ -82,8 +98,10 @@ const EditModal = ({
   deleteError,
   deleteLoading = false,
   error,
+  featureOptions,
   fieldErrors,
   id,
+  ideaOptions,
   initialValues,
   loading = false,
   onClose,
@@ -92,6 +110,8 @@ const EditModal = ({
   type,
 }: EditModalProps) => {
   const showStatusField = type === 'idea' && canEditStatus
+  const showIdeaField = type === 'feature' && ideaOptions !== undefined
+  const showFeatureField = type === 'idea' && featureOptions !== undefined
   const dialogRef = useRef<HTMLDialogElement>(null)
 
   const [title, setTitle] = useState(initialValues.title)
@@ -99,6 +119,8 @@ const EditModal = ({
   const [statusIdea, setStatusIdea] = useState(initialValues.statusIdea ?? 'in_review')
   const [startDate, setStartDate] = useState(initialValues.startDate ?? '')
   const [endDate, setEndDate] = useState(initialValues.endDate ?? '')
+  const [ideaDocumentId, setIdeaDocumentId] = useState(initialValues.ideaDocumentId ?? '')
+  const [featureDocumentId, setFeatureDocumentId] = useState(initialValues.featureDocumentId ?? '')
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false)
 
   useEffect(() => {
@@ -107,12 +129,16 @@ const EditModal = ({
     setStatusIdea(initialValues.statusIdea ?? 'in_review')
     setStartDate(initialValues.startDate ?? '')
     setEndDate(initialValues.endDate ?? '')
+    setIdeaDocumentId(initialValues.ideaDocumentId ?? '')
+    setFeatureDocumentId(initialValues.featureDocumentId ?? '')
   }, [
     initialValues.title,
     initialValues.content,
     initialValues.statusIdea,
     initialValues.startDate,
     initialValues.endDate,
+    initialValues.ideaDocumentId,
+    initialValues.featureDocumentId,
   ])
 
   useEffect(() => {
@@ -135,6 +161,8 @@ const EditModal = ({
       title: title.trim(),
       content: content.trim(),
       ...(showStatusField ? { statusIdea } : {}),
+      ...(showIdeaField ? { ideaDocumentId } : {}),
+      ...(showFeatureField ? { featureDocumentId } : {}),
       ...(type !== 'idea' ? { endDate: endDate.trim(), startDate: startDate.trim() } : {}),
     })
     if (shouldClose) {
@@ -245,6 +273,46 @@ const EditModal = ({
               value={content}
             />
           </Field>
+
+          {showIdeaField && (
+            <Field>
+              <Label htmlFor={`${id}-idea`} optional>
+                Gekoppeld idee
+              </Label>
+              <Select
+                id={`${id}-idea`}
+                onChange={(event) => setIdeaDocumentId(event.target.value)}
+                value={ideaDocumentId}
+              >
+                <option value="">Geen idee gekoppeld</option>
+                {ideaOptions?.map((idea) => (
+                  <option key={idea.documentId} value={idea.documentId}>
+                    {idea.title}
+                  </option>
+                ))}
+              </Select>
+            </Field>
+          )}
+
+          {showFeatureField && (
+            <Field>
+              <Label htmlFor={`${id}-feature`} optional>
+                Gekoppelde feature
+              </Label>
+              <Select
+                id={`${id}-feature`}
+                onChange={(event) => setFeatureDocumentId(event.target.value)}
+                value={featureDocumentId}
+              >
+                <option value="">Geen feature gekoppeld</option>
+                {featureOptions?.map((feature) => (
+                  <option key={feature.documentId} value={feature.documentId}>
+                    {feature.title}
+                  </option>
+                ))}
+              </Select>
+            </Field>
+          )}
 
           {showStatusField && (
             <Field invalid={!!statusIdeaError}>

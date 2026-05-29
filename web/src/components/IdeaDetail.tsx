@@ -1,6 +1,6 @@
 'use client'
 
-import type { EditModalFieldErrors, ReactionItem } from '@design-system-community-roadmap/ui'
+import type { EditModalFeatureOption, EditModalFieldErrors, ReactionItem } from '@design-system-community-roadmap/ui'
 
 import {
   ActionGroup,
@@ -50,6 +50,7 @@ export type IdeaDetailProps = {
   createdAt?: string
   currentUserDocumentId?: string
   currentUserIsTeam?: boolean
+  featureOptions?: EditModalFeatureOption[]
   features: Feature[]
   ideaDocumentId: string
   images?: StrapiImage[] | null
@@ -68,6 +69,7 @@ export default function IdeaDetail({
   createdAt,
   currentUserDocumentId,
   currentUserIsTeam = false,
+  featureOptions,
   features,
   ideaDocumentId,
   images,
@@ -90,6 +92,7 @@ export default function IdeaDetail({
   const handleEditSubmit = async (values: {
     content: string
     endDate?: string
+    featureDocumentId?: string
     startDate?: string
     statusIdea?: string
     title: string
@@ -101,7 +104,12 @@ export default function IdeaDetail({
     const result = await updateIdeaAction(ideaDocumentId, {
       title: values.title,
       content: values.content,
-      ...(currentUserIsTeam ? { statusIdea: values.statusIdea ?? 'in_review' } : {}),
+      ...(currentUserIsTeam
+        ? {
+            featureDocumentId: values.featureDocumentId ?? null,
+            statusIdea: values.statusIdea ?? 'in_review',
+          }
+        : {}),
     })
 
     setEditLoading(false)
@@ -275,9 +283,15 @@ export default function IdeaDetail({
           deleteError={deleteError}
           deleteLoading={deleteLoading}
           error={editError}
+          featureOptions={currentUserIsTeam ? featureOptions : undefined}
           fieldErrors={editFieldErrors}
           id={editModalId}
-          initialValues={{ title, content, statusIdea: status ?? 'in_review' }}
+          initialValues={{
+            title,
+            content,
+            featureDocumentId: sortedFeatures[0]?.documentId ?? '',
+            statusIdea: status ?? 'in_review',
+          }}
           loading={editLoading}
           onClose={() => {
             setEditError(undefined)

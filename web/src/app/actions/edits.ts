@@ -26,6 +26,14 @@ export type DeleteResponse = {
   success?: boolean
 }
 
+export type CreateResponse = {
+  documentId?: string
+  error?: string
+  fieldErrors?: EditResponse['fieldErrors']
+  needsLogin?: boolean
+  success?: boolean
+}
+
 const VALID_STATUSES = ['in_review', 'accepted', 'postponed'] as const
 const DATE_PATTERN = /^\d{4}-\d{2}-\d{2}$/
 
@@ -49,7 +57,12 @@ function validateTitleAndContent(title: string, content: string): { content?: st
 
 export async function updateIdeaAction(
   documentId: string,
-  input: { content: string; statusIdea?: string; title: string },
+  input: {
+    content: string
+    featureDocumentId?: string | null
+    statusIdea?: string
+    title: string
+  },
 ): Promise<EditResponse> {
   const user = await getCurrentUser()
   if (!user) return { needsLogin: true }
@@ -68,6 +81,7 @@ export async function updateIdeaAction(
 
   const trimmedTitle = input.title.trim()
   const trimmedContent = input.content.trim()
+  const featureDocumentId = user.isTeam ? (input.featureDocumentId?.trim() ?? null) : undefined
 
   const fieldErrors: EditResponse['fieldErrors'] = {
     ...validateTitleAndContent(trimmedTitle, trimmedContent),
@@ -88,6 +102,7 @@ export async function updateIdeaAction(
           title: trimmedTitle,
           content: trimmedContent,
           ...(user.isTeam ? { statusIdea: input.statusIdea } : {}),
+          ...(featureDocumentId !== undefined ? { features: featureDocumentId ? [featureDocumentId] : [] } : {}),
         },
       }),
       headers: { 'Content-Type': 'application/json' },
@@ -105,14 +120,22 @@ export async function updateIdeaAction(
   }
 
   revalidatePath('/')
+  revalidatePath('/roadmap')
   revalidatePath(`/ideeen/${documentId}`)
+  if (featureDocumentId) revalidatePath(`/features/${featureDocumentId}`)
 
   return { success: true }
 }
 
 export async function updateFeatureAction(
   documentId: string,
-  input: { content: string; endDate: string | null; startDate: string; title: string },
+  input: {
+    content: string
+    endDate: string | null
+    ideaDocumentId?: string | null
+    startDate: string
+    title: string
+  },
 ): Promise<EditResponse> {
   const user = await getCurrentUser()
   if (!user) return { needsLogin: true }
@@ -122,6 +145,7 @@ export async function updateFeatureAction(
   const trimmedContent = input.content.trim()
   const trimmedStartDate = (input.startDate ?? '').trim()
   const trimmedEndDate = (input.endDate ?? '').trim()
+  const ideaDocumentId = input.ideaDocumentId?.trim() || null
 
   const fieldErrors: EditResponse['fieldErrors'] = {
     ...validateTitleAndContent(trimmedTitle, trimmedContent),
@@ -150,6 +174,7 @@ export async function updateFeatureAction(
           title: trimmedTitle,
           content: trimmedContent,
           endDate: trimmedEndDate || null,
+          idea: ideaDocumentId,
           startDate: trimmedStartDate,
         },
       }),
@@ -170,6 +195,7 @@ export async function updateFeatureAction(
   revalidatePath('/')
   revalidatePath('/roadmap')
   revalidatePath(`/features/${documentId}`)
+  if (ideaDocumentId) revalidatePath(`/ideeen/${ideaDocumentId}`)
 
   return { success: true }
 }
@@ -240,6 +266,156 @@ export async function updateStoryAction(
   revalidatePath(`/stories/${documentId}`)
 
   return { success: true }
+}
+
+export async function createFeatureAction(input: {
+  content: string
+  endDate: string | null
+  startDate: string
+  title: string
+}): Promise<CreateResponse> {
+  const user = await getCurrentUser()
+  if (!user) return { needsLogin: true }
+  if (!user.isTeam) return { error: 'Geen toegang.' }
+
+  const trimmedTitle = input.title.trim()
+  const trimmedContent = input.content.trim()
+  const trimmedStartDate = (input.startDate ?? '').trim()
+  const trimmedEndDate = (input.endDate ?? '').trim()
+
+  const fieldErrors: CreateResponse['fieldErrors'] = {
+    ...validateTitleAndContent(trimmedTitle, trimmedContent),
+  }
+
+  if (!trimmedStartDate) {
+    fieldErrors.startDate = 'Vul een startdatum in.'
+  } else if (!DATE_PATTERN.test(trimmedStartDate)) {
+    fieldErrors.startDate = 'Voer een geldige datum in.'
+  }
+
+  if (trimmedEndDate) {
+    if (!DATE_PATTERN.test(trimmedEndDate)) {
+      fieldErrors.endDate = 'Voer een geldige datum in.'
+    } else if (trimmedStartDate && trimmedEndDate < trimmedStartDate) {
+      fieldErrors.endDate = 'Einddatum moet op of na de startdatum liggen.'
+    }
+  }
+
+  if (Object.keys(fieldErrors).length > 0) return { fieldErrors }
+
+  let documentId: string | undefined
+  try {
+    const response = await client.fetch('features', {
+      body: JSON.stringify({
+        data: {
+          title: trimmedTitle,
+          content: trimmedContent,
+          endDate: trimmedEndDate || null,
+          publishedAt: new Date().toISOString(),
+          startDate: trimmedStartDate,
+        },
+      }),
+      headers: { 'Content-Type': 'application/json' },
+      method: 'POST',
+    })
+
+    if (!response.ok) {
+      const body = await response.text().catch(() => '')
+      console.error('[createFeatureAction] Failed', response.status, body)
+      return { error: 'Er is iets misgegaan. Probeer het opnieuw.' }
+    }
+
+    const json = await response.json()
+    documentId = json.data?.documentId
+    if (!documentId) return { error: 'Er is iets misgegaan bij het verwerken van het antwoord.' }
+  } catch (error) {
+    console.error('[createFeatureAction] Error:', error)
+    return { error: 'Er is iets misgegaan. Probeer het opnieuw.' }
+  }
+
+  revalidatePath('/')
+  revalidatePath('/roadmap')
+
+  return { documentId, success: true }
+}
+
+export async function createStoryAction(input: {
+  content: string
+  endDate: string
+  featureDocumentId?: string
+  startDate: string
+  title: string
+}): Promise<CreateResponse> {
+  const user = await getCurrentUser()
+  if (!user) return { needsLogin: true }
+  if (!user.isTeam) return { error: 'Geen toegang.' }
+
+  const trimmedTitle = input.title.trim()
+  const trimmedContent = input.content.trim()
+  const trimmedStartDate = (input.startDate ?? '').trim()
+  const trimmedEndDate = (input.endDate ?? '').trim()
+  const featureDocumentId = input.featureDocumentId?.trim() || undefined
+
+  const fieldErrors: CreateResponse['fieldErrors'] = {
+    ...validateTitleAndContent(trimmedTitle, trimmedContent),
+  }
+
+  if (!trimmedStartDate) {
+    fieldErrors.startDate = 'Vul een startdatum in.'
+  } else if (!DATE_PATTERN.test(trimmedStartDate)) {
+    fieldErrors.startDate = 'Voer een geldige datum in.'
+  }
+
+  if (!trimmedEndDate) {
+    fieldErrors.endDate = 'Vul een einddatum in.'
+  } else if (!DATE_PATTERN.test(trimmedEndDate)) {
+    fieldErrors.endDate = 'Voer een geldige datum in.'
+  }
+
+  if (!fieldErrors.startDate && !fieldErrors.endDate) {
+    if (trimmedEndDate < trimmedStartDate) {
+      fieldErrors.endDate = 'Einddatum moet op of na de startdatum liggen.'
+    }
+  }
+
+  if (Object.keys(fieldErrors).length > 0) return { fieldErrors }
+
+  let documentId: string | undefined
+  try {
+    const response = await client.fetch('stories', {
+      body: JSON.stringify({
+        data: {
+          title: trimmedTitle,
+          content: trimmedContent,
+          endDate: trimmedEndDate,
+          publishedAt: new Date().toISOString(),
+          startDate: trimmedStartDate,
+          ...(featureDocumentId ? { feature: featureDocumentId } : {}),
+        },
+      }),
+      headers: { 'Content-Type': 'application/json' },
+      method: 'POST',
+    })
+
+    if (!response.ok) {
+      const body = await response.text().catch(() => '')
+      console.error('[createStoryAction] Failed', response.status, body)
+      return { error: 'Er is iets misgegaan. Probeer het opnieuw.' }
+    }
+
+    const json = await response.json()
+    documentId = json.data?.documentId
+    if (!documentId) return { error: 'Er is iets misgegaan bij het verwerken van het antwoord.' }
+  } catch (error) {
+    console.error('[createStoryAction] Error:', error)
+    return { error: 'Er is iets misgegaan. Probeer het opnieuw.' }
+  }
+
+  revalidatePath('/')
+  revalidatePath('/roadmap')
+  if (featureDocumentId) revalidatePath(`/features/${featureDocumentId}`)
+
+  return { documentId, success: true }
 }
 
 export async function deleteIdeaAction(documentId: string): Promise<DeleteResponse> {
