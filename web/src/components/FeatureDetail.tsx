@@ -18,6 +18,7 @@ import {
 } from '@amsterdam/design-system-react'
 import { DocumentWithPencilIcon } from '@amsterdam/design-system-react-icons'
 import { AddReaction, EditModal, LikeButton, Reactions } from '@design-system-community-roadmap/ui'
+import NextLink from 'next/link'
 import { useRouter } from 'next/navigation'
 import { useState } from 'react'
 
@@ -236,7 +237,9 @@ export default function FeatureDetail({
                 Stories
               </Heading>
               {currentUserIsTeam && (
-                <StandaloneLink href={`/stories/nieuw?feature=${featureDocumentId}`}>Story toevoegen</StandaloneLink>
+                <NextLink href={`/stories/nieuw?feature=${featureDocumentId}`} legacyBehavior passHref>
+                  <StandaloneLink>Story toevoegen</StandaloneLink>
+                </NextLink>
               )}
             </Row>
             {stories.length === 0 ? (
@@ -248,7 +251,9 @@ export default function FeatureDetail({
                 </Heading>
                 <Column className={styles['feature-detail__story-content']} gap="x-small">
                   <Badge label={formatDateRange(sortedStories[0].startDate, sortedStories[0].endDate)} />
-                  <StandaloneLink href={`/stories/${sortedStories[0].documentId}`}>Bekijk details</StandaloneLink>
+                  <NextLink href={`/stories/${sortedStories[0].documentId}`} legacyBehavior passHref>
+                    <StandaloneLink>Bekijk details</StandaloneLink>
+                  </NextLink>
                 </Column>
               </>
             ) : (
@@ -261,7 +266,9 @@ export default function FeatureDetail({
                   >
                     <Column className={styles['feature-detail__story-content']} gap="x-small">
                       <Badge label={formatDateRange(story.startDate, story.endDate)} />
-                      <StandaloneLink href={`/stories/${story.documentId}`}>Bekijk details</StandaloneLink>
+                      <NextLink href={`/stories/${story.documentId}`} legacyBehavior passHref>
+                        <StandaloneLink>Bekijk details</StandaloneLink>
+                      </NextLink>
                     </Column>
                   </ProgressList.Step>
                 ))}
@@ -296,7 +303,9 @@ export default function FeatureDetail({
             <>
               <DescriptionList.Term>Gekoppeld idee</DescriptionList.Term>
               <DescriptionList.Description>
-                <StandaloneLink href={`/ideeen/${linkedIdea.documentId}`}>{linkedIdea.title}</StandaloneLink>
+                <NextLink href={`/ideeen/${linkedIdea.documentId}`} legacyBehavior passHref>
+                  <StandaloneLink>{linkedIdea.title}</StandaloneLink>
+                </NextLink>
               </DescriptionList.Description>
             </>
           )}

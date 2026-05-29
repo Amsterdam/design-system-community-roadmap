@@ -18,6 +18,7 @@ import {
 } from '@amsterdam/design-system-react'
 import { DocumentWithPencilIcon } from '@amsterdam/design-system-react-icons'
 import { EditModal, Reactions } from '@design-system-community-roadmap/ui'
+import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { useState } from 'react'
 
@@ -221,7 +222,9 @@ export default function IdeaDetail({
                 </Heading>
                 <Column className={styles['idea-detail__story-content']} gap="x-small">
                   <Badge label={formatDateRange(sortedFeatures[0].startDate, sortedFeatures[0].endDate)} />
-                  <StandaloneLink href={`/features/${sortedFeatures[0].documentId}`}>Bekijk details</StandaloneLink>
+                  <Link href={`/features/${sortedFeatures[0].documentId}`} legacyBehavior passHref>
+                    <StandaloneLink>Bekijk details</StandaloneLink>
+                  </Link>
                 </Column>
               </>
             ) : (
@@ -234,7 +237,9 @@ export default function IdeaDetail({
                   >
                     <Column className={styles['idea-detail__story-content']} gap="x-small">
                       <Badge label={formatDateRange(feature.startDate, feature.endDate)} />
-                      <StandaloneLink href={`/features/${feature.documentId}`}>Bekijk details</StandaloneLink>
+                      <Link href={`/features/${feature.documentId}`} legacyBehavior passHref>
+                        <StandaloneLink>Bekijk details</StandaloneLink>
+                      </Link>
                     </Column>
                   </ProgressList.Step>
                 ))}

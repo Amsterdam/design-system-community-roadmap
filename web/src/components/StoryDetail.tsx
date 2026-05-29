@@ -16,6 +16,7 @@ import {
 } from '@amsterdam/design-system-react'
 import { DocumentWithPencilIcon } from '@amsterdam/design-system-react-icons'
 import { AddReaction, EditModal, LikeButton, Reactions } from '@design-system-community-roadmap/ui'
+import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { useState } from 'react'
 
@@ -253,7 +254,9 @@ export default function StoryDetail({
             <>
               <DescriptionList.Term>Onderdeel van</DescriptionList.Term>
               <DescriptionList.Description>
-                <StandaloneLink href={`/features/${parentFeature.documentId}`}>{parentFeature.title}</StandaloneLink>
+                <Link href={`/features/${parentFeature.documentId}`} legacyBehavior passHref>
+                  <StandaloneLink>{parentFeature.title}</StandaloneLink>
+                </Link>
               </DescriptionList.Description>
             </>
           )}

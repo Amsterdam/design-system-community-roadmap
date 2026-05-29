@@ -1,6 +1,7 @@
 'use client'
 
 import { Grid, Heading, Link, LinkList, Paragraph } from '@amsterdam/design-system-react'
+import NextLink from 'next/link'
 
 type ProfielContentProps = {
   ideas: Array<{ documentId: string; title: string }>
@@ -21,7 +22,11 @@ export default function ProfielContent({ ideas, user }: ProfielContentProps) {
         </Heading>
         {ideas.length === 0 && (
           <Paragraph>
-            Je hebt nog geen ideeën gedeeld. <Link href="/idee-delen">Deel je eerste idee</Link>.
+            Je hebt nog geen ideeën gedeeld.{' '}
+            <NextLink href="/idee-delen" legacyBehavior passHref>
+              <Link>Deel je eerste idee</Link>
+            </NextLink>
+            .
           </Paragraph>
         )}
         {ideas.length > 0 && (

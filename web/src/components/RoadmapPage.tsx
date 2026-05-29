@@ -4,6 +4,7 @@ import type { RoadmapFeature, RoadmapStory } from '@design-system-community-road
 
 import { Grid, Heading, Row, StandaloneLink } from '@amsterdam/design-system-react'
 import { Roadmap, SearchBar } from '@design-system-community-roadmap/ui'
+import NextLink from 'next/link'
 import { useRouter } from 'next/navigation'
 
 import { searchRoadmapAction } from '@/app/actions/search'
@@ -24,7 +25,11 @@ export default function RoadmapPage({ currentUserIsTeam = false, features, stand
           <Heading level={1} size="level-2">
             Roadmap
           </Heading>
-          {currentUserIsTeam && <StandaloneLink href="/features/nieuw">Feature aanmaken</StandaloneLink>}
+          {currentUserIsTeam && (
+            <NextLink href="/features/nieuw" legacyBehavior passHref>
+              <StandaloneLink>Feature aanmaken</StandaloneLink>
+            </NextLink>
+          )}
         </Row>
       </Grid.Cell>
       <Grid.Cell span={{ narrow: 4, medium: 4, wide: 6 }}>
