@@ -2,6 +2,7 @@
 
 import { Link, Paragraph } from '@amsterdam/design-system-react'
 import { LoginForm } from '@design-system-community-roadmap/ui'
+import NextLink from 'next/link'
 import { useState } from 'react'
 
 import { loginAction } from '@/app/actions/login'
@@ -23,7 +24,10 @@ export default function LoginClient() {
       error={error}
       footer={
         <Paragraph>
-          Nog geen account? <Link href="/aanmelden">Maak een account aan</Link>
+          Nog geen account?{' '}
+          <NextLink href="/aanmelden" legacyBehavior passHref>
+            <Link>Maak een account aan</Link>
+          </NextLink>
         </Paragraph>
       }
       loading={loading}

@@ -12,10 +12,12 @@ import {
   IconButton,
   Paragraph,
   ProgressList,
+  Row,
   StandaloneLink,
 } from '@amsterdam/design-system-react'
 import { DocumentWithPencilIcon } from '@amsterdam/design-system-react-icons'
 import { EditModal, Reactions } from '@design-system-community-roadmap/ui'
+import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { useState } from 'react'
 
@@ -181,7 +183,7 @@ export default function IdeaDetail({
   return (
     <Grid gapVertical="large">
       <Grid.Cell className="ams-prose" span={{ narrow: 4, medium: 8, wide: 7 }}>
-        <div className={styles['idea-detail__title-row']}>
+        <Row align="between" alignVertical="center" wrap>
           <Heading level={1} size="level-2">
             {title}
           </Heading>
@@ -202,7 +204,7 @@ export default function IdeaDetail({
               />
             )}
           </ActionGroup>
-        </div>
+        </Row>
         <Paragraph>{content}</Paragraph>
 
         <StrapiImageBlock fallbackAlt={title} images={images} />
@@ -219,7 +221,9 @@ export default function IdeaDetail({
                 </Heading>
                 <div className={styles['idea-detail__story-content']}>
                   <Badge label={formatDateRange(sortedFeatures[0].startDate, sortedFeatures[0].endDate)} />
-                  <StandaloneLink href={`/features/${sortedFeatures[0].documentId}`}>Bekijk details</StandaloneLink>
+                  <Link href={`/features/${sortedFeatures[0].documentId}`} legacyBehavior passHref>
+                    <StandaloneLink>Bekijk details</StandaloneLink>
+                  </Link>
                 </div>
               </>
             ) : (
@@ -232,7 +236,9 @@ export default function IdeaDetail({
                   >
                     <div className={styles['idea-detail__story-content']}>
                       <Badge label={formatDateRange(feature.startDate, feature.endDate)} />
-                      <StandaloneLink href={`/features/${feature.documentId}`}>Bekijk details</StandaloneLink>
+                      <Link href={`/features/${feature.documentId}`} legacyBehavior passHref>
+                        <StandaloneLink>Bekijk details</StandaloneLink>
+                      </Link>
                     </div>
                   </ProgressList.Step>
                 ))}

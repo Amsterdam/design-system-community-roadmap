@@ -12,10 +12,12 @@ import {
   IconButton,
   Paragraph,
   ProgressList,
+  Row,
   StandaloneLink,
 } from '@amsterdam/design-system-react'
 import { DocumentWithPencilIcon } from '@amsterdam/design-system-react-icons'
 import { AddReaction, EditModal, LikeButton, Reactions } from '@design-system-community-roadmap/ui'
+import NextLink from 'next/link'
 import { useRouter } from 'next/navigation'
 import { useState } from 'react'
 
@@ -207,7 +209,7 @@ export default function FeatureDetail({
   return (
     <Grid gapVertical="large">
       <Grid.Cell className="ams-prose" span={{ narrow: 4, medium: 8, wide: 7 }}>
-        <div className={styles['feature-detail__title-row']}>
+        <Row align="between" alignVertical="center" wrap>
           <Heading level={1} size="level-2">
             {title}
           </Heading>
@@ -222,21 +224,23 @@ export default function FeatureDetail({
               />
             )}
           </ActionGroup>
-        </div>
+        </Row>
         <Paragraph>{content}</Paragraph>
 
         <StrapiImageBlock fallbackAlt={title} images={images} />
 
         {(stories.length > 0 || currentUserIsTeam) && (
           <>
-            <div className={styles['feature-detail__stories-header']}>
+            <Row align="between" alignVertical="baseline" wrap>
               <Heading level={2} size="level-3">
                 Stories
               </Heading>
               {currentUserIsTeam && (
-                <StandaloneLink href={`/stories/nieuw?feature=${featureDocumentId}`}>Story toevoegen</StandaloneLink>
+                <NextLink href={`/stories/nieuw?feature=${featureDocumentId}`} legacyBehavior passHref>
+                  <StandaloneLink>Story toevoegen</StandaloneLink>
+                </NextLink>
               )}
-            </div>
+            </Row>
             {stories.length === 0 ? (
               <Paragraph>Er zijn nog geen stories gekoppeld aan deze feature.</Paragraph>
             ) : sortedStories.length === 1 ? (
@@ -246,7 +250,9 @@ export default function FeatureDetail({
                 </Heading>
                 <div className={styles['feature-detail__story-content']}>
                   <Badge label={formatDateRange(sortedStories[0].startDate, sortedStories[0].endDate)} />
-                  <StandaloneLink href={`/stories/${sortedStories[0].documentId}`}>Bekijk details</StandaloneLink>
+                  <NextLink href={`/stories/${sortedStories[0].documentId}`} legacyBehavior passHref>
+                    <StandaloneLink>Bekijk details</StandaloneLink>
+                  </NextLink>
                 </div>
               </>
             ) : (
@@ -259,7 +265,9 @@ export default function FeatureDetail({
                   >
                     <div className={styles['feature-detail__story-content']}>
                       <Badge label={formatDateRange(story.startDate, story.endDate)} />
-                      <StandaloneLink href={`/stories/${story.documentId}`}>Bekijk details</StandaloneLink>
+                      <NextLink href={`/stories/${story.documentId}`} legacyBehavior passHref>
+                        <StandaloneLink>Bekijk details</StandaloneLink>
+                      </NextLink>
                     </div>
                   </ProgressList.Step>
                 ))}
@@ -294,7 +302,9 @@ export default function FeatureDetail({
             <>
               <DescriptionList.Term>Gekoppeld idee</DescriptionList.Term>
               <DescriptionList.Description>
-                <StandaloneLink href={`/ideeen/${linkedIdea.documentId}`}>{linkedIdea.title}</StandaloneLink>
+                <NextLink href={`/ideeen/${linkedIdea.documentId}`} legacyBehavior passHref>
+                  <StandaloneLink>{linkedIdea.title}</StandaloneLink>
+                </NextLink>
               </DescriptionList.Description>
             </>
           )}

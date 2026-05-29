@@ -2,6 +2,7 @@
 
 import { Link, Paragraph } from '@amsterdam/design-system-react'
 import { LoginForm } from '@design-system-community-roadmap/ui'
+import NextLink from 'next/link'
 import { useState } from 'react'
 
 import { registerAction } from '@/app/actions/login'
@@ -23,7 +24,10 @@ export default function RegisterClient() {
       error={error}
       footer={
         <Paragraph>
-          Al een account? <Link href="/inloggen">Log in</Link>
+          Al een account?{' '}
+          <NextLink href="/inloggen" legacyBehavior passHref>
+            <Link>Log in</Link>
+          </NextLink>
         </Paragraph>
       }
       loading={loading}
