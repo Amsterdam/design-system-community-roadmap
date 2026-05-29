@@ -1,16 +1,16 @@
 import { cookies } from 'next/headers'
-import { NextResponse } from 'next/server'
+import { redirect } from 'next/navigation'
 
-export async function GET(req: Request) {
+export async function GET() {
   const cookieStore = await cookies()
   cookieStore.delete('ams-community-user')
   cookieStore.delete('ams-community-user-display')
-  return NextResponse.redirect(new URL('/', req.url))
+  redirect('/')
 }
 
-export async function POST(req: Request) {
+export async function POST() {
   const cookieStore = await cookies()
   cookieStore.delete('ams-community-user')
   cookieStore.delete('ams-community-user-display')
-  return NextResponse.redirect(new URL('/', req.url))
+  redirect('/')
 }
