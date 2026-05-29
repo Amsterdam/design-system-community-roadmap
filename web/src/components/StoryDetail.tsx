@@ -11,6 +11,7 @@ import {
   Heading,
   IconButton,
   Paragraph,
+  Row,
   StandaloneLink,
 } from '@amsterdam/design-system-react'
 import { DocumentWithPencilIcon } from '@amsterdam/design-system-react-icons'
@@ -24,7 +25,6 @@ import { deleteStoryAction, updateStoryAction } from '@/app/actions/edits'
 import { toggleStoryLikeAction } from '@/app/actions/likes'
 import { addStoryReactionAction, deleteStoryReactionAction } from '@/app/actions/reactions'
 
-import styles from './StoryDetail.module.scss'
 import StrapiImageBlock from './StrapiImageBlock'
 
 type ParentFeature = {
@@ -207,7 +207,7 @@ export default function StoryDetail({
   return (
     <Grid gapVertical="large">
       <Grid.Cell className="ams-prose" span={{ narrow: 4, medium: 8, wide: 7 }}>
-        <div className={styles['story-detail__title-row']}>
+        <Row align="between" alignVertical="center" wrap>
           <Heading level={1} size="level-2">
             {title}
           </Heading>
@@ -222,7 +222,7 @@ export default function StoryDetail({
               />
             )}
           </ActionGroup>
-        </div>
+        </Row>
         <Paragraph>{content}</Paragraph>
 
         <StrapiImageBlock fallbackAlt={title} images={images} />

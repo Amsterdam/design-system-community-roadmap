@@ -5,6 +5,7 @@ import type { EditModalFeatureOption, EditModalFieldErrors, ReactionItem } from 
 import {
   ActionGroup,
   Badge,
+  Column,
   DescriptionList,
   Dialog,
   Grid,
@@ -12,6 +13,7 @@ import {
   IconButton,
   Paragraph,
   ProgressList,
+  Row,
   StandaloneLink,
 } from '@amsterdam/design-system-react'
 import { DocumentWithPencilIcon } from '@amsterdam/design-system-react-icons'
@@ -101,15 +103,15 @@ export default function IdeaDetail({
     setEditError(undefined)
     setEditFieldErrors(undefined)
 
+    const initialFeatureDocumentId = sortedFeatures[0]?.documentId ?? ''
+    const submittedFeatureDocumentId = values.featureDocumentId ?? ''
+    const featureLinkChanged = currentUserIsTeam && submittedFeatureDocumentId !== initialFeatureDocumentId
+
     const result = await updateIdeaAction(ideaDocumentId, {
       title: values.title,
       content: values.content,
-      ...(currentUserIsTeam
-        ? {
-            featureDocumentId: values.featureDocumentId ?? null,
-            statusIdea: values.statusIdea ?? 'in_review',
-          }
-        : {}),
+      ...(currentUserIsTeam ? { statusIdea: values.statusIdea ?? 'in_review' } : {}),
+      ...(featureLinkChanged ? { featureDocumentId: submittedFeatureDocumentId || null } : {}),
     })
 
     setEditLoading(false)
@@ -181,7 +183,7 @@ export default function IdeaDetail({
   return (
     <Grid gapVertical="large">
       <Grid.Cell className="ams-prose" span={{ narrow: 4, medium: 8, wide: 7 }}>
-        <div className={styles['idea-detail__title-row']}>
+        <Row align="between" alignVertical="center" wrap>
           <Heading level={1} size="level-2">
             {title}
           </Heading>
@@ -202,7 +204,7 @@ export default function IdeaDetail({
               />
             )}
           </ActionGroup>
-        </div>
+        </Row>
         <Paragraph>{content}</Paragraph>
 
         <StrapiImageBlock fallbackAlt={title} images={images} />
@@ -217,10 +219,10 @@ export default function IdeaDetail({
                 <Heading level={3} size="level-4">
                   {sortedFeatures[0].title}
                 </Heading>
-                <div className={styles['idea-detail__story-content']}>
+                <Column className={styles['idea-detail__story-content']} gap="x-small">
                   <Badge label={formatDateRange(sortedFeatures[0].startDate, sortedFeatures[0].endDate)} />
                   <StandaloneLink href={`/features/${sortedFeatures[0].documentId}`}>Bekijk details</StandaloneLink>
-                </div>
+                </Column>
               </>
             ) : (
               <ProgressList headingLevel={3}>
@@ -230,10 +232,10 @@ export default function IdeaDetail({
                     key={feature.documentId}
                     status={getProgressStatus(feature.startDate, feature.endDate)}
                   >
-                    <div className={styles['idea-detail__story-content']}>
+                    <Column className={styles['idea-detail__story-content']} gap="x-small">
                       <Badge label={formatDateRange(feature.startDate, feature.endDate)} />
                       <StandaloneLink href={`/features/${feature.documentId}`}>Bekijk details</StandaloneLink>
-                    </div>
+                    </Column>
                   </ProgressList.Step>
                 ))}
               </ProgressList>

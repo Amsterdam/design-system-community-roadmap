@@ -5,6 +5,7 @@ import type { EditModalFieldErrors, EditModalIdeaOption, ReactionItem } from '@d
 import {
   ActionGroup,
   Badge,
+  Column,
   DescriptionList,
   Dialog,
   Grid,
@@ -12,6 +13,7 @@ import {
   IconButton,
   Paragraph,
   ProgressList,
+  Row,
   StandaloneLink,
 } from '@amsterdam/design-system-react'
 import { DocumentWithPencilIcon } from '@amsterdam/design-system-react-icons'
@@ -207,7 +209,7 @@ export default function FeatureDetail({
   return (
     <Grid gapVertical="large">
       <Grid.Cell className="ams-prose" span={{ narrow: 4, medium: 8, wide: 7 }}>
-        <div className={styles['feature-detail__title-row']}>
+        <Row align="between" alignVertical="center" wrap>
           <Heading level={1} size="level-2">
             {title}
           </Heading>
@@ -222,21 +224,21 @@ export default function FeatureDetail({
               />
             )}
           </ActionGroup>
-        </div>
+        </Row>
         <Paragraph>{content}</Paragraph>
 
         <StrapiImageBlock fallbackAlt={title} images={images} />
 
         {(stories.length > 0 || currentUserIsTeam) && (
           <>
-            <div className={styles['feature-detail__stories-header']}>
+            <Row align="between" alignVertical="baseline" wrap>
               <Heading level={2} size="level-3">
                 Stories
               </Heading>
               {currentUserIsTeam && (
                 <StandaloneLink href={`/stories/nieuw?feature=${featureDocumentId}`}>Story toevoegen</StandaloneLink>
               )}
-            </div>
+            </Row>
             {stories.length === 0 ? (
               <Paragraph>Er zijn nog geen stories gekoppeld aan deze feature.</Paragraph>
             ) : sortedStories.length === 1 ? (
@@ -244,10 +246,10 @@ export default function FeatureDetail({
                 <Heading level={3} size="level-4">
                   {sortedStories[0].title}
                 </Heading>
-                <div className={styles['feature-detail__story-content']}>
+                <Column className={styles['feature-detail__story-content']} gap="x-small">
                   <Badge label={formatDateRange(sortedStories[0].startDate, sortedStories[0].endDate)} />
                   <StandaloneLink href={`/stories/${sortedStories[0].documentId}`}>Bekijk details</StandaloneLink>
-                </div>
+                </Column>
               </>
             ) : (
               <ProgressList headingLevel={3}>
@@ -257,10 +259,10 @@ export default function FeatureDetail({
                     key={story.documentId}
                     status={getProgressStatus(story.startDate, story.endDate)}
                   >
-                    <div className={styles['feature-detail__story-content']}>
+                    <Column className={styles['feature-detail__story-content']} gap="x-small">
                       <Badge label={formatDateRange(story.startDate, story.endDate)} />
                       <StandaloneLink href={`/stories/${story.documentId}`}>Bekijk details</StandaloneLink>
-                    </div>
+                    </Column>
                   </ProgressList.Step>
                 ))}
               </ProgressList>
