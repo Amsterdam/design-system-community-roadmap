@@ -5,6 +5,7 @@ import type { EditModalFieldErrors, EditModalIdeaOption, ReactionItem } from '@d
 import {
   ActionGroup,
   Badge,
+  Column,
   DescriptionList,
   Dialog,
   Grid,
@@ -248,12 +249,12 @@ export default function FeatureDetail({
                 <Heading level={3} size="level-4">
                   {sortedStories[0].title}
                 </Heading>
-                <div className={styles['feature-detail__story-content']}>
+                <Column className={styles['feature-detail__story-content']} gap="x-small">
                   <Badge label={formatDateRange(sortedStories[0].startDate, sortedStories[0].endDate)} />
                   <NextLink href={`/stories/${sortedStories[0].documentId}`} legacyBehavior passHref>
                     <StandaloneLink>Bekijk details</StandaloneLink>
                   </NextLink>
-                </div>
+                </Column>
               </>
             ) : (
               <ProgressList headingLevel={3}>
@@ -263,12 +264,12 @@ export default function FeatureDetail({
                     key={story.documentId}
                     status={getProgressStatus(story.startDate, story.endDate)}
                   >
-                    <div className={styles['feature-detail__story-content']}>
+                    <Column className={styles['feature-detail__story-content']} gap="x-small">
                       <Badge label={formatDateRange(story.startDate, story.endDate)} />
                       <NextLink href={`/stories/${story.documentId}`} legacyBehavior passHref>
                         <StandaloneLink>Bekijk details</StandaloneLink>
                       </NextLink>
-                    </div>
+                    </Column>
                   </ProgressList.Step>
                 ))}
               </ProgressList>

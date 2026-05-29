@@ -5,6 +5,7 @@ import type { EditModalFeatureOption, EditModalFieldErrors, ReactionItem } from 
 import {
   ActionGroup,
   Badge,
+  Column,
   DescriptionList,
   Dialog,
   Grid,
@@ -103,15 +104,15 @@ export default function IdeaDetail({
     setEditError(undefined)
     setEditFieldErrors(undefined)
 
+    const initialFeatureDocumentId = sortedFeatures[0]?.documentId ?? ''
+    const submittedFeatureDocumentId = values.featureDocumentId ?? ''
+    const featureLinkChanged = currentUserIsTeam && submittedFeatureDocumentId !== initialFeatureDocumentId
+
     const result = await updateIdeaAction(ideaDocumentId, {
       title: values.title,
       content: values.content,
-      ...(currentUserIsTeam
-        ? {
-            featureDocumentId: values.featureDocumentId ?? null,
-            statusIdea: values.statusIdea ?? 'in_review',
-          }
-        : {}),
+      ...(currentUserIsTeam ? { statusIdea: values.statusIdea ?? 'in_review' } : {}),
+      ...(featureLinkChanged ? { featureDocumentId: submittedFeatureDocumentId || null } : {}),
     })
 
     setEditLoading(false)
@@ -219,12 +220,12 @@ export default function IdeaDetail({
                 <Heading level={3} size="level-4">
                   {sortedFeatures[0].title}
                 </Heading>
-                <div className={styles['idea-detail__story-content']}>
+                <Column className={styles['idea-detail__story-content']} gap="x-small">
                   <Badge label={formatDateRange(sortedFeatures[0].startDate, sortedFeatures[0].endDate)} />
                   <Link href={`/features/${sortedFeatures[0].documentId}`} legacyBehavior passHref>
                     <StandaloneLink>Bekijk details</StandaloneLink>
                   </Link>
-                </div>
+                </Column>
               </>
             ) : (
               <ProgressList headingLevel={3}>
@@ -234,12 +235,12 @@ export default function IdeaDetail({
                     key={feature.documentId}
                     status={getProgressStatus(feature.startDate, feature.endDate)}
                   >
-                    <div className={styles['idea-detail__story-content']}>
+                    <Column className={styles['idea-detail__story-content']} gap="x-small">
                       <Badge label={formatDateRange(feature.startDate, feature.endDate)} />
                       <Link href={`/features/${feature.documentId}`} legacyBehavior passHref>
                         <StandaloneLink>Bekijk details</StandaloneLink>
                       </Link>
-                    </div>
+                    </Column>
                   </ProgressList.Step>
                 ))}
               </ProgressList>
