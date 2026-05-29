@@ -1,6 +1,6 @@
 'use client'
 
-import type { EditModalFieldErrors, ReactionItem } from '@design-system-community-roadmap/ui'
+import type { EditModalFieldErrors, EditModalIdeaOption, ReactionItem } from '@design-system-community-roadmap/ui'
 
 import {
   ActionGroup,
@@ -12,10 +12,12 @@ import {
   IconButton,
   Paragraph,
   ProgressList,
+  Row,
   StandaloneLink,
 } from '@amsterdam/design-system-react'
 import { DocumentWithPencilIcon } from '@amsterdam/design-system-react-icons'
 import { AddReaction, EditModal, LikeButton, Reactions } from '@design-system-community-roadmap/ui'
+import NextLink from 'next/link'
 import { useRouter } from 'next/navigation'
 import { useState } from 'react'
 
@@ -42,8 +44,10 @@ export type FeatureDetailProps = {
   currentUserIsTeam?: boolean
   endDate?: string | null
   featureDocumentId: string
+  ideaOptions?: EditModalIdeaOption[]
   images?: StrapiImage[] | null
   isLiked: boolean
+  linkedIdea?: { documentId: string; title: string } | null
   reactions: ReactionItem[]
   startDate?: string
   stories: ConnectedStory[]
@@ -58,8 +62,10 @@ export default function FeatureDetail({
   currentUserIsTeam = false,
   endDate,
   featureDocumentId,
+  ideaOptions,
   images,
   isLiked,
+  linkedIdea,
   reactions,
   startDate,
   stories,
@@ -79,6 +85,7 @@ export default function FeatureDetail({
   const handleEditSubmit = async (values: {
     content: string
     endDate?: string
+    ideaDocumentId?: string
     startDate?: string
     statusIdea?: string
     title: string
@@ -91,6 +98,7 @@ export default function FeatureDetail({
       title: values.title,
       content: values.content,
       endDate: values.endDate ?? null,
+      ideaDocumentId: values.ideaDocumentId ?? null,
       startDate: values.startDate ?? '',
     })
 
@@ -201,7 +209,7 @@ export default function FeatureDetail({
   return (
     <Grid gapVertical="large">
       <Grid.Cell className="ams-prose" span={{ narrow: 4, medium: 8, wide: 7 }}>
-        <div className={styles['feature-detail__title-row']}>
+        <Row align="between" alignVertical="center" wrap>
           <Heading level={1} size="level-2">
             {title}
           </Heading>
@@ -216,24 +224,35 @@ export default function FeatureDetail({
               />
             )}
           </ActionGroup>
-        </div>
+        </Row>
         <Paragraph>{content}</Paragraph>
 
         <StrapiImageBlock fallbackAlt={title} images={images} />
 
-        {stories.length > 0 && (
+        {(stories.length > 0 || currentUserIsTeam) && (
           <>
-            <Heading level={2} size="level-3">
-              Stories
-            </Heading>
-            {sortedStories.length === 1 ? (
+            <Row align="between" alignVertical="baseline" wrap>
+              <Heading level={2} size="level-3">
+                Stories
+              </Heading>
+              {currentUserIsTeam && (
+                <NextLink href={`/stories/nieuw?feature=${featureDocumentId}`} legacyBehavior passHref>
+                  <StandaloneLink>Story toevoegen</StandaloneLink>
+                </NextLink>
+              )}
+            </Row>
+            {stories.length === 0 ? (
+              <Paragraph>Er zijn nog geen stories gekoppeld aan deze feature.</Paragraph>
+            ) : sortedStories.length === 1 ? (
               <>
                 <Heading level={3} size="level-4">
                   {sortedStories[0].title}
                 </Heading>
                 <div className={styles['feature-detail__story-content']}>
                   <Badge label={formatDateRange(sortedStories[0].startDate, sortedStories[0].endDate)} />
-                  <StandaloneLink href={`/stories/${sortedStories[0].documentId}`}>Bekijk details</StandaloneLink>
+                  <NextLink href={`/stories/${sortedStories[0].documentId}`} legacyBehavior passHref>
+                    <StandaloneLink>Bekijk details</StandaloneLink>
+                  </NextLink>
                 </div>
               </>
             ) : (
@@ -246,7 +265,9 @@ export default function FeatureDetail({
                   >
                     <div className={styles['feature-detail__story-content']}>
                       <Badge label={formatDateRange(story.startDate, story.endDate)} />
-                      <StandaloneLink href={`/stories/${story.documentId}`}>Bekijk details</StandaloneLink>
+                      <NextLink href={`/stories/${story.documentId}`} legacyBehavior passHref>
+                        <StandaloneLink>Bekijk details</StandaloneLink>
+                      </NextLink>
                     </div>
                   </ProgressList.Step>
                 ))}
@@ -275,6 +296,16 @@ export default function FeatureDetail({
             <>
               <DescriptionList.Term>Einddatum</DescriptionList.Term>
               <DescriptionList.Description>{new Date(endDate).toLocaleDateString('nl-NL')}</DescriptionList.Description>
+            </>
+          )}
+          {linkedIdea && (
+            <>
+              <DescriptionList.Term>Gekoppeld idee</DescriptionList.Term>
+              <DescriptionList.Description>
+                <NextLink href={`/ideeen/${linkedIdea.documentId}`} legacyBehavior passHref>
+                  <StandaloneLink>{linkedIdea.title}</StandaloneLink>
+                </NextLink>
+              </DescriptionList.Description>
             </>
           )}
         </DescriptionList>
@@ -306,7 +337,14 @@ export default function FeatureDetail({
           error={editError}
           fieldErrors={editFieldErrors}
           id={editModalId}
-          initialValues={{ title, content, endDate: endDate ?? '', startDate: startDate ?? '' }}
+          ideaOptions={ideaOptions}
+          initialValues={{
+            title,
+            content,
+            endDate: endDate ?? '',
+            ideaDocumentId: linkedIdea?.documentId ?? '',
+            startDate: startDate ?? '',
+          }}
           loading={editLoading}
           onClose={() => {
             setEditError(undefined)

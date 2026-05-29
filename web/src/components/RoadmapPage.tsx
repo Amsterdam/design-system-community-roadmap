@@ -2,26 +2,35 @@
 
 import type { RoadmapFeature, RoadmapStory } from '@design-system-community-roadmap/ui'
 
-import { Grid, Heading } from '@amsterdam/design-system-react'
+import { Grid, Heading, Row, StandaloneLink } from '@amsterdam/design-system-react'
 import { Roadmap, SearchBar } from '@design-system-community-roadmap/ui'
+import NextLink from 'next/link'
 import { useRouter } from 'next/navigation'
 
 import { searchRoadmapAction } from '@/app/actions/search'
 
 type RoadmapPageProps = {
+  currentUserIsTeam?: boolean
   features: RoadmapFeature[]
   standaloneStories: RoadmapStory[]
 }
 
-export default function RoadmapPage({ features, standaloneStories }: RoadmapPageProps) {
+export default function RoadmapPage({ currentUserIsTeam = false, features, standaloneStories }: RoadmapPageProps) {
   const router = useRouter()
 
   return (
     <Grid gapVertical="large">
       <Grid.Cell span={{ narrow: 4, medium: 4, wide: 6 }}>
-        <Heading level={1} size="level-2">
-          Roadmap
-        </Heading>
+        <Row align="between" alignVertical="baseline" wrap>
+          <Heading level={1} size="level-2">
+            Roadmap
+          </Heading>
+          {currentUserIsTeam && (
+            <NextLink href="/features/nieuw" legacyBehavior passHref>
+              <StandaloneLink>Feature aanmaken</StandaloneLink>
+            </NextLink>
+          )}
+        </Row>
       </Grid.Cell>
       <Grid.Cell span={{ narrow: 4, medium: 4, wide: 6 }}>
         <SearchBar onSearch={searchRoadmapAction} placeholder="Zoek features en stories" />

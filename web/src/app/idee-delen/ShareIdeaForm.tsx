@@ -25,8 +25,8 @@ export default function ShareIdeaForm() {
   const [loading, setLoading] = useState(false)
 
   const invalidFields = [
-    ...(fieldErrors.title ? [{ id: 'idea-title', label: fieldErrors.title }] : []),
-    ...(fieldErrors.content ? [{ id: 'idea-content', label: fieldErrors.content }] : []),
+    ...(fieldErrors.title ? [{ id: '#idea-title', label: fieldErrors.title }] : []),
+    ...(fieldErrors.content ? [{ id: '#idea-content', label: fieldErrors.content }] : []),
   ]
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {

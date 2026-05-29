@@ -86,6 +86,12 @@ export const NestedStorySchema = z.object({
   startDate: z.string().optional(),
 })
 
+export const NestedIdeaSchema = z.object({
+  title: z.string(),
+  documentId: z.string(),
+  id: z.number(),
+})
+
 export const IdeaSchema = strapiBase.extend({
   title: z.string(),
   content: z.string(),
@@ -102,7 +108,7 @@ export const FeatureSchema = strapiBase.extend({
   title: z.string(),
   content: z.string(),
   endDate: z.string().nullable().optional(),
-  idea: IdeaSchema.nullable().optional(),
+  idea: NestedIdeaSchema.nullable().optional(),
   images: z.array(StrapiImageSchema).nullable().optional(),
   likes: z.array(PopulatedLikeSchema).optional(),
   publishedAt: z.string().nullable().optional(),
@@ -146,6 +152,7 @@ export type Notification = z.infer<typeof NotificationSchema>
 export type NotificationType = z.infer<typeof NotificationTypeSchema>
 export type PopulatedLike = z.infer<typeof PopulatedLikeSchema>
 export type NestedFeature = z.infer<typeof NestedFeatureSchema>
+export type NestedIdea = z.infer<typeof NestedIdeaSchema>
 export type NestedStory = z.infer<typeof NestedStorySchema>
 export type Idea = z.infer<typeof IdeaSchema>
 export type Feature = z.infer<typeof FeatureSchema>

@@ -47,35 +47,38 @@ export default function IdeaGrid({ currentUserDocumentId, ideas }: IdeaGridProps
   }
 
   return (
-    <Grid gapVertical="large">
-      <Grid.Cell span={{ narrow: 4, medium: 4, wide: 6 }}>
-        <Heading level={1} size="level-2">
-          Ideeën
-        </Heading>
-      </Grid.Cell>
-      <Grid.Cell span={{ narrow: 4, medium: 4, wide: 6 }}>
-        <SearchBar onSearch={searchIdeasAction} placeholder="Zoek tussen de ideeën" />
-      </Grid.Cell>
+    <>
+      <Grid paddingBottom="large">
+        <Grid.Cell span={{ narrow: 4, medium: 4, wide: 6 }}>
+          <Heading level={1} size="level-2">
+            Ideeën
+          </Heading>
+        </Grid.Cell>
+        <Grid.Cell span={{ narrow: 4, medium: 4, wide: 6 }}>
+          <SearchBar onSearch={searchIdeasAction} placeholder="Zoek tussen de ideeën" />
+        </Grid.Cell>
+      </Grid>
+      <Grid gapVertical="none">
+        {sortedIdeas.map((idea) => {
+          const isLiked =
+            !!currentUserDocumentId &&
+            (idea.likes?.some((l) => l.end_user?.documentId === currentUserDocumentId) ?? false)
 
-      {sortedIdeas.map((idea) => {
-        const isLiked =
-          !!currentUserDocumentId &&
-          (idea.likes?.some((l) => l.end_user?.documentId === currentUserDocumentId) ?? false)
-
-        return (
-          <Grid.Cell key={idea.id} span={{ narrow: 4, medium: 4, wide: 4 }}>
-            <Card
-              author={idea.end_users?.[0]}
-              description={idea.content}
-              href={`/ideeen/${idea.documentId}`}
-              isLiked={isLiked}
-              onLike={(liked) => handleLike(idea.documentId, liked)}
-              title={idea.title}
-              voteCount={idea.likes?.length ?? 0}
-            />
-          </Grid.Cell>
-        )
-      })}
-    </Grid>
+          return (
+            <Grid.Cell key={idea.id} span={{ narrow: 4, medium: 4, wide: 4 }}>
+              <Card
+                author={idea.end_users?.[0]}
+                description={idea.content}
+                href={`/ideeen/${idea.documentId}`}
+                isLiked={isLiked}
+                onLike={(liked) => handleLike(idea.documentId, liked)}
+                title={idea.title}
+                voteCount={idea.likes?.length ?? 0}
+              />
+            </Grid.Cell>
+          )
+        })}
+      </Grid>
+    </>
   )
 }
