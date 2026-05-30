@@ -75,12 +75,14 @@ async function toggleLike<T extends z.ZodType<{ documentId: string }>>({
 }
 
 export async function toggleIdeaLikeAction(ideaDocumentId: string, isLiked: boolean): Promise<ActionResponse> {
+  // Does not revalidate `/`: the home page sorts ideas by like
+  // count, and an automatic Server-Action revalidation there would reshuffle the cards
   return toggleLike({
     collection: 'idea-likes',
     documentId: ideaDocumentId,
     entityField: 'idea',
     isLiked,
-    revalidatePaths: ['/', `/ideeen/${ideaDocumentId}`],
+    revalidatePaths: [`/ideeen/${ideaDocumentId}`],
     schema: IdeaLikeSchema,
   })
 }

@@ -9,11 +9,10 @@ type Props = {
   currentUserDocumentId?: string
   ideaDocumentId: string
   isLiked: boolean
-  size?: 'default' | 'large' | 'small'
   voteCount: number
 }
 
-export default function IdeaLikeButton({ currentUserDocumentId, ideaDocumentId, isLiked, size, voteCount }: Props) {
+export default function IdeaLikeButton({ currentUserDocumentId, ideaDocumentId, isLiked, voteCount }: Props) {
   const router = useRouter()
 
   const handleToggle = async (liked: boolean) => {
@@ -26,16 +25,8 @@ export default function IdeaLikeButton({ currentUserDocumentId, ideaDocumentId, 
 
     if (result.needsLogin) {
       router.push('/inloggen')
-      return
     }
-
-    if (result.success) {
-      router.refresh()
-      return
-    }
-
-    router.refresh()
   }
 
-  return <LikeButton count={voteCount} isLiked={isLiked} onToggle={handleToggle} size={size} />
+  return <LikeButton count={voteCount} isLiked={isLiked} onToggle={handleToggle} />
 }

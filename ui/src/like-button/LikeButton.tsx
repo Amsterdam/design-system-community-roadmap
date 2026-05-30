@@ -1,49 +1,47 @@
 'use client'
 
-import { Badge } from '@amsterdam/design-system-react'
-import { HeartFillIcon, HeartIcon } from '@amsterdam/design-system-react-icons'
-import { clsx } from 'clsx'
+import { Badge, Button, IconButton, Row } from '@amsterdam/design-system-react'
+import { ThumbsUpFillIcon, ThumbsUpIcon } from '@amsterdam/design-system-react-icons'
 import { useState } from 'react'
 
-import styles from './LikeButton.module.scss'
-
-type LikeButtonSize = 'default' | 'large' | 'small'
-
 type LikeButtonProps = {
+  compact?: boolean
   count: number
   isLiked?: boolean
   onToggle?: (isLiked: boolean) => void
-  size?: LikeButtonSize
 }
 
-const LikeButton = ({ count, isLiked: initialLiked = false, onToggle, size = 'default' }: LikeButtonProps) => {
+const LikeButton = ({ compact = false, count, isLiked: initialLiked = false, onToggle }: LikeButtonProps) => {
   const [liked, setLiked] = useState(initialLiked)
   const [voteCount, setVoteCount] = useState(count)
 
   const handleToggle = () => {
-    const newLiked = !liked
-    setLiked(newLiked)
-    setVoteCount((prev) => (newLiked ? prev + 1 : prev - 1))
-    onToggle?.(newLiked)
+    const nextLiked = !liked
+    setLiked(nextLiked)
+    setVoteCount((previous) => (nextLiked ? previous + 1 : previous - 1))
+    onToggle?.(nextLiked)
+  }
+
+  const icon = liked ? ThumbsUpFillIcon : ThumbsUpIcon
+
+  if (compact) {
+    return (
+      <Row alignVertical="center" gap="x-small">
+        <Badge color="magenta" label={voteCount} />
+        <IconButton
+          label={liked ? 'Stem intrekken' : 'Stem uitbrengen'}
+          onClick={handleToggle}
+          size="small"
+          svg={icon}
+        />
+      </Row>
+    )
   }
 
   return (
-    <div className={styles['like-button']}>
-      <Badge color="magenta" label={voteCount} />
-      <button
-        aria-label={liked ? 'Verwijder like' : 'Voeg like toe'}
-        aria-pressed={liked}
-        className={clsx(
-          styles['like-button__button'],
-          size === 'small' && styles['like-button__button--small'],
-          size === 'large' && styles['like-button__button--large'],
-        )}
-        onClick={handleToggle}
-        type="button"
-      >
-        {liked ? <HeartFillIcon className={styles['like-button__icon--liked']} /> : <HeartIcon />}
-      </button>
-    </div>
+    <Button aria-pressed={liked} icon={icon} iconBefore onClick={handleToggle} type="button" variant="secondary">
+      {voteCount} {voteCount === 1 ? 'stem' : 'stemmen'}
+    </Button>
   )
 }
 

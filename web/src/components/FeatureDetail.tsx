@@ -5,12 +5,12 @@ import type { EditModalFieldErrors, EditModalIdeaOption, ReactionItem } from '@d
 import {
   ActionGroup,
   Badge,
+  Button,
   Column,
   DescriptionList,
   Dialog,
   Grid,
   Heading,
-  IconButton,
   Paragraph,
   ProgressList,
   Row,
@@ -174,10 +174,8 @@ export default function FeatureDetail({
 
     if (result.needsLogin) {
       router.push('/inloggen')
-      return
     }
-
-    router.refresh()
+    // Does not refresh: the LikeButton already updates its count already, to prevent shuffling cards
   }
 
   const handleDeleteReaction = async (reactionId: number) => {
@@ -209,23 +207,28 @@ export default function FeatureDetail({
 
   return (
     <Grid gapVertical="large">
-      <Grid.Cell className="ams-prose" span={{ narrow: 4, medium: 8, wide: 7 }}>
+      <Grid.Cell span="all">
         <Row align="between" alignVertical="center" wrap>
           <Heading level={1} size="level-2">
             {title}
           </Heading>
           <ActionGroup>
-            <LikeButton count={voteCount} isLiked={isLiked} onToggle={handleLikeToggle} size="large" />
+            <LikeButton count={voteCount} isLiked={isLiked} onToggle={handleLikeToggle} />
             {currentUserIsTeam && (
-              <IconButton
-                label="Feature bewerken"
+              <Button
+                icon={DocumentWithPencilIcon}
+                iconBefore
                 onClick={() => Dialog.open(`#${editModalId}`)}
-                svg={DocumentWithPencilIcon}
                 type="button"
-              />
+                variant="secondary"
+              >
+                Bewerken
+              </Button>
             )}
           </ActionGroup>
         </Row>
+      </Grid.Cell>
+      <Grid.Cell className="ams-prose" span={{ narrow: 4, medium: 8, wide: 7 }}>
         <Paragraph>{content}</Paragraph>
 
         <StrapiImageBlock fallbackAlt={title} images={images} />
@@ -249,7 +252,7 @@ export default function FeatureDetail({
                 <Heading level={3} size="level-4">
                   {sortedStories[0].title}
                 </Heading>
-                <Column className={styles['feature-detail__story-content']} gap="x-small">
+                <Column alignHorizontal="start" className={styles['feature-detail__story-content']} gap="x-small">
                   <Badge label={formatDateRange(sortedStories[0].startDate, sortedStories[0].endDate)} />
                   <NextLink href={`/stories/${sortedStories[0].documentId}`} legacyBehavior passHref>
                     <StandaloneLink>Bekijk details</StandaloneLink>
@@ -264,7 +267,7 @@ export default function FeatureDetail({
                     key={story.documentId}
                     status={getProgressStatus(story.startDate, story.endDate)}
                   >
-                    <Column className={styles['feature-detail__story-content']} gap="x-small">
+                    <Column alignHorizontal="start" className={styles['feature-detail__story-content']} gap="x-small">
                       <Badge label={formatDateRange(story.startDate, story.endDate)} />
                       <NextLink href={`/stories/${story.documentId}`} legacyBehavior passHref>
                         <StandaloneLink>Bekijk details</StandaloneLink>
