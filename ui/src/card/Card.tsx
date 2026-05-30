@@ -19,17 +19,18 @@ type CardProps = {
 
 const Card = ({ title, author, description, href, isLiked, onLike, voteCount }: CardProps) => (
   <AmsCard className={styles['card']}>
-    <AmsCard.Heading level={2}>{href ? <AmsCard.Link href={href}>{title}</AmsCard.Link> : title}</AmsCard.Heading>
+    {author ? (
+      <AmsCard.HeadingGroup tagline={`Idee van ${author.name}`}>
+        <AmsCard.Heading level={2}>{href ? <AmsCard.Link href={href}>{title}</AmsCard.Link> : title}</AmsCard.Heading>
+      </AmsCard.HeadingGroup>
+    ) : (
+      <AmsCard.Heading level={2}>{href ? <AmsCard.Link href={href}>{title}</AmsCard.Link> : title}</AmsCard.Heading>
+    )}
     <Paragraph className={styles['card__description']} size="small">
       {description}
     </Paragraph>
     <div className={styles['card__footer']}>
-      {author && (
-        <Paragraph className={styles['card__author']} size="small">
-          Idee van {author.name}
-        </Paragraph>
-      )}
-      <LikeButton count={voteCount} isLiked={isLiked} onToggle={onLike} size="default" />
+      <LikeButton count={voteCount} isLiked={isLiked} onToggle={onLike} />
     </div>
   </AmsCard>
 )

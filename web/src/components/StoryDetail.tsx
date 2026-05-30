@@ -5,11 +5,11 @@ import type { EditModalFieldErrors, ReactionItem } from '@design-system-communit
 import {
   ActionGroup,
   Badge,
+  Button,
   DescriptionList,
   Dialog,
   Grid,
   Heading,
-  IconButton,
   Paragraph,
   Row,
   StandaloneLink,
@@ -155,10 +155,7 @@ export default function StoryDetail({
 
     if (result.needsLogin) {
       router.push('/inloggen')
-      return
     }
-
-    router.refresh()
   }
 
   const handleDeleteReaction = async (reactionId: number) => {
@@ -207,23 +204,28 @@ export default function StoryDetail({
 
   return (
     <Grid gapVertical="large">
-      <Grid.Cell className="ams-prose" span={{ narrow: 4, medium: 8, wide: 7 }}>
+      <Grid.Cell span="all">
         <Row align="between" alignVertical="center" wrap>
           <Heading level={1} size="level-2">
             {title}
           </Heading>
           <ActionGroup>
-            <LikeButton count={voteCount} isLiked={isLiked} onToggle={handleLikeToggle} size="large" />
+            <LikeButton count={voteCount} isLiked={isLiked} onToggle={handleLikeToggle} />
             {currentUserIsTeam && (
-              <IconButton
-                label="Story bewerken"
+              <Button
+                icon={DocumentWithPencilIcon}
+                iconBefore
                 onClick={() => Dialog.open(`#${editModalId}`)}
-                svg={DocumentWithPencilIcon}
                 type="button"
-              />
+                variant="secondary"
+              >
+                Bewerken
+              </Button>
             )}
           </ActionGroup>
         </Row>
+      </Grid.Cell>
+      <Grid.Cell className="ams-prose" span={{ narrow: 4, medium: 8, wide: 7 }}>
         <Paragraph>{content}</Paragraph>
 
         <StrapiImageBlock fallbackAlt={title} images={images} />

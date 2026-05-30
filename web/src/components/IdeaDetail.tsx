@@ -5,12 +5,12 @@ import type { EditModalFeatureOption, EditModalFieldErrors, ReactionItem } from 
 import {
   ActionGroup,
   Badge,
+  Button,
   Column,
   DescriptionList,
   Dialog,
   Grid,
   Heading,
-  IconButton,
   Paragraph,
   ProgressList,
   Row,
@@ -183,7 +183,7 @@ export default function IdeaDetail({
 
   return (
     <Grid gapVertical="large">
-      <Grid.Cell className="ams-prose" span={{ narrow: 4, medium: 8, wide: 7 }}>
+      <Grid.Cell span="all">
         <Row align="between" alignVertical="center" wrap>
           <Heading level={1} size="level-2">
             {title}
@@ -193,19 +193,23 @@ export default function IdeaDetail({
               currentUserDocumentId={currentUserDocumentId}
               ideaDocumentId={ideaDocumentId}
               isLiked={isLiked}
-              size="large"
               voteCount={voteCount}
             />
             {canEdit && (
-              <IconButton
-                label="Idee bewerken"
+              <Button
+                icon={DocumentWithPencilIcon}
+                iconBefore
                 onClick={() => Dialog.open(`#${editModalId}`)}
-                svg={DocumentWithPencilIcon}
                 type="button"
-              />
+                variant="secondary"
+              >
+                Bewerken
+              </Button>
             )}
           </ActionGroup>
         </Row>
+      </Grid.Cell>
+      <Grid.Cell className="ams-prose" span={{ narrow: 4, medium: 8, wide: 7 }}>
         <Paragraph>{content}</Paragraph>
 
         <StrapiImageBlock fallbackAlt={title} images={images} />
@@ -220,7 +224,7 @@ export default function IdeaDetail({
                 <Heading level={3} size="level-4">
                   {sortedFeatures[0].title}
                 </Heading>
-                <Column className={styles['idea-detail__story-content']} gap="x-small">
+                <Column alignHorizontal="start" className={styles['idea-detail__story-content']} gap="x-small">
                   <Badge label={formatDateRange(sortedFeatures[0].startDate, sortedFeatures[0].endDate)} />
                   <Link href={`/features/${sortedFeatures[0].documentId}`} legacyBehavior passHref>
                     <StandaloneLink>Bekijk details</StandaloneLink>
@@ -235,7 +239,7 @@ export default function IdeaDetail({
                     key={feature.documentId}
                     status={getProgressStatus(feature.startDate, feature.endDate)}
                   >
-                    <Column className={styles['idea-detail__story-content']} gap="x-small">
+                    <Column alignHorizontal="start" className={styles['idea-detail__story-content']} gap="x-small">
                       <Badge label={formatDateRange(feature.startDate, feature.endDate)} />
                       <Link href={`/features/${feature.documentId}`} legacyBehavior passHref>
                         <StandaloneLink>Bekijk details</StandaloneLink>
