@@ -77,6 +77,11 @@
   inline-size: 2.5rem;
 }
 
+.sidebar__open-button {
+  flex-shrink: 0;
+  margin-inline-end: var(--ams-space-s);
+}
+
 .sidebar__feature-button {
   background: none;
   block-size: 100%;
@@ -85,7 +90,7 @@
   flex: 1;
   min-inline-size: 0;
   padding-block: 0;
-  padding-inline-end: var(--ams-space-s);
+  padding-inline-end: 0;
   padding-inline-start: 0;
   text-align: start;
 }
@@ -113,6 +118,16 @@
   border-block-end: var(--ams-border-width-s) solid var(--ams-color-separator);
 }
 
+.sidebar__story-row {
+  align-items: center;
+  display: flex;
+}
+
+.sidebar__story-row--selected {
+  border-inline-start: var(--ams-border-width-xl) solid
+    var(--ams-color-highlight-azure);
+}
+
 .sidebar__story-button {
   align-items: center;
   background: none;
@@ -121,21 +136,24 @@
   color: var(--ams-color-text);
   cursor: pointer;
   display: flex;
-  inline-size: 100%;
-  padding-inline-end: var(--ams-space-s);
+  flex: 1;
+  min-inline-size: 0;
+  padding-inline-end: 0;
   padding-inline-start: 2.5rem;
   text-align: start;
 }
 
 .sidebar__story-button--selected {
   background-color: var(--ams-color-background-body);
-  border-inline-start: var(--ams-border-width-xl) solid
-    var(--ams-color-highlight-azure);
   padding-inline-start: calc(2.5rem - var(--ams-border-width-xl));
 }
 
 .sidebar__story-button--standalone {
   padding-inline-start: var(--ams-space-m);
+}
+
+.sidebar__story-button--standalone.sidebar__story-button--selected {
+  padding-inline-start: calc(var(--ams-space-m) - var(--ams-border-width-xl));
 }
 
 .sidebar__story-title {
