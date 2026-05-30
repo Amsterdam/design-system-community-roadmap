@@ -1,0 +1,52 @@
+import{c as e,i as t}from"./preload-helper-usAeo7Bx.js";import{C as n}from"./iframe-BDsurc-Z.js";import{t as r}from"./jsx-runtime-O9QVJvLM.js";import{O as i,f as a,m as o,t as s,w as c}from"./src-DlUFq-WL.js";import{A as l,B as u,C as d,D as f,E as p,I as m,L as h,M as g,N as _,O as ee,P as v,R as y,S as b,T as x,d as S,f as C,h as w,i as T,j as E,n as D,r as O,s as k,t as A,u as j,v as M,w as N,y as P,z as te}from"./StrapiImageBlock-DGXpIR1H.js";function F({title:e,content:t,currentUserDocumentId:n,currentUserIsTeam:r=!1,endDate:s,images:u,isLiked:d,parentFeature:y,reactions:x,startDate:S,storyDocumentId:C,voteCount:T}){let D=N(),[P,F]=(0,L.useState)(!1),[z,B]=(0,L.useState)(),[V,H]=(0,L.useState)(!1),[U,W]=(0,L.useState)(),[G,K]=(0,L.useState)(),[q,J]=(0,L.useState)(!1),[Y,X]=(0,L.useState)(),Z=`edit-modal-story-${C}`,ne=async()=>{J(!0),X(void 0);let e=await M(C);return J(!1),e.needsLogin?(D.push(`/inloggen`),!1):e.error?(X(e.error),!1):e.success?(D.push(`/roadmap`),!0):!1},re=async e=>{H(!0),W(void 0),K(void 0);let t=await b(C,{title:e.title,content:e.content,endDate:e.endDate??``,startDate:e.startDate??``});return H(!1),t.needsLogin?(D.push(`/inloggen`),!1):t.error?(W(t.error),!1):t.fieldErrors?(K(t.fieldErrors),!1):t.success?(D.refresh(),!0):!1},Q=x.find(e=>e.author?.isTeam),ie=Q?x.filter(e=>e.id!==Q.id):x,ae=async e=>{if(!n){D.push(`/inloggen`);return}(await w(C,e)).needsLogin&&D.push(`/inloggen`)},$=async e=>{F(!0),B(void 0);let t=await j(C,e);if(F(!1),t.needsLogin){D.push(`/inloggen`);return}if(t.error){B(t.error);return}t.success&&D.refresh()},oe=async e=>{F(!0),B(void 0);let t=await k(C,e);if(F(!1),t.needsLogin){D.push(`/inloggen`);return}if(t.error){B(t.error);return}t.success&&D.refresh()};return(0,R.jsxs)(g,{gapVertical:`large`,children:[(0,R.jsxs)(g.Cell,{span:`all`,children:[(0,R.jsx)(O,{items:[{href:`/roadmap`,label:`Roadmap`},...y?[{href:`/features/${y.documentId}`,label:y.title}]:[]]}),(0,R.jsxs)(m,{align:`between`,alignVertical:`center`,wrap:!0,children:[(0,R.jsx)(_,{level:1,size:`level-2`,children:e}),(0,R.jsxs)(p,{children:[(0,R.jsx)(i,{count:T,isLiked:d,onToggle:ae}),r&&(0,R.jsx)(ee,{icon:te,iconBefore:!0,onClick:()=>E.open(`#${Z}`),type:`button`,variant:`secondary`,children:`Bewerken`})]})]})]}),(0,R.jsxs)(g.Cell,{className:`ams-prose`,span:{narrow:4,medium:8,wide:7},children:[(0,R.jsx)(v,{children:t}),(0,R.jsx)(A,{fallbackAlt:e,images:u})]}),(0,R.jsxs)(g.Cell,{className:`ams-prose`,span:{narrow:4,medium:8,wide:5},children:[(0,R.jsx)(_,{level:2,size:`level-3`,children:`Details`}),(0,R.jsxs)(l,{children:[(0,R.jsx)(l.Term,{children:`Status`}),(0,R.jsx)(l.Description,{children:(0,R.jsx)(f,{color:s&&new Date(s)<new Date?`lime`:`azure`,label:s&&new Date(s)<new Date?`Voltooid`:`In uitvoering`})}),(0,R.jsx)(l.Term,{children:`Startdatum`}),(0,R.jsx)(l.Description,{children:S?new Date(S).toLocaleDateString(`nl-NL`):`Onbekend`}),s&&(0,R.jsxs)(R.Fragment,{children:[(0,R.jsx)(l.Term,{children:`Einddatum`}),(0,R.jsx)(l.Description,{children:new Date(s).toLocaleDateString(`nl-NL`)})]}),y&&(0,R.jsxs)(R.Fragment,{children:[(0,R.jsx)(l.Term,{children:`Onderdeel van`}),(0,R.jsx)(l.Description,{children:(0,R.jsx)(I.default,{href:`/features/${y.documentId}`,legacyBehavior:!0,passHref:!0,children:(0,R.jsx)(h,{children:y.title})})})]})]}),Q&&(0,R.jsx)(a,{onDeleteReaction:r?$:void 0,reactions:[Q]}),(0,R.jsx)(_,{level:2,size:`level-3`,children:`Reacties`}),(0,R.jsx)(a,{compact:!0,onDeleteReaction:r?$:void 0,reactions:ie}),(0,R.jsx)(o,{error:z,isLoggedIn:!!n,loading:P,onSubmit:oe})]}),r&&(0,R.jsx)(c,{deleteError:Y,deleteLoading:q,error:U,fieldErrors:G,id:Z,initialValues:{title:e,content:t,endDate:s??``,startDate:S??``},loading:V,onClose:()=>{W(void 0),K(void 0),X(void 0)},onDelete:ne,onSubmit:re,type:`story`})]})}var I,L,R,z=t((()=>{y(),u(),s(),I=e(x()),d(),L=e(n()),P(),C(),S(),T(),D(),R=r(),F.__docgenInfo={description:``,methods:[],displayName:`StoryDetail`,props:{content:{required:!0,tsType:{name:`string`},description:``},currentUserDocumentId:{required:!1,tsType:{name:`string`},description:``},currentUserIsTeam:{required:!1,tsType:{name:`boolean`},description:``,defaultValue:{value:`false`,computed:!1}},endDate:{required:!1,tsType:{name:`union`,raw:`string | null`,elements:[{name:`string`},{name:`null`}]},description:``},images:{required:!1,tsType:{name:`union`,raw:`StrapiImage[] | null`,elements:[{name:`Array`,elements:[{name:`StrapiImage`}],raw:`StrapiImage[]`},{name:`null`}]},description:``},isLiked:{required:!0,tsType:{name:`boolean`},description:``},parentFeature:{required:!1,tsType:{name:`union`,raw:`ParentFeature | null`,elements:[{name:`signature`,type:`object`,raw:`{
+  documentId: string
+  title: string
+}`,signature:{properties:[{key:`documentId`,value:{name:`string`,required:!0}},{key:`title`,value:{name:`string`,required:!0}}]}},{name:`null`}]},description:``},reactions:{required:!0,tsType:{name:`Array`,elements:[{name:`signature`,type:`object`,raw:`{
+  author?: { isTeam?: boolean; name: string } | null
+  content: string
+  id: number
+}`,signature:{properties:[{key:`author`,value:{name:`union`,raw:`{ isTeam?: boolean; name: string } | null`,elements:[{name:`signature`,type:`object`,raw:`{ isTeam?: boolean; name: string }`,signature:{properties:[{key:`isTeam`,value:{name:`boolean`,required:!1}},{key:`name`,value:{name:`string`,required:!0}}]}},{name:`null`}],required:!1}},{key:`content`,value:{name:`string`,required:!0}},{key:`id`,value:{name:`number`,required:!0}}]}}],raw:`ReactionItem[]`},description:``},startDate:{required:!1,tsType:{name:`string`},description:``},storyDocumentId:{required:!0,tsType:{name:`string`},description:``},title:{required:!0,tsType:{name:`string`},description:``},voteCount:{required:!0,tsType:{name:`number`},description:``}}}})),B,V,H,U,W,G,K,q;t((()=>{z(),B=r(),V=[{author:{name:`Emma`},content:`Wanneer is dit beschikbaar in de npm package?`,id:1},{author:{name:`Joost`},content:`De Figma-bestanden zijn al bijgewerkt, top!`,id:2},{author:{isTeam:!0,name:`Evi`},content:`We verwachten dit eind Q2 te releasen. Bedankt voor jullie geduld!`,id:3}],H={title:`Pages/Story Detail`,component:F,decorators:[e=>(0,B.jsx)(`div`,{style:{padding:`2rem`},children:(0,B.jsx)(e,{})})],parameters:{layout:`fullscreen`}},U={args:{title:`[Design] Achtergrond-kleur voor interne applicaties`,content:`Interne applicaties van de gemeente Amsterdam hebben specifieke eisen voor achtergrondkleuren die afwijken van de publiek-gerichte applicaties. In deze story worden de designkeuzes voor achtergrondkleuren vastgesteld en gedocumenteerd in het design system.`,endDate:null,isLiked:!1,parentFeature:{title:`Donkere Modus Ondersteuning`,documentId:`feature-layout-001`},reactions:V,startDate:`2025-03-01`,storyDocumentId:`feature-layout-001`,voteCount:14}},W={args:{...U.args,title:`[Code] Geneste items en actieve weergave Menu`,content:`De Menu component wordt uitgebreid met ondersteuning voor geneste menu-items en een actieve weergave. Hiermee kunnen navigatiestructuren worden weergegeven met meerdere niveaus diep, waarbij het actieve pad visueel wordt gemarkeerd.`,endDate:`2025-05-31`,isLiked:!0,startDate:`2025-04-17`,voteCount:27}},G={args:{...U.args,title:`Rich Text editor onderzoek`,content:`Onderzoek naar bestaande open-source rich text editors die voldoen aan de toegankelijkheidseisen van de gemeente Amsterdam. Het doel is een onderbouwde aanbeveling te doen voor de keuze van een editor die goed integreert met het design system.`,endDate:null,parentFeature:null,reactions:[],startDate:`2025-06-01`,voteCount:9}},K={args:{...U.args,title:`[Design] Tabel varianten`,content:`Ontwerpen van de verschillende varianten van de Data Tabel component: standaard, compact en zebra-streepen. Inclusief states voor geselecteerde rijen, hover en focus.`,reactions:[],voteCount:5}},U.parameters={...U.parameters,docs:{...U.parameters?.docs,source:{originalSource:`{
+  args: {
+    title: '[Design] Achtergrond-kleur voor interne applicaties',
+    content: 'Interne applicaties van de gemeente Amsterdam hebben specifieke eisen voor achtergrondkleuren die afwijken van de publiek-gerichte applicaties. In deze story worden de designkeuzes voor achtergrondkleuren vastgesteld en gedocumenteerd in het design system.',
+    endDate: null,
+    isLiked: false,
+    parentFeature: {
+      title: 'Donkere Modus Ondersteuning',
+      documentId: 'feature-layout-001'
+    },
+    reactions: mockReactions,
+    startDate: '2025-03-01',
+    storyDocumentId: 'feature-layout-001',
+    voteCount: 14
+  }
+}`,...U.parameters?.docs?.source}}},W.parameters={...W.parameters,docs:{...W.parameters?.docs,source:{originalSource:`{
+  args: {
+    ...Default.args,
+    title: '[Code] Geneste items en actieve weergave Menu',
+    content: 'De Menu component wordt uitgebreid met ondersteuning voor geneste menu-items en een actieve weergave. Hiermee kunnen navigatiestructuren worden weergegeven met meerdere niveaus diep, waarbij het actieve pad visueel wordt gemarkeerd.',
+    endDate: '2025-05-31',
+    isLiked: true,
+    startDate: '2025-04-17',
+    voteCount: 27
+  }
+}`,...W.parameters?.docs?.source}}},G.parameters={...G.parameters,docs:{...G.parameters?.docs,source:{originalSource:`{
+  args: {
+    ...Default.args,
+    title: 'Rich Text editor onderzoek',
+    content: 'Onderzoek naar bestaande open-source rich text editors die voldoen aan de toegankelijkheidseisen van de gemeente Amsterdam. Het doel is een onderbouwde aanbeveling te doen voor de keuze van een editor die goed integreert met het design system.',
+    endDate: null,
+    parentFeature: null,
+    reactions: [],
+    startDate: '2025-06-01',
+    voteCount: 9
+  }
+}`,...G.parameters?.docs?.source}}},K.parameters={...K.parameters,docs:{...K.parameters?.docs,source:{originalSource:`{
+  args: {
+    ...Default.args,
+    title: '[Design] Tabel varianten',
+    content: 'Ontwerpen van de verschillende varianten van de Data Tabel component: standaard, compact en zebra-streepen. Inclusief states voor geselecteerde rijen, hover en focus.',
+    reactions: [],
+    voteCount: 5
+  }
+}`,...K.parameters?.docs?.source}}},q=[`Default`,`WithEndDate`,`WithoutParentFeature`,`Empty`]}))();export{U as Default,K as Empty,W as WithEndDate,G as WithoutParentFeature,q as __namedExportsOrder,H as default};
