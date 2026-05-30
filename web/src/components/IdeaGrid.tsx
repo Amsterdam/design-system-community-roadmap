@@ -3,6 +3,7 @@
 import { Grid, Heading } from '@amsterdam/design-system-react'
 import { Card, SearchBar } from '@design-system-community-roadmap/ui'
 import { useRouter } from 'next/navigation'
+import { useState } from 'react'
 
 import type { Idea } from '@/utils/schemas'
 
@@ -17,11 +18,9 @@ type IdeaGridProps = {
 export default function IdeaGrid({ currentUserDocumentId, ideas }: IdeaGridProps) {
   const router = useRouter()
 
-  const sortedIdeas = [...ideas].sort((a, b) => {
-    const likesA = a.likes?.length ?? 0
-    const likesB = b.likes?.length ?? 0
-    return likesB - likesA
-  })
+  // Sort order is locked in on mount so cards don't jump when Next.js
+  // auto-refreshes the route after a Server Action completes.
+  const [sortedIdeas] = useState(() => [...ideas].sort((a, b) => (b.likes?.length ?? 0) - (a.likes?.length ?? 0)))
 
   const handleLike = async (ideaDocumentId: string, isLiked: boolean) => {
     if (!currentUserDocumentId) {
@@ -33,16 +32,6 @@ export default function IdeaGrid({ currentUserDocumentId, ideas }: IdeaGridProps
 
     if (result.needsLogin) {
       router.push('/inloggen')
-      return
-    }
-
-    if (result.error || result.success === false) {
-      router.refresh()
-      return
-    }
-
-    if (result.success) {
-      router.refresh()
     }
   }
 
