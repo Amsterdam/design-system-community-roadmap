@@ -21,6 +21,10 @@ body {
   padding-inline: 0;
 }
 
+main {
+  padding-block-end: var(--ams-space-xl);
+}
+
 dialog[open] {
   margin-block: auto;
   margin-inline: auto;
