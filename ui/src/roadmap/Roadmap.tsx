@@ -82,19 +82,30 @@ const Roadmap = ({
     setRange((previousRange) => panRange(previousRange, daysCount))
   }, [])
 
-  const selectFeature = useCallback(
+  const focusFeature = useCallback(
     (feature: RoadmapFeature) => {
-      if (selectedItem?.type === 'feature' && selectedItem.id === feature.id) {
-        setSelectedItem(null)
-        animateToRange(resolvedInitialRange)
-        return
-      }
-
       setSelectedItem({ id: feature.id, type: 'feature' })
       setExpandedFeatureIds([feature.id])
       animateToRange(paddedRange(new Date(feature.startDate), new Date(feature.endDate), 3))
     },
-    [animateToRange, resolvedInitialRange, selectedItem],
+    [animateToRange],
+  )
+
+  const clearFocus = useCallback(() => {
+    setSelectedItem(null)
+    setExpandedFeatureIds([])
+    animateToRange(resolvedInitialRange)
+  }, [animateToRange, resolvedInitialRange])
+
+  const selectFeature = useCallback(
+    (feature: RoadmapFeature) => {
+      if (selectedItem?.type === 'feature' && selectedItem.id === feature.id) {
+        clearFocus()
+        return
+      }
+      focusFeature(feature)
+    },
+    [clearFocus, focusFeature, selectedItem],
   )
 
   const selectStory = useCallback(
@@ -112,6 +123,18 @@ const Roadmap = ({
       animateToRange(paddedRange(startDate, endDate, 2))
     },
     [animateToRange, resolvedInitialRange, selectedItem],
+  )
+
+  const handleToggleFeature = useCallback(
+    (id: number) => {
+      if (expandedFeatureIds.includes(id)) {
+        setExpandedFeatureIds([])
+      } else {
+        const feature = features.find((candidate) => candidate.id === id)
+        if (feature) focusFeature(feature)
+      }
+    },
+    [expandedFeatureIds, features, focusFeature],
   )
 
   const setFeaturesExpanded = useCallback((ids: number[], expanded: boolean) => {
@@ -134,11 +157,10 @@ const Roadmap = ({
         expandedFeatureIds={expandedFeatureIds}
         features={features}
         onFeatureClick={selectFeature}
-        onStoryClick={(story) => {
-          selectStory(story)
-          onStoryNavigate?.(story)
-        }}
-        onToggleFeature={(id) => setExpandedFeatureIds((prev) => (prev.includes(id) ? [] : [id]))}
+        onFeatureNavigate={onFeatureNavigate}
+        onStoryClick={selectStory}
+        onStoryNavigate={onStoryNavigate}
+        onToggleFeature={handleToggleFeature}
         selectedId={selectedItem}
         standaloneStories={standaloneStories}
       />
@@ -148,13 +170,12 @@ const Roadmap = ({
           expandedFeatureIds={expandedFeatureIds}
           features={features}
           granularity={granularity}
+          onFeatureClick={selectFeature}
           onFeatureNavigate={onFeatureNavigate}
           onHeaderHeightChange={handleHeaderHeightChange}
           onPan={pan}
-          onStoryClick={(story) => {
-            selectStory(story)
-            onStoryNavigate?.(story)
-          }}
+          onStoryClick={selectStory}
+          onStoryNavigate={onStoryNavigate}
           onZoom={(factor, pivotDate) => setRange((previousRange) => zoomRange(previousRange, factor, pivotDate))}
           selectedId={selectedItem}
           setFeaturesExpanded={setFeaturesExpanded}

@@ -3,6 +3,7 @@ import type { Meta, StoryObj } from '@storybook/react-vite'
 
 import { Roadmap } from '@design-system-community-roadmap/ui'
 import { addDays, format, subDays } from 'date-fns'
+import { expect, userEvent } from 'storybook/test'
 
 const today = new Date()
 const fmt = (d: Date) => format(d, 'yyyy-MM-dd')
@@ -102,6 +103,8 @@ const meta = {
   component: Roadmap,
   args: {
     features: mockFeatures,
+    onFeatureNavigate: (feature: RoadmapFeature) => console.log('Navigate to feature:', feature.documentId),
+    onStoryNavigate: (story: RoadmapStory) => console.log('Navigate to story:', story.documentId),
     standaloneStories: mockStandaloneStories,
   },
   parameters: {
@@ -114,10 +117,14 @@ type Story = StoryObj<typeof meta>
 
 export const Default: Story = {}
 
-export const WithExpandedFeature: Story = {
-  play: async () => {},
-  render: (args) => {
-    return <Roadmap {...args} features={mockFeatures.map((f, i) => (i === 0 ? { ...f } : f))} />
+export const FocusedFeature: Story = {
+  play: async ({ canvas }) => {
+    const featureBar = canvas.getByRole('button', { name: /^Feature: Applicatie-layout/ })
+    await userEvent.click(featureBar)
+
+    const detailLink = canvas.getByRole('link', { name: 'Bekijk feature: Applicatie-layout' })
+    await expect(detailLink).toBeVisible()
+    await expect(detailLink).toHaveAttribute('href', '/features/feature-1')
   },
 }
 

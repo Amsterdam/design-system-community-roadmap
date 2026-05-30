@@ -16,10 +16,12 @@ type RoadmapTimelineProps = {
   expandedFeatureIds: number[]
   features: RoadmapFeature[]
   granularity: RoadmapGranularity
+  onFeatureClick: (feature: RoadmapFeature) => void
   onFeatureNavigate?: (feature: RoadmapFeature) => void
   onHeaderHeightChange: (height: number) => void
   onPan: (daysCount: number) => void
   onStoryClick: (story: RoadmapStory) => void
+  onStoryNavigate?: (story: RoadmapStory) => void
   onZoom: (factor: number, pivotDate: Date) => void
   selectedId: { id: number; type: 'feature' | 'story' } | null
   setFeaturesExpanded: (ids: number[], expanded: boolean) => void
@@ -31,10 +33,12 @@ const RoadmapTimeline = ({
   expandedFeatureIds,
   features,
   granularity,
+  onFeatureClick,
   onFeatureNavigate,
   onHeaderHeightChange,
   onPan,
   onStoryClick,
+  onStoryNavigate,
   onZoom,
   selectedId,
   setFeaturesExpanded,
@@ -281,10 +285,12 @@ const RoadmapTimeline = ({
                   columnEnd={getColEnd(feature.endDate, feature.startDate)}
                   columnStart={getColStart(feature.startDate)}
                   endDate={feature.endDate}
-                  href={`/features/${feature.documentId}`}
                   isDimmed={isDimmed}
                   isSelected={isSelected}
-                  onClick={onFeatureNavigate ? () => onFeatureNavigate(feature) : undefined}
+                  onClick={() => onFeatureClick(feature)}
+                  onOpenDetail={onFeatureNavigate ? () => onFeatureNavigate(feature) : undefined}
+                  openDetailHref={`/features/${feature.documentId}`}
+                  openDetailLabel={`Bekijk feature: ${feature.title}`}
                   startDate={feature.startDate}
                   title={feature.title}
                   variant="feature"
@@ -306,6 +312,9 @@ const RoadmapTimeline = ({
                         endDate={story.endDate}
                         isSelected={isStorySelected}
                         onClick={() => onStoryClick(story)}
+                        onOpenDetail={onStoryNavigate ? () => onStoryNavigate(story) : undefined}
+                        openDetailHref={`/stories/${story.documentId}`}
+                        openDetailLabel={`Bekijk story: ${story.title}`}
                         startDate={story.startDate}
                         title={story.title}
                         variant="story"
@@ -327,6 +336,9 @@ const RoadmapTimeline = ({
                 endDate={story.endDate}
                 isSelected={isStorySelected}
                 onClick={() => onStoryClick(story)}
+                onOpenDetail={onStoryNavigate ? () => onStoryNavigate(story) : undefined}
+                openDetailHref={`/stories/${story.documentId}`}
+                openDetailLabel={`Bekijk story: ${story.title}`}
                 startDate={story.startDate}
                 title={story.title}
                 variant="story"

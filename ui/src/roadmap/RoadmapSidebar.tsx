@@ -1,7 +1,7 @@
 'use client'
 
-import { Heading } from '@amsterdam/design-system-react'
-import { ChevronDownIcon, ChevronForwardIcon } from '@amsterdam/design-system-react-icons'
+import { Heading, IconButton } from '@amsterdam/design-system-react'
+import { ChevronDownIcon, ChevronForwardIcon, DocumentIcon } from '@amsterdam/design-system-react-icons'
 import { clsx } from 'clsx'
 
 import type { RoadmapFeature, RoadmapStory } from './dateUtils'
@@ -12,7 +12,9 @@ type RoadmapSidebarProps = {
   expandedFeatureIds: number[]
   features: RoadmapFeature[]
   onFeatureClick: (feature: RoadmapFeature) => void
+  onFeatureNavigate?: (feature: RoadmapFeature) => void
   onStoryClick: (story: RoadmapStory) => void
+  onStoryNavigate?: (story: RoadmapStory) => void
   onToggleFeature: (id: number) => void
   selectedId: { id: number; type: 'feature' | 'story' } | null
   standaloneStories: RoadmapStory[]
@@ -22,7 +24,9 @@ const RoadmapSidebar = ({
   expandedFeatureIds,
   features,
   onFeatureClick,
+  onFeatureNavigate,
   onStoryClick,
+  onStoryNavigate,
   onToggleFeature,
   selectedId,
   standaloneStories,
@@ -73,6 +77,16 @@ const RoadmapSidebar = ({
                   {feature.title}
                 </Heading>
               </button>
+
+              {onFeatureNavigate && (
+                <IconButton
+                  className={styles['sidebar__open-button']}
+                  label={`Bekijk feature: ${feature.title}`}
+                  onClick={() => onFeatureNavigate(feature)}
+                  size="small"
+                  svg={DocumentIcon}
+                />
+              )}
             </div>
 
             {isExpanded && feature.stories.length > 0 && (
@@ -81,17 +95,34 @@ const RoadmapSidebar = ({
                   const isStorySelected = selectedId?.type === 'story' && selectedId.id === story.id
                   return (
                     <li className={styles['sidebar__story-item']} key={story.id}>
-                      <button
-                        aria-current={isStorySelected ? 'true' : undefined}
+                      <div
                         className={clsx(
-                          styles['sidebar__story-button'],
-                          isStorySelected && styles['sidebar__story-button--selected'],
+                          styles['sidebar__story-row'],
+                          isStorySelected && styles['sidebar__story-row--selected'],
                         )}
-                        onClick={() => onStoryClick(story)}
-                        type="button"
                       >
-                        <span className={styles['sidebar__story-title']}>{story.title}</span>
-                      </button>
+                        <button
+                          aria-current={isStorySelected ? 'true' : undefined}
+                          className={clsx(
+                            styles['sidebar__story-button'],
+                            isStorySelected && styles['sidebar__story-button--selected'],
+                          )}
+                          onClick={() => onStoryClick(story)}
+                          type="button"
+                        >
+                          <span className={styles['sidebar__story-title']}>{story.title}</span>
+                        </button>
+
+                        {onStoryNavigate && (
+                          <IconButton
+                            className={styles['sidebar__open-button']}
+                            label={`Bekijk story: ${story.title}`}
+                            onClick={() => onStoryNavigate(story)}
+                            size="small"
+                            svg={DocumentIcon}
+                          />
+                        )}
+                      </div>
                     </li>
                   )
                 })}
@@ -105,18 +136,32 @@ const RoadmapSidebar = ({
         const isStorySelected = selectedId?.type === 'story' && selectedId.id === story.id
         return (
           <li className={styles['sidebar__story-item']} key={story.id}>
-            <button
-              aria-current={isStorySelected ? 'true' : undefined}
-              className={clsx(
-                styles['sidebar__story-button'],
-                isStorySelected && styles['sidebar__story-button--selected'],
-                styles['sidebar__story-button--standalone'],
-              )}
-              onClick={() => onStoryClick(story)}
-              type="button"
+            <div
+              className={clsx(styles['sidebar__story-row'], isStorySelected && styles['sidebar__story-row--selected'])}
             >
-              <span className={styles['sidebar__story-title']}>{story.title}</span>
-            </button>
+              <button
+                aria-current={isStorySelected ? 'true' : undefined}
+                className={clsx(
+                  styles['sidebar__story-button'],
+                  isStorySelected && styles['sidebar__story-button--selected'],
+                  styles['sidebar__story-button--standalone'],
+                )}
+                onClick={() => onStoryClick(story)}
+                type="button"
+              >
+                <span className={styles['sidebar__story-title']}>{story.title}</span>
+              </button>
+
+              {onStoryNavigate && (
+                <IconButton
+                  className={styles['sidebar__open-button']}
+                  label={`Bekijk story: ${story.title}`}
+                  onClick={() => onStoryNavigate(story)}
+                  size="small"
+                  svg={DocumentIcon}
+                />
+              )}
+            </div>
           </li>
         )
       })}
