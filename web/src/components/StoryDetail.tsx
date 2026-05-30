@@ -26,6 +26,7 @@ import { deleteStoryAction, updateStoryAction } from '@/app/actions/edits'
 import { toggleStoryLikeAction } from '@/app/actions/likes'
 import { addStoryReactionAction, deleteStoryReactionAction } from '@/app/actions/reactions'
 
+import Breadcrumbs from './Breadcrumbs'
 import StrapiImageBlock from './StrapiImageBlock'
 
 type ParentFeature = {
@@ -205,6 +206,12 @@ export default function StoryDetail({
   return (
     <Grid gapVertical="large">
       <Grid.Cell span="all">
+        <Breadcrumbs
+          items={[
+            { href: '/roadmap', label: 'Roadmap' },
+            ...(parentFeature ? [{ href: `/features/${parentFeature.documentId}`, label: parentFeature.title }] : []),
+          ]}
+        />
         <Row align="between" alignVertical="center" wrap>
           <Heading level={1} size="level-2">
             {title}
