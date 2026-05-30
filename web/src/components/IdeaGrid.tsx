@@ -1,7 +1,10 @@
 'use client'
 
-import { Grid, Heading, Row, StandaloneLink } from '@amsterdam/design-system-react'
+import type { AnchorHTMLAttributes, ComponentProps } from 'react'
+
+import { Grid, Heading, Pagination, Row, StandaloneLink } from '@amsterdam/design-system-react'
 import { Card, SearchBar } from '@design-system-community-roadmap/ui'
+import NextLink from 'next/link'
 import { useRouter } from 'next/navigation'
 import { useState } from 'react'
 
@@ -10,17 +13,30 @@ import type { Idea } from '@/utils/schemas'
 import { toggleIdeaLikeAction } from '@/app/actions/likes'
 import { searchIdeasAction } from '@/app/actions/search'
 
+const IDEAS_PER_PAGE = 18
+
+const PaginationLink = ({ href = '', ...restProps }: AnchorHTMLAttributes<HTMLAnchorElement>) => (
+  <NextLink {...(restProps as unknown as Omit<ComponentProps<typeof NextLink>, 'href'>)} href={href} />
+)
+
 type IdeaGridProps = {
+  currentPage?: number
   currentUserDocumentId?: string
   ideas: Idea[]
 }
 
-export default function IdeaGrid({ currentUserDocumentId, ideas }: IdeaGridProps) {
+export default function IdeaGrid({ currentPage = 1, currentUserDocumentId, ideas }: IdeaGridProps) {
   const router = useRouter()
 
   // Sort order is locked in on mount so cards don't jump when Next.js
   // auto-refreshes the route after a Server Action completes.
-  const [sortedIdeas] = useState(() => [...ideas].sort((a, b) => (b.likes?.length ?? 0) - (a.likes?.length ?? 0)))
+  const [sortedIdeas] = useState(() =>
+    [...ideas].sort((firstIdea, secondIdea) => (secondIdea.likes?.length ?? 0) - (firstIdea.likes?.length ?? 0)),
+  )
+
+  const totalPages = Math.max(1, Math.ceil(sortedIdeas.length / IDEAS_PER_PAGE))
+  const activePage = Math.min(Math.max(currentPage, 1), totalPages)
+  const visibleIdeas = sortedIdeas.slice((activePage - 1) * IDEAS_PER_PAGE, activePage * IDEAS_PER_PAGE)
 
   const handleLike = async (ideaDocumentId: string, isLiked: boolean) => {
     if (!currentUserDocumentId) {
@@ -53,10 +69,10 @@ export default function IdeaGrid({ currentUserDocumentId, ideas }: IdeaGridProps
         </Grid.Cell>
       </Grid>
       <Grid gapVertical="none">
-        {sortedIdeas.map((idea) => {
+        {visibleIdeas.map((idea) => {
           const isLiked =
             !!currentUserDocumentId &&
-            (idea.likes?.some((l) => l.end_user?.documentId === currentUserDocumentId) ?? false)
+            (idea.likes?.some((like) => like.end_user?.documentId === currentUserDocumentId) ?? false)
 
           return (
             <Grid.Cell key={idea.id} span={{ narrow: 4, medium: 4, wide: 4 }}>
@@ -73,6 +89,18 @@ export default function IdeaGrid({ currentUserDocumentId, ideas }: IdeaGridProps
           )
         })}
       </Grid>
+      {totalPages > 1 && (
+        <Grid paddingTop="large">
+          <Grid.Cell span="all">
+            <Pagination
+              linkComponent={PaginationLink}
+              linkTemplate={(pageNumber) => `/?pagina=${pageNumber}`}
+              page={activePage}
+              totalPages={totalPages}
+            />
+          </Grid.Cell>
+        </Grid>
+      )}
     </>
   )
 }

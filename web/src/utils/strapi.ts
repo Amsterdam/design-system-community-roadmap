@@ -32,6 +32,40 @@ async function fetchParsed<T>(endpoint: string, schema: ZodType<T>, init?: Reque
   return schema.parse(await res.json())
 }
 
+/**
+ * Fetches every record of a collection, following Strapi's pagination across all
+ * pages instead of stopping at the default page size. A stable sort keeps the
+ * paging consistent. Returns the same `{ data }` shape as a single fetch.
+ */
+async function fetchAllParsed<T>(
+  path: string,
+  baseParams: Record<string, string>,
+  itemSchema: ZodType<T>,
+  init?: RequestInit,
+): Promise<{ data: T[] }> {
+  const pageSize = 100
+  const collectionSchema = strapiCollection(itemSchema)
+
+  const fetchPage = (page: number) => {
+    const params = new URLSearchParams({
+      ...baseParams,
+      'pagination[page]': String(page),
+      'pagination[pageSize]': String(pageSize),
+    })
+    return fetchParsed(`${path}?${params}`, collectionSchema, init)
+  }
+
+  const firstPage = await fetchPage(1)
+  const allItems: T[] = [...firstPage.data]
+
+  for (let page = 2; page <= firstPage.meta.pagination.pageCount; page += 1) {
+    const nextPage = await fetchPage(page)
+    allItems.push(...nextPage.data)
+  }
+
+  return { data: allItems }
+}
+
 const imagePopulateParams = {
   'populate[images][fields][0]': 'url',
   'populate[images][fields][1]': 'alternativeText',
@@ -61,16 +95,20 @@ export const strapi = {
       })
       return fetchParsed(`features?${params}`, strapiCollection(FeatureSelectOptionSchema), init)
     },
-    findManyWithStories: (init?: RequestInit) => {
-      const params = new URLSearchParams({
-        'populate[stories][fields][0]': 'id',
-        'populate[stories][fields][1]': 'documentId',
-        'populate[stories][fields][2]': 'title',
-        'populate[stories][fields][3]': 'startDate',
-        'populate[stories][fields][4]': 'endDate',
-      })
-      return fetchParsed(`features?${params}`, strapiCollection(FeatureWithStoriesSchema), init)
-    },
+    findManyWithStories: (init?: RequestInit) =>
+      fetchAllParsed(
+        'features',
+        {
+          'populate[stories][fields][0]': 'id',
+          'populate[stories][fields][1]': 'documentId',
+          'populate[stories][fields][2]': 'title',
+          'populate[stories][fields][3]': 'startDate',
+          'populate[stories][fields][4]': 'endDate',
+          'sort[0]': 'id:asc',
+        },
+        FeatureWithStoriesSchema,
+        init,
+      ),
     findOne: (id: string | number, init?: RequestInit) => {
       const params = new URLSearchParams({
         ...imagePopulateParams,
@@ -98,17 +136,21 @@ export const strapi = {
       fetchParsed(`idea-likes/${id}`, strapiSingle(IdeaLikeSchema), init),
   },
   ideas: {
-    findMany: (init?: RequestInit) => {
-      const params = new URLSearchParams({
-        'populate[end_users][fields][0]': 'name',
-        'populate[end_users][fields][1]': 'documentId',
-        'populate[end_users][fields][2]': 'id',
-        'populate[end_users][fields][3]': 'isTeam',
-        'populate[likes][fields][0]': 'documentId',
-        'populate[likes][populate][end_user][fields][0]': 'documentId',
-      })
-      return fetchParsed('ideas?' + params, strapiCollection(IdeaSchema), init)
-    },
+    findMany: (init?: RequestInit) =>
+      fetchAllParsed(
+        'ideas',
+        {
+          'populate[end_users][fields][0]': 'name',
+          'populate[end_users][fields][1]': 'documentId',
+          'populate[end_users][fields][2]': 'id',
+          'populate[end_users][fields][3]': 'isTeam',
+          'populate[likes][fields][0]': 'documentId',
+          'populate[likes][populate][end_user][fields][0]': 'documentId',
+          'sort[0]': 'createdAt:desc',
+        },
+        IdeaSchema,
+        init,
+      ),
     findManyForSelect: (init?: RequestInit) => {
       const params = new URLSearchParams({
         'fields[0]': 'documentId',
@@ -141,16 +183,20 @@ export const strapi = {
   },
   stories: {
     findMany: (init?: RequestInit) => fetchParsed('stories', strapiCollection(StorySchema), init),
-    findManyWithFeature: (init?: RequestInit) => {
-      const params = new URLSearchParams({
-        'populate[feature][fields][0]': 'id',
-        'populate[feature][fields][1]': 'documentId',
-        'populate[feature][fields][2]': 'title',
-        'populate[feature][fields][3]': 'startDate',
-        'populate[feature][fields][4]': 'endDate',
-      })
-      return fetchParsed(`stories?${params}`, strapiCollection(StoryWithFeatureSchema), init)
-    },
+    findManyWithFeature: (init?: RequestInit) =>
+      fetchAllParsed(
+        'stories',
+        {
+          'populate[feature][fields][0]': 'id',
+          'populate[feature][fields][1]': 'documentId',
+          'populate[feature][fields][2]': 'title',
+          'populate[feature][fields][3]': 'startDate',
+          'populate[feature][fields][4]': 'endDate',
+          'sort[0]': 'id:asc',
+        },
+        StoryWithFeatureSchema,
+        init,
+      ),
     findOne: (id: string | number, init?: RequestInit) => {
       const params = new URLSearchParams({
         'populate[feature][fields][0]': 'documentId',
