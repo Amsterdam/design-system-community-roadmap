@@ -20,18 +20,23 @@ export default function RoadmapPage({ currentUserIsTeam = false, features, stand
 
   return (
     <Grid gapVertical="large">
-      <Grid.Cell span={{ narrow: 4, medium: 4, wide: 6 }}>
-        <Row align="between" alignVertical="baseline" wrap>
-          <Heading level={1} size="level-2">
-            Roadmap
-          </Heading>
-          {currentUserIsTeam && (
+      <Grid.Cell span={{ narrow: 4, medium: 4, wide: 4 }}>
+        <Heading level={1} size="level-2">
+          Roadmap
+        </Heading>
+      </Grid.Cell>
+      {currentUserIsTeam && (
+        <Grid.Cell span={{ narrow: 4, medium: 4, wide: 4 }} start={{ narrow: 1, medium: 5, wide: 5 }}>
+          <Row align="end" alignVertical="center" gap="small" wrap>
             <NextLink href="/features/nieuw" legacyBehavior passHref>
               <StandaloneLink>Feature aanmaken</StandaloneLink>
             </NextLink>
-          )}
-        </Row>
-      </Grid.Cell>
+            <NextLink href="/stories/nieuw" legacyBehavior passHref>
+              <StandaloneLink>Story aanmaken</StandaloneLink>
+            </NextLink>
+          </Row>
+        </Grid.Cell>
+      )}
       <Grid.Cell span={{ narrow: 4, medium: 4, wide: 4 }} start={{ narrow: 1, medium: 1, wide: 9 }}>
         <SearchBar onSearch={searchRoadmapAction} placeholder="Zoek features en stories" />
       </Grid.Cell>
