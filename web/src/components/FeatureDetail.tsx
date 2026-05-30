@@ -29,6 +29,7 @@ import { toggleFeatureLikeAction } from '@/app/actions/likes'
 import { addFeatureReactionAction, deleteFeatureReactionAction } from '@/app/actions/reactions'
 import { formatDateRange, getProgressStatus } from '@/utils/date'
 
+import Breadcrumbs from './Breadcrumbs'
 import styles from './FeatureDetail.module.scss'
 import StrapiImageBlock from './StrapiImageBlock'
 
@@ -208,6 +209,7 @@ export default function FeatureDetail({
   return (
     <Grid gapVertical="large">
       <Grid.Cell span="all">
+        <Breadcrumbs items={[{ href: '/roadmap', label: 'Roadmap' }]} />
         <Row align="between" alignVertical="center" wrap>
           <Heading level={1} size="level-2">
             {title}

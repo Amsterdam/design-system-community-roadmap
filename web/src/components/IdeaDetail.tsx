@@ -29,6 +29,7 @@ import { deleteIdeaReactionAction } from '@/app/actions/reactions'
 import { formatDateRange, getProgressStatus } from '@/utils/date'
 
 import AddReaction from './AddReaction'
+import Breadcrumbs from './Breadcrumbs'
 import styles from './IdeaDetail.module.scss'
 import IdeaLikeButton from './IdeaLikeButton'
 import StrapiImageBlock from './StrapiImageBlock'
@@ -184,6 +185,7 @@ export default function IdeaDetail({
   return (
     <Grid gapVertical="large">
       <Grid.Cell span="all">
+        <Breadcrumbs items={[{ href: '/', label: 'Ideeën' }]} />
         <Row align="between" alignVertical="center" wrap>
           <Heading level={1} size="level-2">
             {title}
