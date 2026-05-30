@@ -1,6 +1,6 @@
 'use client'
 
-import { Grid, Heading } from '@amsterdam/design-system-react'
+import { Grid, Heading, Row, StandaloneLink } from '@amsterdam/design-system-react'
 import { Card, SearchBar } from '@design-system-community-roadmap/ui'
 import { useRouter } from 'next/navigation'
 import { useState } from 'react'
@@ -38,12 +38,17 @@ export default function IdeaGrid({ currentUserDocumentId, ideas }: IdeaGridProps
   return (
     <>
       <Grid paddingBottom="large">
-        <Grid.Cell span={{ narrow: 4, medium: 4, wide: 6 }}>
+        <Grid.Cell span={{ narrow: 2, medium: 4, wide: 4 }}>
           <Heading level={1} size="level-2">
             Ideeën
           </Heading>
         </Grid.Cell>
-        <Grid.Cell span={{ narrow: 4, medium: 4, wide: 6 }}>
+        <Grid.Cell span={{ narrow: 2, medium: 4, wide: 2 }} start={{ narrow: 3, medium: 5, wide: 7 }}>
+          <Row align="end" alignVertical="center">
+            <StandaloneLink href="/idee-delen">Idee delen</StandaloneLink>
+          </Row>
+        </Grid.Cell>
+        <Grid.Cell span={{ narrow: 4, medium: 4, wide: 4 }}>
           <SearchBar onSearch={searchIdeasAction} placeholder="Zoek tussen de ideeën" />
         </Grid.Cell>
       </Grid>

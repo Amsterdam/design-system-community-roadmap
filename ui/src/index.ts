@@ -3,7 +3,7 @@ import EditModal from './edit-modal/EditModal'
 import LikeButton from './like-button/LikeButton'
 import EmojiPicker from './login/EmojiPicker'
 import LoginForm from './login/LoginForm'
-import AppHeader from './navigation/AppHeader'
+import Header from './navigation/Header'
 import Navigation from './navigation/Navigation'
 import NotificationMenu from './notifications/NotificationMenu'
 import AddReaction from './reactions/AddReaction'
@@ -13,10 +13,10 @@ import SearchBar from './search/SearchBar'
 
 export {
   AddReaction,
-  AppHeader,
   Card,
   EditModal,
   EmojiPicker,
+  Header,
   LikeButton,
   LoginForm,
   Navigation,

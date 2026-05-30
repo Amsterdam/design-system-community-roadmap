@@ -1,14 +1,14 @@
 import type { Meta, StoryObj } from '@storybook/react-vite'
 
-import { AppHeader } from '@design-system-community-roadmap/ui'
+import { Header } from '@design-system-community-roadmap/ui'
 
 const meta = {
-  title: 'Organisms/App Header',
-  component: AppHeader,
+  title: 'Organisms/Header',
+  component: Header,
   parameters: {
     layout: 'fullscreen',
   },
-} satisfies Meta<typeof AppHeader>
+} satisfies Meta<typeof Header>
 
 export default meta
 type Story = StoryObj<typeof meta>
@@ -17,14 +17,12 @@ export const LoggedOut: Story = {}
 
 export const LoggedIn: Story = {
   args: {
-    currentUser: { name: 'Jan de Vries' },
-    onLogout: () => {},
+    currentUser: { name: 'Jan' },
   },
 }
 
 export const LoggedInLongName: Story = {
   args: {
-    currentUser: { name: 'Wilhelmina van den Berg' },
-    onLogout: () => {},
+    currentUser: { name: 'Wilhelmina' },
   },
 }
