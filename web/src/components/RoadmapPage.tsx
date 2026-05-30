@@ -32,7 +32,7 @@ export default function RoadmapPage({ currentUserIsTeam = false, features, stand
           )}
         </Row>
       </Grid.Cell>
-      <Grid.Cell span={{ narrow: 4, medium: 4, wide: 6 }}>
+      <Grid.Cell span={{ narrow: 4, medium: 4, wide: 4 }} start={{ narrow: 1, medium: 1, wide: 9 }}>
         <SearchBar onSearch={searchRoadmapAction} placeholder="Zoek features en stories" />
       </Grid.Cell>
       <Grid.Cell span="all">

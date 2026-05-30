@@ -2,18 +2,13 @@
 
 import type { NotificationMenuItem } from '@design-system-community-roadmap/ui'
 
-import { AppHeader } from '@design-system-community-roadmap/ui'
+import { Header } from '@design-system-community-roadmap/ui'
 import { usePathname, useRouter } from 'next/navigation'
 import { useCallback, useEffect, useState } from 'react'
 
-import { logoutAction } from '@/app/actions/login'
 import { getNotifications, markAllNotificationsRead, markNotificationRead } from '@/app/actions/notifications'
 
 const POLL_INTERVAL_MS = 60_000
-
-function pathAllowsShareIdea(pathname: string): boolean {
-  return pathname === '/' || pathname.startsWith('/ideeen')
-}
 
 function getDisplayUser(): { name: string } | undefined {
   if (typeof document === 'undefined') return undefined
@@ -27,7 +22,7 @@ function getDisplayUser(): { name: string } | undefined {
   }
 }
 
-export default function AppHeaderClient() {
+export default function HeaderClient() {
   const pathname = usePathname()
   const router = useRouter()
   const [currentUser, setCurrentUser] = useState<{ name: string } | undefined>(undefined)
@@ -79,14 +74,12 @@ export default function AppHeaderClient() {
   }
 
   return (
-    <AppHeader
+    <Header
       currentUser={currentUser}
       notifications={notifications}
-      onLogout={logoutAction}
       onMarkAllNotificationsRead={handleMarkAllRead}
       onSelectNotification={handleSelect}
       pathname={pathname}
-      showShareIdea={pathAllowsShareIdea(pathname)}
     />
   )
 }
