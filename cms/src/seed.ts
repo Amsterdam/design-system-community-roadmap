@@ -1,53 +1,7 @@
 import type { Core } from '@strapi/strapi'
 
-import { promises as fs } from 'node:fs'
-import os from 'node:os'
-import path from 'node:path'
-
 export default async ({ strapi }: { strapi: Core.Strapi }) => {
   console.log('Starting seeding...')
-
-  const uploadFromUrl = async (url: string, filename: string): Promise<number | null> => {
-    try {
-      const controller = new AbortController()
-      const timeoutId = setTimeout(() => controller.abort(), 5000)
-      let response: Response
-      try {
-        response = await fetch(url, { signal: controller.signal })
-      } finally {
-        clearTimeout(timeoutId)
-      }
-      if (!response.ok) {
-        console.warn(`Skipping image ${url}: HTTP ${response.status}`)
-        return null
-      }
-      const buffer = Buffer.from(await response.arrayBuffer())
-      const mimetype = response.headers.get('content-type')?.split(';')[0] ?? 'image/jpeg'
-      const tmpDir = await fs.mkdtemp(path.join(os.tmpdir(), 'seed-img-'))
-      const filePath = path.join(tmpDir, filename)
-      try {
-        await fs.writeFile(filePath, buffer)
-        const [uploaded] = await strapi
-          .plugin('upload')
-          .service('upload')
-          .upload({
-            data: {},
-            files: {
-              filepath: filePath,
-              mimetype,
-              originalFilename: filename,
-              size: buffer.length,
-            },
-          })
-        return uploaded.id
-      } finally {
-        await fs.rm(tmpDir, { force: true, recursive: true })
-      }
-    } catch (error) {
-      console.warn(`Failed to upload image from ${url}:`, error)
-      return null
-    }
-  }
 
   const endUserNames = [
     'Bram',
@@ -295,23 +249,10 @@ export default async ({ strapi }: { strapi: Core.Strapi }) => {
   for (let index = 0; index < ideaData.length; index++) {
     const data = ideaData[index]
 
-    const imageIds: number[] = []
-    if (Math.random() < 0.5) {
-      const numImages = Math.random() < 0.3 ? 2 : 1
-      for (let imageIndex = 0; imageIndex < numImages; imageIndex++) {
-        const id = await uploadFromUrl(
-          `https://cataas.com/cat?seed=idea-${index}-${imageIndex}`,
-          `idea-${index}-${imageIndex}.jpg`,
-        )
-        if (id) imageIds.push(id)
-      }
-    }
-
     const idea = await strapi.documents('api::idea.idea').create({
       data: {
         ...data,
         end_users: [endUsers[Math.floor(Math.random() * endUsers.length)].documentId],
-        ...(imageIds.length > 0 ? { images: imageIds } : {}),
       },
       status: 'published',
     })
