@@ -7,7 +7,7 @@
     "displayName": "Feature"
   },
   "options": {
-    "draftAndPublish": true
+    "draftAndPublish": false
   },
   "pluginOptions": {},
   "attributes": {
@@ -57,6 +57,13 @@
       "relation": "oneToMany",
       "target": "api::story.story",
       "mappedBy": "feature"
+    },
+    "rank": {
+      "type": "integer"
+    },
+    "progressStatus": {
+      "type": "enumeration",
+      "enum": ["Bezig", "Voltooid"]
     }
   }
 }

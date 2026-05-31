@@ -7,7 +7,7 @@
     "displayName": "Story"
   },
   "options": {
-    "draftAndPublish": true
+    "draftAndPublish": false
   },
   "pluginOptions": {},
   "attributes": {
@@ -52,6 +52,13 @@
     "endDate": {
       "type": "date",
       "required": true
+    },
+    "rank": {
+      "type": "integer"
+    },
+    "progressStatus": {
+      "type": "enumeration",
+      "enum": ["Bezig", "Voltooid"]
     }
   }
 }

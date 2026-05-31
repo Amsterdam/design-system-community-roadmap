@@ -25,6 +25,7 @@ import type { StrapiImage } from '@/utils/schemas'
 import { deleteStoryAction, updateStoryAction } from '@/app/actions/edits'
 import { toggleStoryLikeAction } from '@/app/actions/likes'
 import { addStoryReactionAction, deleteStoryReactionAction } from '@/app/actions/reactions'
+import { getStatusBadge } from '@/utils/status'
 
 import Breadcrumbs from './Breadcrumbs'
 import StrapiImageBlock from './StrapiImageBlock'
@@ -44,6 +45,7 @@ export type StoryDetailProps = {
   parentFeature?: ParentFeature | null
   reactions: ReactionItem[]
   startDate?: string
+  status?: string
   storyDocumentId: string
   title: string
   voteCount: number
@@ -60,6 +62,7 @@ export default function StoryDetail({
   parentFeature,
   reactions,
   startDate,
+  status,
   storyDocumentId,
   voteCount,
 }: StoryDetailProps) {
@@ -244,10 +247,7 @@ export default function StoryDetail({
         <DescriptionList>
           <DescriptionList.Term>Status</DescriptionList.Term>
           <DescriptionList.Description>
-            <Badge
-              color={endDate && new Date(endDate) < new Date() ? 'lime' : 'azure'}
-              label={endDate && new Date(endDate) < new Date() ? 'Voltooid' : 'In uitvoering'}
-            />
+            <Badge color={getStatusBadge(status).color} label={getStatusBadge(status).label} />
           </DescriptionList.Description>
           <DescriptionList.Term>Startdatum</DescriptionList.Term>
           <DescriptionList.Description>

@@ -62,6 +62,7 @@ export default async function StoryPage({ params }: Props) {
       parentFeature={story.feature ?? null}
       reactions={reactions}
       startDate={story.startDate}
+      status={story.progressStatus ?? undefined}
       storyDocumentId={story.documentId}
       title={story.title}
       voteCount={story.likes?.length ?? 0}

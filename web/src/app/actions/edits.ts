@@ -133,6 +133,7 @@ export async function updateFeatureAction(
     content: string
     endDate: string | null
     ideaDocumentId?: string | null
+    progressStatus?: string | null
     startDate: string
     title: string
   },
@@ -175,6 +176,7 @@ export async function updateFeatureAction(
           content: trimmedContent,
           endDate: trimmedEndDate || null,
           idea: ideaDocumentId,
+          progressStatus: input.progressStatus || null,
           startDate: trimmedStartDate,
         },
       }),
@@ -505,6 +507,66 @@ export async function deleteStoryAction(documentId: string): Promise<DeleteRespo
   revalidatePath('/')
   revalidatePath('/roadmap')
   revalidatePath(`/stories/${documentId}`)
+
+  return { success: true }
+}
+
+export async function updateStoryProgressAction(
+  documentId: string,
+  input: { progressStatus?: string | null; rank?: number },
+): Promise<EditResponse> {
+  const user = await getCurrentUser()
+  if (!user) return { needsLogin: true }
+  if (!user.isTeam) return { error: 'Je hebt geen rechten om deze actie uit te voeren.' }
+
+  try {
+    const response = await client.fetch(`stories/${documentId}`, {
+      body: JSON.stringify({ data: input }),
+      headers: { 'Content-Type': 'application/json' },
+      method: 'PUT',
+    })
+    if (!response.ok) {
+      const body = await response.text().catch(() => '')
+      console.error('[updateStoryProgressAction] Failed', response.status, body)
+      return { error: 'Dat is helaas niet gelukt. Probeer het opnieuw of kom later terug.' }
+    }
+  } catch (error) {
+    console.error('[updateStoryProgressAction] Error:', error)
+    return { error: 'Dat is helaas niet gelukt. Probeer het opnieuw of kom later terug.' }
+  }
+
+  revalidatePath('/roadmap')
+  revalidatePath(`/stories/${documentId}`)
+
+  return { success: true }
+}
+
+export async function updateFeatureProgressAction(
+  documentId: string,
+  input: { progressStatus?: string | null; rank?: number },
+): Promise<EditResponse> {
+  const user = await getCurrentUser()
+  if (!user) return { needsLogin: true }
+  if (!user.isTeam) return { error: 'Je hebt geen rechten om deze actie uit te voeren.' }
+
+  try {
+    const response = await client.fetch(`features/${documentId}`, {
+      body: JSON.stringify({ data: input }),
+      headers: { 'Content-Type': 'application/json' },
+      method: 'PUT',
+    })
+    if (!response.ok) {
+      const body = await response.text().catch(() => '')
+      console.error('[updateFeatureProgressAction] Failed', response.status, body)
+      return { error: 'Dat is helaas niet gelukt. Probeer het opnieuw of kom later terug.' }
+    }
+  } catch (error) {
+    console.error('[updateFeatureProgressAction] Error:', error)
+    return { error: 'Dat is helaas niet gelukt. Probeer het opnieuw of kom later terug.' }
+  }
+
+  revalidatePath('/roadmap')
+  revalidatePath(`/features/${documentId}`)
 
   return { success: true }
 }

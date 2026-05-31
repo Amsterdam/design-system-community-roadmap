@@ -14,9 +14,10 @@ import {
   Paragraph,
   ProgressList,
   Row,
+  Select,
   StandaloneLink,
 } from '@amsterdam/design-system-react'
-import { DocumentWithPencilIcon } from '@amsterdam/design-system-react-icons'
+import { ChevronDownIcon, ChevronUpIcon, DocumentWithPencilIcon } from '@amsterdam/design-system-react-icons'
 import { AddReaction, EditModal, LikeButton, Reactions } from '@design-system-community-roadmap/ui'
 import NextLink from 'next/link'
 import { useRouter } from 'next/navigation'
@@ -24,10 +25,11 @@ import { useState } from 'react'
 
 import type { StrapiImage } from '@/utils/schemas'
 
-import { deleteFeatureAction, updateFeatureAction } from '@/app/actions/edits'
+import { deleteFeatureAction, updateFeatureAction, updateStoryProgressAction } from '@/app/actions/edits'
 import { toggleFeatureLikeAction } from '@/app/actions/likes'
 import { addFeatureReactionAction, deleteFeatureReactionAction } from '@/app/actions/reactions'
-import { formatDateRange, getProgressStatus } from '@/utils/date'
+import { formatDateRange } from '@/utils/date'
+import { getStatusBadge, toProgressStepStatus } from '@/utils/status'
 
 import Breadcrumbs from './Breadcrumbs'
 import styles from './FeatureDetail.module.scss'
@@ -36,6 +38,8 @@ import StrapiImageBlock from './StrapiImageBlock'
 type ConnectedStory = {
   documentId: string
   endDate?: string | null
+  progressStatus?: string | null
+  rank?: number | null
   startDate?: string
   title: string
 }
@@ -52,6 +56,7 @@ export type FeatureDetailProps = {
   linkedIdea?: { documentId: string; title: string } | null
   reactions: ReactionItem[]
   startDate?: string
+  status?: string
   stories: ConnectedStory[]
   title: string
   voteCount: number
@@ -70,6 +75,7 @@ export default function FeatureDetail({
   linkedIdea,
   reactions,
   startDate,
+  status,
   stories,
   voteCount,
 }: FeatureDetailProps) {
@@ -88,6 +94,7 @@ export default function FeatureDetail({
     content: string
     endDate?: string
     ideaDocumentId?: string
+    progressStatus?: string
     startDate?: string
     statusIdea?: string
     title: string
@@ -101,6 +108,7 @@ export default function FeatureDetail({
       content: values.content,
       endDate: values.endDate ?? null,
       ideaDocumentId: values.ideaDocumentId ?? null,
+      progressStatus: values.progressStatus ?? null,
       startDate: values.startDate ?? '',
     })
 
@@ -158,12 +166,21 @@ export default function FeatureDetail({
   const teamReaction = reactions.find((reaction) => reaction.author?.isTeam)
   const feedReactions = teamReaction ? reactions.filter((reaction) => reaction.id !== teamReaction.id) : reactions
 
-  const sortedStories = [...stories].sort((storyA, storyB) => {
-    if (!storyA.startDate && !storyB.startDate) return 0
-    if (!storyA.startDate) return 1
-    if (!storyB.startDate) return -1
-    return new Date(storyA.startDate).getTime() - new Date(storyB.startDate).getTime()
-  })
+  const sortedStories = [...stories].sort((storyA, storyB) => (storyA.rank ?? 0) - (storyB.rank ?? 0))
+
+  const handleStoryStatus = async (storyDocumentId: string, progressStatus: string | null) => {
+    await updateStoryProgressAction(storyDocumentId, { progressStatus })
+    router.refresh()
+  }
+
+  const handleMoveStory = async (index: number, direction: -1 | 1) => {
+    const target = sortedStories[index]
+    const neighbor = sortedStories[index + direction]
+    if (!neighbor) return
+    await updateStoryProgressAction(target.documentId, { rank: neighbor.rank ?? index + direction + 1 })
+    await updateStoryProgressAction(neighbor.documentId, { rank: target.rank ?? index + 1 })
+    router.refresh()
+  }
 
   const handleLikeToggle = async (liked: boolean) => {
     if (!currentUserDocumentId) {
@@ -263,17 +280,52 @@ export default function FeatureDetail({
               </>
             ) : (
               <ProgressList headingLevel={3}>
-                {sortedStories.map((story) => (
+                {sortedStories.map((story, storyIndex) => (
                   <ProgressList.Step
                     heading={story.title}
                     key={story.documentId}
-                    status={getProgressStatus(story.startDate, story.endDate)}
+                    status={toProgressStepStatus(story.progressStatus)}
                   >
                     <Column alignHorizontal="start" className={styles['feature-detail__story-content']} gap="x-small">
                       <Badge label={formatDateRange(story.startDate, story.endDate)} />
                       <NextLink href={`/stories/${story.documentId}`} legacyBehavior passHref>
                         <StandaloneLink>Bekijk details</StandaloneLink>
                       </NextLink>
+                      {currentUserIsTeam && (
+                        <Row alignVertical="center" gap="small" wrap>
+                          <Select
+                            aria-label="Voortgang"
+                            onChange={(event) => handleStoryStatus(story.documentId, event.target.value || null)}
+                            value={story.progressStatus ?? ''}
+                          >
+                            <option value="">Gepland</option>
+                            <option value="Bezig">Bezig</option>
+                            <option value="Voltooid">Voltooid</option>
+                          </Select>
+                          <ActionGroup role="toolbar">
+                            <Button
+                              disabled={storyIndex === 0}
+                              icon={ChevronUpIcon}
+                              iconOnly
+                              onClick={() => handleMoveStory(storyIndex, -1)}
+                              type="button"
+                              variant="tertiary"
+                            >
+                              Naar boven
+                            </Button>
+                            <Button
+                              disabled={storyIndex === sortedStories.length - 1}
+                              icon={ChevronDownIcon}
+                              iconOnly
+                              onClick={() => handleMoveStory(storyIndex, 1)}
+                              type="button"
+                              variant="tertiary"
+                            >
+                              Naar beneden
+                            </Button>
+                          </ActionGroup>
+                        </Row>
+                      )}
                     </Column>
                   </ProgressList.Step>
                 ))}
@@ -289,10 +341,7 @@ export default function FeatureDetail({
         <DescriptionList>
           <DescriptionList.Term>Status</DescriptionList.Term>
           <DescriptionList.Description>
-            <Badge
-              color={endDate && new Date(endDate) < new Date() ? 'lime' : 'azure'}
-              label={endDate && new Date(endDate) < new Date() ? 'Voltooid' : 'In uitvoering'}
-            />
+            <Badge color={getStatusBadge(status).color} label={getStatusBadge(status).label} />
           </DescriptionList.Description>
           <DescriptionList.Term>Startdatum</DescriptionList.Term>
           <DescriptionList.Description>
@@ -349,6 +398,7 @@ export default function FeatureDetail({
             content,
             endDate: endDate ?? '',
             ideaDocumentId: linkedIdea?.documentId ?? '',
+            progressStatus: status ?? '',
             startDate: startDate ?? '',
           }}
           loading={editLoading}
