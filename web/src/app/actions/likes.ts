@@ -74,7 +74,33 @@ async function toggleLike<T extends z.ZodType<{ documentId: string }>>({
   }
 }
 
+async function isIdeaAuthor(ideaDocumentId: string, userDocumentId: string): Promise<boolean> {
+  try {
+    const params = new URLSearchParams({
+      'fields[0]': 'id',
+      'populate[end_users][fields][0]': 'documentId',
+    })
+    const res = await client.fetch(`ideas/${ideaDocumentId}?${params}`)
+    if (!res.ok) return false
+
+    const authors: { documentId?: string }[] = (await res.json()).data?.end_users ?? []
+    return authors.some((author) => author.documentId === userDocumentId)
+  } catch (error) {
+    console.error('[isIdeaAuthor] Error:', error)
+    return false
+  }
+}
+
 export async function toggleIdeaLikeAction(ideaDocumentId: string, isLiked: boolean): Promise<ActionResponse> {
+  // You cannot vote on your own idea.
+  if (isLiked) {
+    const user = await getCurrentUser()
+    if (!user) return { needsLogin: true }
+    if (await isIdeaAuthor(ideaDocumentId, user.documentId)) {
+      return { error: 'Je kunt niet op je eigen idee stemmen.' }
+    }
+  }
+
   // Does not revalidate `/`: the home page sorts ideas by like
   // count, and an automatic Server-Action revalidation there would reshuffle the cards
   return toggleLike({

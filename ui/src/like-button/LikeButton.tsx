@@ -15,6 +15,7 @@ type LikeButtonProps = {
   isLiked?: boolean
   mode?: 'follow' | 'vote'
   onToggle?: (isLiked: boolean) => void
+  readOnly?: boolean
 }
 
 const LikeButton = ({
@@ -23,6 +24,7 @@ const LikeButton = ({
   isLiked: initialLiked = false,
   mode = 'vote',
   onToggle,
+  readOnly = false,
 }: LikeButtonProps) => {
   const [liked, setLiked] = useState(initialLiked)
   const [voteCount, setVoteCount] = useState(count)
@@ -32,6 +34,17 @@ const LikeButton = ({
     setLiked(nextLiked)
     setVoteCount((previous) => (nextLiked ? previous + 1 : previous - 1))
     onToggle?.(nextLiked)
+  }
+
+  // Read-only: show the vote count without an interactive control
+  // (used when the viewer is the idea's author and cannot vote on it).
+  if (readOnly) {
+    return (
+      <Row alignVertical="center" gap="x-small">
+        <Badge color="magenta" label={voteCount} />
+        <span>{voteCount === 1 ? 'stem' : 'stemmen'}</span>
+      </Row>
+    )
   }
 
   if (mode === 'follow') {
