@@ -50,10 +50,3 @@ export const Empty: Story = {
     reactions: [],
   },
 }
-
-export const CustomTeamLabel: Story = {
-  args: {
-    reactions: mockReactions,
-    teamLabel: 'DS Projectgroep',
-  },
-}

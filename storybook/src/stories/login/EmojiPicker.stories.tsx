@@ -40,11 +40,3 @@ export const WithSelection: Story = {
   },
   render: (args) => <ControlledPicker {...args} />,
 }
-
-export const WithTakenEmojis: Story = {
-  args: {
-    onChange: () => {},
-    takenEmojis: ['🦊', '🐼', '🦁', '🐸', '🦋'],
-  },
-  render: (args) => <ControlledPicker {...args} />,
-}

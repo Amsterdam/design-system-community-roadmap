@@ -4,7 +4,6 @@ import LikeButton from './like-button/LikeButton'
 import EmojiPicker from './login/EmojiPicker'
 import LoginForm from './login/LoginForm'
 import Header from './navigation/Header'
-import Navigation from './navigation/Navigation'
 import NotificationMenu from './notifications/NotificationMenu'
 import AddReaction from './reactions/AddReaction'
 import Reactions from './reactions/Reactions'
@@ -19,7 +18,6 @@ export {
   Header,
   LikeButton,
   LoginForm,
-  Navigation,
   NotificationMenu,
   Reactions,
   Roadmap,
@@ -35,4 +33,3 @@ export type { NotificationMenuItem } from './notifications/NotificationMenu'
 export type { ReactionItem } from './reactions/Reactions'
 export type { RoadmapFeature, RoadmapStory } from './roadmap/dateUtils'
 export type { SearchResult, SearchResultType } from './search/SearchBar'
-export default Navigation
