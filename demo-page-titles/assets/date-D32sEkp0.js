@@ -1,0 +1,1 @@
+import{i as e}from"./preload-helper-usAeo7Bx.js";function t(e,t){if(!e)return`Onbekend`;let n=new Date(e).toLocaleDateString(`nl-NL`,{day:`numeric`,month:`short`});return t?`${n} - ${new Date(t).toLocaleDateString(`nl-NL`,{day:`numeric`,month:`short`})}`:n}var n=e((()=>{}));export{n,t};
