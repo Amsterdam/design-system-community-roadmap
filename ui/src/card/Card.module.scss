@@ -5,6 +5,10 @@
   padding-inline: var(--ams-space-s);
   transition: box-shadow 0.2s ease;
 
+  @media (prefers-reduced-motion: reduce) {
+    transition: none;
+  }
+
   &:hover {
     box-shadow: var(--ams-space-xs) var(--ams-space-xs) 0 0
       var(--ams-color-text);
