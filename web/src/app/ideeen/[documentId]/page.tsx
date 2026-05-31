@@ -7,6 +7,7 @@ import type { Idea } from '@/utils/schemas'
 
 import { getCurrentUser } from '@/app/actions/login'
 import IdeaDetail from '@/components/IdeaDetail'
+import { metaDescription } from '@/utils/meta'
 import { strapi } from '@/utils/strapi'
 
 type Props = {
@@ -17,7 +18,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { documentId } = await params
   try {
     const res = await strapi.ideas.findOne(documentId)
-    return { title: res.data.title }
+    return { title: res.data.title, description: metaDescription(res.data.content) }
   } catch {
     return { title: 'Idee niet gevonden' }
   }

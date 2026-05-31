@@ -9,6 +9,7 @@ import NotificationsClient from './NotificationsClient'
 
 export const metadata: Metadata = {
   title: 'Meldingen',
+  description: 'Bekijk je meldingen over reacties en updates op ideeën, features en stories die je volgt.',
 }
 
 export default async function NotificationsPage() {

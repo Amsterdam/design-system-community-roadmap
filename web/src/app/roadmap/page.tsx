@@ -1,8 +1,14 @@
 import type { RoadmapFeature, RoadmapStory } from '@design-system-community-roadmap/ui'
+import type { Metadata } from 'next'
 
 import { getCurrentUser } from '@/app/actions/login'
 import RoadmapPage from '@/components/RoadmapPage'
 import { strapi } from '@/utils/strapi'
+
+export const metadata: Metadata = {
+  title: 'Roadmap',
+  description: 'Bekijk waar het Amsterdam Design System aan werkt en wat er op de planning staat.',
+}
 
 export default async function Page() {
   const [{ data: allFeatures }, { data: allStories }, currentUser] = await Promise.all([

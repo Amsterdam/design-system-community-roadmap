@@ -10,6 +10,7 @@ import ProfielContent from './ProfielContent'
 
 export const metadata: Metadata = {
   title: 'Mijn profiel',
+  description: 'Bekijk je profiel en de ideeën die je hebt ingediend.',
 }
 
 async function fetchIdeasForUser(userDocumentId: string) {

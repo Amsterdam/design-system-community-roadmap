@@ -8,6 +8,7 @@ import FeatureForm from './FeatureForm'
 
 export const metadata: Metadata = {
   title: 'Nieuwe feature',
+  description: 'Maak een nieuwe feature aan voor de roadmap van het Amsterdam Design System.',
 }
 
 export default async function NewFeaturePage() {
