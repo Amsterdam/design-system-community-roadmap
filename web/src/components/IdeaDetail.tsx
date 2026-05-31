@@ -27,7 +27,9 @@ import type { StrapiImage } from '@/utils/schemas'
 
 import { deleteIdeaAction, updateFeatureProgressAction, updateIdeaAction } from '@/app/actions/edits'
 import { deleteIdeaReactionAction, editIdeaReactionAction } from '@/app/actions/reactions'
+import { uploadImages } from '@/app/actions/upload'
 import { formatDateRange } from '@/utils/date'
+import { getStrapiMedia } from '@/utils/media'
 import { toProgressStepStatus } from '@/utils/status'
 
 import AddReaction from './AddReaction'
@@ -101,6 +103,8 @@ export default function IdeaDetail({
     content: string
     endDate?: string
     featureDocumentId?: string
+    keepImageIds?: number[]
+    newImages?: File[]
     startDate?: string
     statusIdea?: string
     title: string
@@ -113,9 +117,18 @@ export default function IdeaDetail({
     const submittedFeatureDocumentId = values.featureDocumentId ?? ''
     const featureLinkChanged = currentUserIsTeam && submittedFeatureDocumentId !== initialFeatureDocumentId
 
+    const upload = await uploadImages(values.newImages ?? [])
+    if (upload.error) {
+      setEditError(upload.error)
+      setEditLoading(false)
+      return false
+    }
+    const imageIds = [...(values.keepImageIds ?? []), ...(upload.ids ?? [])]
+
     const result = await updateIdeaAction(ideaDocumentId, {
       title: values.title,
       content: values.content,
+      imageIds,
       ...(currentUserIsTeam ? { statusIdea: values.statusIdea ?? 'in_review' } : {}),
       ...(featureLinkChanged ? { featureDocumentId: submittedFeatureDocumentId || null } : {}),
     })
@@ -357,6 +370,11 @@ export default function IdeaDetail({
           deleteError={deleteError}
           deleteLoading={deleteLoading}
           error={editError}
+          existingImages={(images ?? []).map((image) => ({
+            alternativeText: image.alternativeText,
+            id: image.id ?? 0,
+            url: getStrapiMedia(image.url) ?? image.url,
+          }))}
           featureOptions={currentUserIsTeam ? featureOptions : undefined}
           fieldErrors={editFieldErrors}
           id={editModalId}

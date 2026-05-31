@@ -60,6 +60,7 @@ export async function updateIdeaAction(
   input: {
     content: string
     featureDocumentId?: string | null
+    imageIds?: number[]
     statusIdea?: string
     title: string
   },
@@ -103,6 +104,7 @@ export async function updateIdeaAction(
           content: trimmedContent,
           ...(user.isTeam ? { statusIdea: input.statusIdea } : {}),
           ...(featureDocumentId !== undefined ? { features: featureDocumentId ? [featureDocumentId] : [] } : {}),
+          ...(input.imageIds !== undefined ? { images: input.imageIds } : {}),
         },
       }),
       headers: { 'Content-Type': 'application/json' },

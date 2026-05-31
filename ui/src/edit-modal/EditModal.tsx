@@ -131,7 +131,7 @@ const EditModal = ({
   const showProgressStatusField = type === 'feature'
   const showIdeaField = type === 'feature' && ideaOptions !== undefined
   const showFeatureField = type === 'idea' && featureOptions !== undefined
-  const showImagesField = type !== 'idea' && existingImages !== undefined
+  const showImagesField = existingImages !== undefined
   const dialogRef = useRef<HTMLDialogElement>(null)
 
   const [title, setTitle] = useState(initialValues.title)
