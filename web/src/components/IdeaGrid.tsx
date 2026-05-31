@@ -74,6 +74,9 @@ export default function IdeaGrid({ currentPage = 1, currentUserDocumentId, ideas
           const isLiked =
             !!currentUserDocumentId &&
             (idea.likes?.some((like) => like.end_user?.documentId === currentUserDocumentId) ?? false)
+          const isAuthor =
+            !!currentUserDocumentId &&
+            (idea.end_users?.some((author) => author.documentId === currentUserDocumentId) ?? false)
 
           return (
             <Grid.Cell key={idea.id} span={{ narrow: 4, medium: 4, wide: 4 }}>
@@ -82,7 +85,8 @@ export default function IdeaGrid({ currentPage = 1, currentUserDocumentId, ideas
                 description={idea.content}
                 href={`/ideeen/${idea.documentId}`}
                 isLiked={isLiked}
-                onLike={(liked) => handleLike(idea.documentId, liked)}
+                onLike={isAuthor ? undefined : (liked) => handleLike(idea.documentId, liked)}
+                readOnly={isAuthor}
                 title={idea.title}
                 voteCount={idea.likes?.length ?? 0}
               />

@@ -8,12 +8,24 @@ import { toggleIdeaLikeAction } from '@/app/actions/likes'
 type Props = {
   currentUserDocumentId?: string
   ideaDocumentId: string
+  isAuthor?: boolean
   isLiked: boolean
   voteCount: number
 }
 
-export default function IdeaLikeButton({ currentUserDocumentId, ideaDocumentId, isLiked, voteCount }: Props) {
+export default function IdeaLikeButton({
+  currentUserDocumentId,
+  ideaDocumentId,
+  isAuthor = false,
+  isLiked,
+  voteCount,
+}: Props) {
   const router = useRouter()
+
+  // Authors cannot vote on their own idea, so only show the vote count.
+  if (isAuthor) {
+    return <LikeButton count={voteCount} readOnly />
+  }
 
   const handleToggle = async (liked: boolean) => {
     if (!currentUserDocumentId) {

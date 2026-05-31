@@ -27,6 +27,7 @@ export type {
   EditModalFeatureOption,
   EditModalFieldErrors,
   EditModalIdeaOption,
+  EditModalImage,
   EditModalProps,
 } from './edit-modal/EditModal'
 export type { NotificationMenuItem } from './notifications/NotificationMenu'

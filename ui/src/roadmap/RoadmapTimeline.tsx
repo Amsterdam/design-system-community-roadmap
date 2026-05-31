@@ -7,7 +7,15 @@ import { useEffect, useMemo, useRef, useState } from 'react'
 
 import type { RoadmapFeature, RoadmapGranularity, RoadmapStory } from './dateUtils'
 
-import { clampToRange, formatDayLabel, getDayIndex, getMonthBands, getYearBands, shouldShowDayLabel } from './dateUtils'
+import {
+  clampToRange,
+  formatDayLabel,
+  getDayIndex,
+  getMonthBands,
+  getYearBands,
+  resolveEndDate,
+  shouldShowDayLabel,
+} from './dateUtils'
 import RoadmapItem from './RoadmapItem'
 import styles from './RoadmapTimeline.module.scss'
 
@@ -185,8 +193,7 @@ const RoadmapTimeline = ({
 
   const getColStart = (dateStr: string) => clampToRange(getDayIndex(new Date(dateStr), rangeStart), dayCount)
   const getColEnd = (dateStr: string | null, startStr: string) => {
-    if (!dateStr) return clampToRange(getDayIndex(new Date(startStr), rangeStart) + 2, dayCount)
-    return clampToRange(getDayIndex(new Date(dateStr), rangeStart) + 1, dayCount)
+    return clampToRange(getDayIndex(resolveEndDate(dateStr, startStr), rangeStart) + 1, dayCount)
   }
 
   const majorLineIndexes = useMemo(

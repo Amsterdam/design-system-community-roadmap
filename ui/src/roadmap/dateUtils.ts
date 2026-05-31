@@ -26,11 +26,18 @@ export type RoadmapStory = {
 
 export type RoadmapFeature = {
   documentId: string
-  endDate: string
+  endDate: string | null
   id: number
   startDate: string
   stories: RoadmapStory[]
   title: string
+}
+
+// Number of days an item spans on the roadmap when it has no end date set.
+export const DEFAULT_DURATION_DAYS = 14
+
+export function resolveEndDate(endDate: null | string, startDate: string): Date {
+  return endDate ? new Date(endDate) : addDays(new Date(startDate), DEFAULT_DURATION_DAYS)
 }
 
 export type RoadmapGranularity = 'day' | 'week' | 'month' | 'year'
@@ -120,11 +127,9 @@ export function getDefaultRangeForFeatures(
   const baseRange = getDefaultRange()
 
   const allEndDates: Date[] = [
-    ...features.map((feature) => new Date(feature.endDate)),
-    ...features.flatMap((feature) =>
-      feature.stories.flatMap((story) => (story.endDate ? [new Date(story.endDate)] : [])),
-    ),
-    ...standaloneStories.flatMap((story) => (story.endDate ? [new Date(story.endDate)] : [])),
+    ...features.map((feature) => resolveEndDate(feature.endDate, feature.startDate)),
+    ...features.flatMap((feature) => feature.stories.map((story) => resolveEndDate(story.endDate, story.startDate))),
+    ...standaloneStories.map((story) => resolveEndDate(story.endDate, story.startDate)),
   ]
 
   if (allEndDates.length === 0) return baseRange

@@ -50,8 +50,7 @@
       "required": true
     },
     "endDate": {
-      "type": "date",
-      "required": true
+      "type": "date"
     },
     "rank": {
       "type": "integer"

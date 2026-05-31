@@ -13,11 +13,12 @@ type CardProps = {
   href?: string
   isLiked?: boolean
   onLike?: (isLiked: boolean) => void
+  readOnly?: boolean
   title: string
   voteCount: number
 }
 
-const Card = ({ title, author, description, href, isLiked, onLike, voteCount }: CardProps) => (
+const Card = ({ title, author, description, href, isLiked, onLike, readOnly, voteCount }: CardProps) => (
   <AmsCard className={styles['card']}>
     {author ? (
       <AmsCard.HeadingGroup tagline={`Idee van ${author.name}`}>
@@ -30,7 +31,7 @@ const Card = ({ title, author, description, href, isLiked, onLike, voteCount }: 
       {description}
     </Paragraph>
     <div className={styles['card__footer']}>
-      <LikeButton count={voteCount} isLiked={isLiked} onToggle={onLike} />
+      <LikeButton count={voteCount} isLiked={isLiked} onToggle={onLike} readOnly={readOnly} />
     </div>
   </AmsCard>
 )

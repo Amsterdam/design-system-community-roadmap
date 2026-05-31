@@ -18,3 +18,24 @@
   flex-direction: column;
   gap: var(--ams-space-m);
 }
+
+.edit-modal__images {
+  display: flex;
+  flex-direction: column;
+  gap: var(--ams-space-s);
+  list-style: none;
+  margin-block: 0 var(--ams-space-s);
+  padding-inline: 0;
+}
+
+.edit-modal__image {
+  align-items: center;
+  display: flex;
+  gap: var(--ams-space-m);
+}
+
+.edit-modal__image-preview {
+  block-size: 4rem;
+  inline-size: 4rem;
+  object-fit: cover;
+}

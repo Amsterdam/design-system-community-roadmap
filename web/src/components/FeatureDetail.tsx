@@ -32,7 +32,9 @@ import {
   deleteFeatureReactionAction,
   editFeatureReactionAction,
 } from '@/app/actions/reactions'
+import { uploadImages } from '@/app/actions/upload'
 import { formatDateRange } from '@/utils/date'
+import { getStrapiMedia } from '@/utils/media'
 import { getStatusBadge, toProgressStepStatus } from '@/utils/status'
 
 import Breadcrumbs from './Breadcrumbs'
@@ -98,6 +100,8 @@ export default function FeatureDetail({
     content: string
     endDate?: string
     ideaDocumentId?: string
+    keepImageIds?: number[]
+    newImages?: File[]
     progressStatus?: string
     startDate?: string
     statusIdea?: string
@@ -107,11 +111,20 @@ export default function FeatureDetail({
     setEditError(undefined)
     setEditFieldErrors(undefined)
 
+    const upload = await uploadImages(values.newImages ?? [])
+    if (upload.error) {
+      setEditError(upload.error)
+      setEditLoading(false)
+      return false
+    }
+    const imageIds = [...(values.keepImageIds ?? []), ...(upload.ids ?? [])]
+
     const result = await updateFeatureAction(featureDocumentId, {
       title: values.title,
       content: values.content,
       endDate: values.endDate ?? null,
       ideaDocumentId: values.ideaDocumentId ?? null,
+      imageIds,
       progressStatus: values.progressStatus ?? null,
       startDate: values.startDate ?? '',
     })
@@ -406,6 +419,11 @@ export default function FeatureDetail({
           deleteError={deleteError}
           deleteLoading={deleteLoading}
           error={editError}
+          existingImages={(images ?? []).map((image) => ({
+            alternativeText: image.alternativeText,
+            id: image.id ?? 0,
+            url: getStrapiMedia(image.url) ?? image.url,
+          }))}
           fieldErrors={editFieldErrors}
           id={editModalId}
           ideaOptions={ideaOptions}

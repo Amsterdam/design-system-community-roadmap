@@ -133,6 +133,7 @@ export async function updateFeatureAction(
     content: string
     endDate: string | null
     ideaDocumentId?: string | null
+    imageIds?: number[]
     progressStatus?: string | null
     startDate: string
     title: string
@@ -178,6 +179,7 @@ export async function updateFeatureAction(
           idea: ideaDocumentId,
           progressStatus: input.progressStatus || null,
           startDate: trimmedStartDate,
+          ...(input.imageIds !== undefined ? { images: input.imageIds } : {}),
         },
       }),
       headers: { 'Content-Type': 'application/json' },
@@ -204,7 +206,7 @@ export async function updateFeatureAction(
 
 export async function updateStoryAction(
   documentId: string,
-  input: { content: string; endDate: string; startDate: string; title: string },
+  input: { content: string; endDate: string | null; imageIds?: number[]; startDate: string; title: string },
 ): Promise<EditResponse> {
   const user = await getCurrentUser()
   if (!user) return { needsLogin: true }
@@ -225,14 +227,10 @@ export async function updateStoryAction(
     fieldErrors.startDate = 'Vul een geldige datum in, bijvoorbeeld 01-01-2025.'
   }
 
-  if (!trimmedEndDate) {
-    fieldErrors.endDate = 'Vul een einddatum in, bijvoorbeeld 31-12-2025.'
-  } else if (!DATE_PATTERN.test(trimmedEndDate)) {
-    fieldErrors.endDate = 'Vul een geldige datum in, bijvoorbeeld 01-01-2025.'
-  }
-
-  if (!fieldErrors.startDate && !fieldErrors.endDate) {
-    if (trimmedEndDate < trimmedStartDate) {
+  if (trimmedEndDate) {
+    if (!DATE_PATTERN.test(trimmedEndDate)) {
+      fieldErrors.endDate = 'Vul een geldige datum in, bijvoorbeeld 01-01-2025.'
+    } else if (trimmedStartDate && trimmedEndDate < trimmedStartDate) {
       fieldErrors.endDate = 'De einddatum moet op of na de startdatum liggen.'
     }
   }
@@ -245,8 +243,9 @@ export async function updateStoryAction(
         data: {
           title: trimmedTitle,
           content: trimmedContent,
-          endDate: trimmedEndDate,
+          endDate: trimmedEndDate || null,
           startDate: trimmedStartDate,
+          ...(input.imageIds !== undefined ? { images: input.imageIds } : {}),
         },
       }),
       headers: { 'Content-Type': 'application/json' },
@@ -273,6 +272,7 @@ export async function updateStoryAction(
 export async function createFeatureAction(input: {
   content: string
   endDate: string | null
+  imageIds?: number[]
   startDate: string
   title: string
 }): Promise<CreateResponse> {
@@ -315,6 +315,7 @@ export async function createFeatureAction(input: {
           endDate: trimmedEndDate || null,
           publishedAt: new Date().toISOString(),
           startDate: trimmedStartDate,
+          ...(input.imageIds && input.imageIds.length > 0 ? { images: input.imageIds } : {}),
         },
       }),
       headers: { 'Content-Type': 'application/json' },
@@ -347,8 +348,9 @@ export async function createFeatureAction(input: {
 
 export async function createStoryAction(input: {
   content: string
-  endDate: string
+  endDate: string | null
   featureDocumentId?: string
+  imageIds?: number[]
   startDate: string
   title: string
 }): Promise<CreateResponse> {
@@ -372,14 +374,10 @@ export async function createStoryAction(input: {
     fieldErrors.startDate = 'Vul een geldige datum in, bijvoorbeeld 01-01-2025.'
   }
 
-  if (!trimmedEndDate) {
-    fieldErrors.endDate = 'Vul een einddatum in, bijvoorbeeld 31-12-2025.'
-  } else if (!DATE_PATTERN.test(trimmedEndDate)) {
-    fieldErrors.endDate = 'Vul een geldige datum in, bijvoorbeeld 01-01-2025.'
-  }
-
-  if (!fieldErrors.startDate && !fieldErrors.endDate) {
-    if (trimmedEndDate < trimmedStartDate) {
+  if (trimmedEndDate) {
+    if (!DATE_PATTERN.test(trimmedEndDate)) {
+      fieldErrors.endDate = 'Vul een geldige datum in, bijvoorbeeld 01-01-2025.'
+    } else if (trimmedStartDate && trimmedEndDate < trimmedStartDate) {
       fieldErrors.endDate = 'De einddatum moet op of na de startdatum liggen.'
     }
   }
@@ -393,7 +391,7 @@ export async function createStoryAction(input: {
         data: {
           title: trimmedTitle,
           content: trimmedContent,
-          endDate: trimmedEndDate,
+          endDate: trimmedEndDate || null,
           publishedAt: new Date().toISOString(),
           startDate: trimmedStartDate,
           ...(featureDocumentId ? { feature: featureDocumentId } : {}),

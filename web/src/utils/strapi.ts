@@ -69,6 +69,7 @@ async function fetchAllParsed<T>(
 const imagePopulateParams = {
   'populate[images][fields][0]': 'url',
   'populate[images][fields][1]': 'alternativeText',
+  'populate[images][fields][2]': 'id',
 }
 
 export const strapi = {

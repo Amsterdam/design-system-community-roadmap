@@ -9,6 +9,7 @@ import {
   ErrorMessage,
   Field,
   FieldSet,
+  FileInput,
   Grid,
   Heading,
   InvalidFormAlert,
@@ -20,6 +21,8 @@ import { useRouter } from 'next/navigation'
 import { useState } from 'react'
 
 import { createFeatureAction } from '@/app/actions/edits'
+import { uploadImages } from '@/app/actions/upload'
+import { MAX_IMAGES } from '@/utils/images'
 
 type FieldErrors = {
   content?: string
@@ -34,6 +37,7 @@ export default function FeatureForm() {
   const [content, setContent] = useState('')
   const [startDate, setStartDate] = useState('')
   const [endDate, setEndDate] = useState('')
+  const [images, setImages] = useState<File[]>([])
   const [fieldErrors, setFieldErrors] = useState<FieldErrors>({})
   const [error, setError] = useState<string | undefined>()
   const [loading, setLoading] = useState(false)
@@ -51,10 +55,18 @@ export default function FeatureForm() {
     setError(undefined)
     setFieldErrors({})
 
+    const upload = await uploadImages(images)
+    if (upload.error) {
+      setError(upload.error)
+      setLoading(false)
+      return
+    }
+
     const result = await createFeatureAction({
       title,
       content,
       endDate: endDate || null,
+      imageIds: upload.ids,
       startDate,
     })
 
@@ -144,6 +156,15 @@ export default function FeatureForm() {
               />
             </Field>
           </FieldSet>
+          <Field className="ams-mb-m">
+            <Label htmlFor="feature-images">Afbeeldingen (optioneel)</Label>
+            <FileInput
+              accept="image/*"
+              id="feature-images"
+              multiple
+              onChange={(event) => setImages(Array.from(event.target.files ?? []).slice(0, MAX_IMAGES))}
+            />
+          </Field>
           <Button disabled={loading} type="submit" variant="primary">
             {loading ? 'Bezig…' : 'Feature aanmaken'}
           </Button>

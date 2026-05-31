@@ -213,6 +213,7 @@ export default function IdeaDetail({
             <IdeaLikeButton
               currentUserDocumentId={currentUserDocumentId}
               ideaDocumentId={ideaDocumentId}
+              isAuthor={isAuthor}
               isLiked={isLiked}
               voteCount={voteCount}
             />
