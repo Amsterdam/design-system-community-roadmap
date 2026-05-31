@@ -26,7 +26,7 @@ import { useState } from 'react'
 import type { StrapiImage } from '@/utils/schemas'
 
 import { deleteIdeaAction, updateFeatureProgressAction, updateIdeaAction } from '@/app/actions/edits'
-import { deleteIdeaReactionAction } from '@/app/actions/reactions'
+import { deleteIdeaReactionAction, editIdeaReactionAction } from '@/app/actions/reactions'
 import { formatDateRange } from '@/utils/date'
 import { toProgressStepStatus } from '@/utils/status'
 
@@ -179,6 +179,12 @@ export default function IdeaDetail({
     if (result.success) router.refresh()
   }
 
+  const handleEditReaction = async (reactionId: number, content: string) => {
+    const result = await editIdeaReactionAction(ideaDocumentId, reactionId, content)
+    if (result.success) router.refresh()
+    return result
+  }
+
   const sortedFeatures = [...features].sort((featureA, featureB) => (featureA.rank ?? 0) - (featureB.rank ?? 0))
 
   const handleFeatureStatus = async (featureDocumentId: string, progressStatus: string | null) => {
@@ -305,7 +311,10 @@ export default function IdeaDetail({
       <Grid.Cell className="ams-prose" span={{ narrow: 4, medium: 8, wide: 5 }}>
         {teamReaction && (
           <Reactions
-            onDeleteReaction={currentUserIsTeam ? handleDeleteReaction : undefined}
+            canDeleteAll={currentUserIsTeam}
+            currentUserDocumentId={currentUserDocumentId}
+            onDeleteReaction={handleDeleteReaction}
+            onEditReaction={handleEditReaction}
             reactions={[teamReaction]}
           />
         )}
@@ -332,8 +341,11 @@ export default function IdeaDetail({
           Reacties
         </Heading>
         <Reactions
+          canDeleteAll={currentUserIsTeam}
           compact
-          onDeleteReaction={currentUserIsTeam ? handleDeleteReaction : undefined}
+          currentUserDocumentId={currentUserDocumentId}
+          onDeleteReaction={handleDeleteReaction}
+          onEditReaction={handleEditReaction}
           reactions={feedReactions}
         />
         <AddReaction currentUserDocumentId={currentUserDocumentId} ideaDocumentId={ideaDocumentId} />

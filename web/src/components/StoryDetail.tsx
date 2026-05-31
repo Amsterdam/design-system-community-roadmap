@@ -24,7 +24,7 @@ import type { StrapiImage } from '@/utils/schemas'
 
 import { deleteStoryAction, updateStoryAction } from '@/app/actions/edits'
 import { toggleStoryLikeAction } from '@/app/actions/likes'
-import { addStoryReactionAction, deleteStoryReactionAction } from '@/app/actions/reactions'
+import { addStoryReactionAction, deleteStoryReactionAction, editStoryReactionAction } from '@/app/actions/reactions'
 import { getStatusBadge } from '@/utils/status'
 
 import Breadcrumbs from './Breadcrumbs'
@@ -184,6 +184,13 @@ export default function StoryDetail({
     }
   }
 
+  const handleEditReaction = async (reactionId: number, content: string) => {
+    const result = await editStoryReactionAction(storyDocumentId, reactionId, content)
+    if (result.needsLogin) router.push('/inloggen')
+    if (result.success) router.refresh()
+    return result
+  }
+
   const handleReactionSubmit = async (content: string) => {
     setReactionLoading(true)
     setReactionError(undefined)
@@ -220,7 +227,7 @@ export default function StoryDetail({
             {title}
           </Heading>
           <ActionGroup>
-            <LikeButton count={voteCount} isLiked={isLiked} onToggle={handleLikeToggle} />
+            <LikeButton count={voteCount} isLiked={isLiked} mode="follow" onToggle={handleLikeToggle} />
             {currentUserIsTeam && (
               <Button
                 icon={DocumentWithPencilIcon}
@@ -272,7 +279,10 @@ export default function StoryDetail({
         </DescriptionList>
         {teamReaction && (
           <Reactions
-            onDeleteReaction={currentUserIsTeam ? handleDeleteReaction : undefined}
+            canDeleteAll={currentUserIsTeam}
+            currentUserDocumentId={currentUserDocumentId}
+            onDeleteReaction={handleDeleteReaction}
+            onEditReaction={handleEditReaction}
             reactions={[teamReaction]}
           />
         )}
@@ -280,8 +290,11 @@ export default function StoryDetail({
           Reacties
         </Heading>
         <Reactions
+          canDeleteAll={currentUserIsTeam}
           compact
-          onDeleteReaction={currentUserIsTeam ? handleDeleteReaction : undefined}
+          currentUserDocumentId={currentUserDocumentId}
+          onDeleteReaction={handleDeleteReaction}
+          onEditReaction={handleEditReaction}
           reactions={feedReactions}
         />
         <AddReaction

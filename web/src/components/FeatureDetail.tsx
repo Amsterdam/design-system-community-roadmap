@@ -27,7 +27,11 @@ import type { StrapiImage } from '@/utils/schemas'
 
 import { deleteFeatureAction, updateFeatureAction, updateStoryProgressAction } from '@/app/actions/edits'
 import { toggleFeatureLikeAction } from '@/app/actions/likes'
-import { addFeatureReactionAction, deleteFeatureReactionAction } from '@/app/actions/reactions'
+import {
+  addFeatureReactionAction,
+  deleteFeatureReactionAction,
+  editFeatureReactionAction,
+} from '@/app/actions/reactions'
 import { formatDateRange } from '@/utils/date'
 import { getStatusBadge, toProgressStepStatus } from '@/utils/status'
 
@@ -201,6 +205,12 @@ export default function FeatureDetail({
     if (result.success) router.refresh()
   }
 
+  const handleEditReaction = async (reactionId: number, content: string) => {
+    const result = await editFeatureReactionAction(featureDocumentId, reactionId, content)
+    if (result.success) router.refresh()
+    return result
+  }
+
   const handleReactionSubmit = async (content: string) => {
     setReactionLoading(true)
     setReactionError(undefined)
@@ -232,7 +242,7 @@ export default function FeatureDetail({
             {title}
           </Heading>
           <ActionGroup>
-            <LikeButton count={voteCount} isLiked={isLiked} onToggle={handleLikeToggle} />
+            <LikeButton count={voteCount} isLiked={isLiked} mode="follow" onToggle={handleLikeToggle} />
             {currentUserIsTeam && (
               <Button
                 icon={DocumentWithPencilIcon}
@@ -366,7 +376,10 @@ export default function FeatureDetail({
         </DescriptionList>
         {teamReaction && (
           <Reactions
-            onDeleteReaction={currentUserIsTeam ? handleDeleteReaction : undefined}
+            canDeleteAll={currentUserIsTeam}
+            currentUserDocumentId={currentUserDocumentId}
+            onDeleteReaction={handleDeleteReaction}
+            onEditReaction={handleEditReaction}
             reactions={[teamReaction]}
           />
         )}
@@ -374,8 +387,11 @@ export default function FeatureDetail({
           Reacties
         </Heading>
         <Reactions
+          canDeleteAll={currentUserIsTeam}
           compact
-          onDeleteReaction={currentUserIsTeam ? handleDeleteReaction : undefined}
+          currentUserDocumentId={currentUserDocumentId}
+          onDeleteReaction={handleDeleteReaction}
+          onEditReaction={handleEditReaction}
           reactions={feedReactions}
         />
         <AddReaction

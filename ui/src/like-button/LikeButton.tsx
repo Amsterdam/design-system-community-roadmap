@@ -1,17 +1,29 @@
 'use client'
 
 import { Badge, Button, IconButton, Row } from '@amsterdam/design-system-react'
-import { ThumbsUpFillIcon, ThumbsUpIcon } from '@amsterdam/design-system-react-icons'
+import {
+  NotificationFillIcon,
+  NotificationIcon,
+  ThumbsUpFillIcon,
+  ThumbsUpIcon,
+} from '@amsterdam/design-system-react-icons'
 import { useState } from 'react'
 
 type LikeButtonProps = {
   compact?: boolean
   count: number
   isLiked?: boolean
+  mode?: 'follow' | 'vote'
   onToggle?: (isLiked: boolean) => void
 }
 
-const LikeButton = ({ compact = false, count, isLiked: initialLiked = false, onToggle }: LikeButtonProps) => {
+const LikeButton = ({
+  compact = false,
+  count,
+  isLiked: initialLiked = false,
+  mode = 'vote',
+  onToggle,
+}: LikeButtonProps) => {
   const [liked, setLiked] = useState(initialLiked)
   const [voteCount, setVoteCount] = useState(count)
 
@@ -20,6 +32,15 @@ const LikeButton = ({ compact = false, count, isLiked: initialLiked = false, onT
     setLiked(nextLiked)
     setVoteCount((previous) => (nextLiked ? previous + 1 : previous - 1))
     onToggle?.(nextLiked)
+  }
+
+  if (mode === 'follow') {
+    const icon = liked ? NotificationFillIcon : NotificationIcon
+    return (
+      <Button aria-pressed={liked} icon={icon} iconBefore onClick={handleToggle} type="button" variant="secondary">
+        {liked ? 'Volgend' : 'Volgen'}
+      </Button>
+    )
   }
 
   const icon = liked ? ThumbsUpFillIcon : ThumbsUpIcon
