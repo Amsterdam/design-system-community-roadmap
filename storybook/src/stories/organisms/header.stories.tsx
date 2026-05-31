@@ -20,9 +20,3 @@ export const LoggedIn: Story = {
     currentUser: { name: 'Jan' },
   },
 }
-
-export const LoggedInLongName: Story = {
-  args: {
-    currentUser: { name: 'Wilhelmina' },
-  },
-}

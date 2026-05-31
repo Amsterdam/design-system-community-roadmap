@@ -8,6 +8,17 @@ const config: StorybookConfig = {
   stories: ['../src/**/*.mdx', '../src/**/*.stories.@(js|jsx|mjs|ts|tsx)'],
   viteFinal: async (viteConfig) => ({
     ...viteConfig,
+    // Web modules read env vars at module load (utils/media.ts, utils/fetch.ts, which
+    // throws when they are missing). Storybook runs on Vite, where `process` is undefined,
+    // so provide placeholder values here. Network calls are mocked, so the values are dummies.
+    define: {
+      ...viteConfig.define,
+      'process.env': JSON.stringify({
+        NEXT_PUBLIC_STRAPI_URL: process.env.NEXT_PUBLIC_STRAPI_URL ?? 'http://localhost:1337/api',
+        NODE_ENV: process.env.NODE_ENV ?? 'production',
+        STRAPI_API_TOKEN: process.env.STRAPI_API_TOKEN ?? 'storybook-placeholder-token',
+      }),
+    },
     resolve: {
       ...viteConfig.resolve,
       alias: [

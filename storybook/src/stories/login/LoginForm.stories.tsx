@@ -25,15 +25,6 @@ export const Default: Story = {
   },
 }
 
-export const WithTakenEmojis: Story = {
-  args: {
-    onSubmit: (name, emoji) => {
-      console.log(`Inloggen als: ${name} ${emoji}`)
-    },
-    takenEmojis: ['🦊', '🐼', '🦁', '🐸', '🦋', '🐙'],
-  },
-}
-
 export const WithError: Story = {
   args: {
     error: 'Deze emoji is al in gebruik. Kies een andere emoji.',
