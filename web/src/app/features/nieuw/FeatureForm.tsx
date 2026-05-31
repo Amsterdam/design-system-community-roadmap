@@ -88,7 +88,7 @@ export default function FeatureForm() {
         </Heading>
         {invalidFields.length > 0 && <InvalidFormAlert className="ams-mb-m" errors={invalidFields} headingLevel={2} />}
         {error && (
-          <Alert className="ams-mb-m" heading="Er is een fout opgetreden" headingLevel={2} severity="error">
+          <Alert className="ams-mb-m" heading="De feature kon niet worden aangemaakt" headingLevel={2} severity="error">
             {error}
           </Alert>
         )}

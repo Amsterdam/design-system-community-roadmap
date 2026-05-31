@@ -97,7 +97,7 @@ async function addReaction({
   if (!user) return { needsLogin: true }
 
   const normalizedContent = content.trim()
-  if (!normalizedContent) return { error: 'Reactie mag niet leeg zijn.' }
+  if (!normalizedContent) return { error: 'Vul je reactie in voordat je deze verstuurt.' }
 
   try {
     const params = new URLSearchParams({
@@ -108,7 +108,7 @@ async function addReaction({
     })
 
     const getRes = await client.fetch(`${collection}/${documentId}?${params}`)
-    if (!getRes.ok) return { error: 'Kon reacties niet ophalen.' }
+    if (!getRes.ok) return { error: 'De reacties konden niet worden geladen. Probeer de pagina te verversen.' }
 
     const entity: Record<string, unknown> = (await getRes.json()).data ?? {}
     const existing = (entity.reactions as StoredReaction[] | undefined) ?? []
@@ -126,7 +126,7 @@ async function addReaction({
       method: 'PUT',
     })
 
-    if (!putRes.ok) return { error: 'Kon reactie niet toevoegen.' }
+    if (!putRes.ok) return { error: 'Je reactie kon niet worden opgeslagen. Probeer het opnieuw.' }
 
     if (notify) {
       try {
@@ -140,7 +140,7 @@ async function addReaction({
     return { success: true }
   } catch (err) {
     console.error('[addReaction] Error:', err)
-    return { error: 'Er is een onverwachte fout opgetreden.' }
+    return { error: 'Dat is helaas niet gelukt. Probeer het opnieuw of kom later terug.' }
   }
 }
 
@@ -159,7 +159,7 @@ async function deleteReaction({
 }): Promise<ActionResponse> {
   const user = await getCurrentUser()
   if (!user) return { needsLogin: true }
-  if (!user.isTeam) return { error: 'Geen toegang.' }
+  if (!user.isTeam) return { error: 'Je hebt geen rechten om deze reactie te verwijderen.' }
 
   try {
     const params = new URLSearchParams({
@@ -170,7 +170,7 @@ async function deleteReaction({
     })
 
     const getRes = await client.fetch(`${collection}/${documentId}?${params}`)
-    if (!getRes.ok) return { error: 'Kon reacties niet ophalen.' }
+    if (!getRes.ok) return { error: 'De reacties konden niet worden geladen. Probeer de pagina te verversen.' }
 
     const entity: Record<string, unknown> = (await getRes.json()).data ?? {}
     const existing = (entity.reactions as StoredReaction[] | undefined) ?? []
@@ -187,13 +187,13 @@ async function deleteReaction({
       method: 'PUT',
     })
 
-    if (!putRes.ok) return { error: 'Kon reactie niet verwijderen.' }
+    if (!putRes.ok) return { error: 'De reactie kon niet worden verwijderd. Probeer het opnieuw.' }
 
     revalidatePath(path)
     return { success: true }
   } catch (err) {
     console.error('[deleteReaction] Error:', err)
-    return { error: 'Er is een onverwachte fout opgetreden.' }
+    return { error: 'Dat is helaas niet gelukt. Probeer het opnieuw of kom later terug.' }
   }
 }
 

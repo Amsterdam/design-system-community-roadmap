@@ -56,7 +56,7 @@ export default function ShareIdeaForm() {
         </Heading>
         {invalidFields.length > 0 && <InvalidFormAlert className="ams-mb-m" errors={invalidFields} headingLevel={2} />}
         {error && (
-          <Alert className="ams-mb-m" heading="Er is een fout opgetreden" headingLevel={2} severity="error">
+          <Alert className="ams-mb-m" heading="Het idee kon niet worden opgeslagen" headingLevel={2} severity="error">
             {error}
           </Alert>
         )}

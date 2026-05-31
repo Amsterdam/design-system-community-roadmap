@@ -43,13 +43,13 @@ function validateTitleAndContent(title: string, content: string): { content?: st
   if (!title) {
     fieldErrors.title = 'Vul een titel in.'
   } else if (title.length > 140) {
-    fieldErrors.title = 'Titel mag maximaal 140 tekens bevatten.'
+    fieldErrors.title = 'De titel is te lang. Gebruik maximaal 140 tekens.'
   }
 
   if (!content) {
-    fieldErrors.content = 'Vul een inhoud in.'
+    fieldErrors.content = 'Vul een beschrijving in.'
   } else if (content.length > 10000) {
-    fieldErrors.content = 'Inhoud mag maximaal 10.000 tekens bevatten.'
+    fieldErrors.content = 'De beschrijving is te lang. Gebruik maximaal 10.000 tekens.'
   }
 
   return fieldErrors
@@ -74,9 +74,9 @@ export async function updateIdeaAction(
       isAuthor = ideaResponse.data.end_users?.some((author) => author.documentId === user.documentId) ?? false
     } catch (error) {
       console.error('[updateIdeaAction] Failed to load idea for ownership check:', error)
-      return { error: 'Er is iets misgegaan. Probeer het opnieuw.' }
+      return { error: 'Dat is helaas niet gelukt. Probeer het opnieuw of kom later terug.' }
     }
-    if (!isAuthor) return { error: 'Geen toegang.' }
+    if (!isAuthor) return { error: 'Je hebt geen rechten om deze actie uit te voeren.' }
   }
 
   const trimmedTitle = input.title.trim()
@@ -89,7 +89,7 @@ export async function updateIdeaAction(
 
   if (user.isTeam) {
     if (!input.statusIdea || !VALID_STATUSES.includes(input.statusIdea as (typeof VALID_STATUSES)[number])) {
-      fieldErrors.statusIdea = 'Ongeldige status.'
+      fieldErrors.statusIdea = 'Kies een geldige status uit de lijst.'
     }
   }
 
@@ -112,11 +112,11 @@ export async function updateIdeaAction(
     if (!response.ok) {
       const body = await response.text().catch(() => '')
       console.error('[updateIdeaAction] Failed', response.status, body)
-      return { error: 'Er is iets misgegaan. Probeer het opnieuw.' }
+      return { error: 'Dat is helaas niet gelukt. Probeer het opnieuw of kom later terug.' }
     }
   } catch (error) {
     console.error('[updateIdeaAction] Error:', error)
-    return { error: 'Er is iets misgegaan. Probeer het opnieuw.' }
+    return { error: 'Dat is helaas niet gelukt. Probeer het opnieuw of kom later terug.' }
   }
 
   revalidatePath('/')
@@ -139,7 +139,7 @@ export async function updateFeatureAction(
 ): Promise<EditResponse> {
   const user = await getCurrentUser()
   if (!user) return { needsLogin: true }
-  if (!user.isTeam) return { error: 'Geen toegang.' }
+  if (!user.isTeam) return { error: 'Je hebt geen rechten om deze actie uit te voeren.' }
 
   const trimmedTitle = input.title.trim()
   const trimmedContent = input.content.trim()
@@ -152,16 +152,16 @@ export async function updateFeatureAction(
   }
 
   if (!trimmedStartDate) {
-    fieldErrors.startDate = 'Vul een startdatum in.'
+    fieldErrors.startDate = 'Vul een startdatum in, bijvoorbeeld 01-01-2025.'
   } else if (!DATE_PATTERN.test(trimmedStartDate)) {
-    fieldErrors.startDate = 'Voer een geldige datum in.'
+    fieldErrors.startDate = 'Vul een geldige datum in, bijvoorbeeld 01-01-2025.'
   }
 
   if (trimmedEndDate) {
     if (!DATE_PATTERN.test(trimmedEndDate)) {
-      fieldErrors.endDate = 'Voer een geldige datum in.'
+      fieldErrors.endDate = 'Vul een geldige datum in, bijvoorbeeld 01-01-2025.'
     } else if (trimmedStartDate && trimmedEndDate < trimmedStartDate) {
-      fieldErrors.endDate = 'Einddatum moet op of na de startdatum liggen.'
+      fieldErrors.endDate = 'De einddatum moet op of na de startdatum liggen.'
     }
   }
 
@@ -185,11 +185,11 @@ export async function updateFeatureAction(
     if (!response.ok) {
       const body = await response.text().catch(() => '')
       console.error('[updateFeatureAction] Failed', response.status, body)
-      return { error: 'Er is iets misgegaan. Probeer het opnieuw.' }
+      return { error: 'Dat is helaas niet gelukt. Probeer het opnieuw of kom later terug.' }
     }
   } catch (error) {
     console.error('[updateFeatureAction] Error:', error)
-    return { error: 'Er is iets misgegaan. Probeer het opnieuw.' }
+    return { error: 'Dat is helaas niet gelukt. Probeer het opnieuw of kom later terug.' }
   }
 
   revalidatePath('/')
@@ -206,7 +206,7 @@ export async function updateStoryAction(
 ): Promise<EditResponse> {
   const user = await getCurrentUser()
   if (!user) return { needsLogin: true }
-  if (!user.isTeam) return { error: 'Geen toegang.' }
+  if (!user.isTeam) return { error: 'Je hebt geen rechten om deze actie uit te voeren.' }
 
   const trimmedTitle = input.title.trim()
   const trimmedContent = input.content.trim()
@@ -218,20 +218,20 @@ export async function updateStoryAction(
   }
 
   if (!trimmedStartDate) {
-    fieldErrors.startDate = 'Vul een startdatum in.'
+    fieldErrors.startDate = 'Vul een startdatum in, bijvoorbeeld 01-01-2025.'
   } else if (!DATE_PATTERN.test(trimmedStartDate)) {
-    fieldErrors.startDate = 'Voer een geldige datum in.'
+    fieldErrors.startDate = 'Vul een geldige datum in, bijvoorbeeld 01-01-2025.'
   }
 
   if (!trimmedEndDate) {
-    fieldErrors.endDate = 'Vul een einddatum in.'
+    fieldErrors.endDate = 'Vul een einddatum in, bijvoorbeeld 31-12-2025.'
   } else if (!DATE_PATTERN.test(trimmedEndDate)) {
-    fieldErrors.endDate = 'Voer een geldige datum in.'
+    fieldErrors.endDate = 'Vul een geldige datum in, bijvoorbeeld 01-01-2025.'
   }
 
   if (!fieldErrors.startDate && !fieldErrors.endDate) {
     if (trimmedEndDate < trimmedStartDate) {
-      fieldErrors.endDate = 'Einddatum moet op of na de startdatum liggen.'
+      fieldErrors.endDate = 'De einddatum moet op of na de startdatum liggen.'
     }
   }
 
@@ -254,11 +254,11 @@ export async function updateStoryAction(
     if (!response.ok) {
       const body = await response.text().catch(() => '')
       console.error('[updateStoryAction] Failed', response.status, body)
-      return { error: 'Er is iets misgegaan. Probeer het opnieuw.' }
+      return { error: 'Dat is helaas niet gelukt. Probeer het opnieuw of kom later terug.' }
     }
   } catch (error) {
     console.error('[updateStoryAction] Error:', error)
-    return { error: 'Er is iets misgegaan. Probeer het opnieuw.' }
+    return { error: 'Dat is helaas niet gelukt. Probeer het opnieuw of kom later terug.' }
   }
 
   revalidatePath('/')
@@ -276,7 +276,7 @@ export async function createFeatureAction(input: {
 }): Promise<CreateResponse> {
   const user = await getCurrentUser()
   if (!user) return { needsLogin: true }
-  if (!user.isTeam) return { error: 'Geen toegang.' }
+  if (!user.isTeam) return { error: 'Je hebt geen rechten om deze actie uit te voeren.' }
 
   const trimmedTitle = input.title.trim()
   const trimmedContent = input.content.trim()
@@ -288,16 +288,16 @@ export async function createFeatureAction(input: {
   }
 
   if (!trimmedStartDate) {
-    fieldErrors.startDate = 'Vul een startdatum in.'
+    fieldErrors.startDate = 'Vul een startdatum in, bijvoorbeeld 01-01-2025.'
   } else if (!DATE_PATTERN.test(trimmedStartDate)) {
-    fieldErrors.startDate = 'Voer een geldige datum in.'
+    fieldErrors.startDate = 'Vul een geldige datum in, bijvoorbeeld 01-01-2025.'
   }
 
   if (trimmedEndDate) {
     if (!DATE_PATTERN.test(trimmedEndDate)) {
-      fieldErrors.endDate = 'Voer een geldige datum in.'
+      fieldErrors.endDate = 'Vul een geldige datum in, bijvoorbeeld 01-01-2025.'
     } else if (trimmedStartDate && trimmedEndDate < trimmedStartDate) {
-      fieldErrors.endDate = 'Einddatum moet op of na de startdatum liggen.'
+      fieldErrors.endDate = 'De einddatum moet op of na de startdatum liggen.'
     }
   }
 
@@ -322,15 +322,19 @@ export async function createFeatureAction(input: {
     if (!response.ok) {
       const body = await response.text().catch(() => '')
       console.error('[createFeatureAction] Failed', response.status, body)
-      return { error: 'Er is iets misgegaan. Probeer het opnieuw.' }
+      return { error: 'Dat is helaas niet gelukt. Probeer het opnieuw of kom later terug.' }
     }
 
     const json = await response.json()
     documentId = json.data?.documentId
-    if (!documentId) return { error: 'Er is iets misgegaan bij het verwerken van het antwoord.' }
+    if (!documentId)
+      return {
+        error:
+          'Het verzoek is verstuurd, maar de bevestiging is niet ontvangen. Ververs de pagina om te zien of de wijziging is doorgekomen.',
+      }
   } catch (error) {
     console.error('[createFeatureAction] Error:', error)
-    return { error: 'Er is iets misgegaan. Probeer het opnieuw.' }
+    return { error: 'Dat is helaas niet gelukt. Probeer het opnieuw of kom later terug.' }
   }
 
   revalidatePath('/')
@@ -348,7 +352,7 @@ export async function createStoryAction(input: {
 }): Promise<CreateResponse> {
   const user = await getCurrentUser()
   if (!user) return { needsLogin: true }
-  if (!user.isTeam) return { error: 'Geen toegang.' }
+  if (!user.isTeam) return { error: 'Je hebt geen rechten om deze actie uit te voeren.' }
 
   const trimmedTitle = input.title.trim()
   const trimmedContent = input.content.trim()
@@ -361,20 +365,20 @@ export async function createStoryAction(input: {
   }
 
   if (!trimmedStartDate) {
-    fieldErrors.startDate = 'Vul een startdatum in.'
+    fieldErrors.startDate = 'Vul een startdatum in, bijvoorbeeld 01-01-2025.'
   } else if (!DATE_PATTERN.test(trimmedStartDate)) {
-    fieldErrors.startDate = 'Voer een geldige datum in.'
+    fieldErrors.startDate = 'Vul een geldige datum in, bijvoorbeeld 01-01-2025.'
   }
 
   if (!trimmedEndDate) {
-    fieldErrors.endDate = 'Vul een einddatum in.'
+    fieldErrors.endDate = 'Vul een einddatum in, bijvoorbeeld 31-12-2025.'
   } else if (!DATE_PATTERN.test(trimmedEndDate)) {
-    fieldErrors.endDate = 'Voer een geldige datum in.'
+    fieldErrors.endDate = 'Vul een geldige datum in, bijvoorbeeld 01-01-2025.'
   }
 
   if (!fieldErrors.startDate && !fieldErrors.endDate) {
     if (trimmedEndDate < trimmedStartDate) {
-      fieldErrors.endDate = 'Einddatum moet op of na de startdatum liggen.'
+      fieldErrors.endDate = 'De einddatum moet op of na de startdatum liggen.'
     }
   }
 
@@ -400,15 +404,19 @@ export async function createStoryAction(input: {
     if (!response.ok) {
       const body = await response.text().catch(() => '')
       console.error('[createStoryAction] Failed', response.status, body)
-      return { error: 'Er is iets misgegaan. Probeer het opnieuw.' }
+      return { error: 'Dat is helaas niet gelukt. Probeer het opnieuw of kom later terug.' }
     }
 
     const json = await response.json()
     documentId = json.data?.documentId
-    if (!documentId) return { error: 'Er is iets misgegaan bij het verwerken van het antwoord.' }
+    if (!documentId)
+      return {
+        error:
+          'Het verzoek is verstuurd, maar de bevestiging is niet ontvangen. Ververs de pagina om te zien of de wijziging is doorgekomen.',
+      }
   } catch (error) {
     console.error('[createStoryAction] Error:', error)
-    return { error: 'Er is iets misgegaan. Probeer het opnieuw.' }
+    return { error: 'Dat is helaas niet gelukt. Probeer het opnieuw of kom later terug.' }
   }
 
   revalidatePath('/')
@@ -429,9 +437,9 @@ export async function deleteIdeaAction(documentId: string): Promise<DeleteRespon
       isAuthor = ideaResponse.data.end_users?.some((author) => author.documentId === user.documentId) ?? false
     } catch (error) {
       console.error('[deleteIdeaAction] Failed to load idea for ownership check:', error)
-      return { error: 'Er is iets misgegaan. Probeer het opnieuw.' }
+      return { error: 'Dat is helaas niet gelukt. Probeer het opnieuw of kom later terug.' }
     }
-    if (!isAuthor) return { error: 'Geen toegang.' }
+    if (!isAuthor) return { error: 'Je hebt geen rechten om deze actie uit te voeren.' }
   }
 
   try {
@@ -439,11 +447,11 @@ export async function deleteIdeaAction(documentId: string): Promise<DeleteRespon
     if (!response.ok && response.status !== 204) {
       const body = await response.text().catch(() => '')
       console.error('[deleteIdeaAction] Failed', response.status, body)
-      return { error: 'Er is iets misgegaan. Probeer het opnieuw.' }
+      return { error: 'Dat is helaas niet gelukt. Probeer het opnieuw of kom later terug.' }
     }
   } catch (error) {
     console.error('[deleteIdeaAction] Error:', error)
-    return { error: 'Er is iets misgegaan. Probeer het opnieuw.' }
+    return { error: 'Dat is helaas niet gelukt. Probeer het opnieuw of kom later terug.' }
   }
 
   revalidatePath('/')
@@ -456,18 +464,18 @@ export async function deleteIdeaAction(documentId: string): Promise<DeleteRespon
 export async function deleteFeatureAction(documentId: string): Promise<DeleteResponse> {
   const user = await getCurrentUser()
   if (!user) return { needsLogin: true }
-  if (!user.isTeam) return { error: 'Geen toegang.' }
+  if (!user.isTeam) return { error: 'Je hebt geen rechten om deze actie uit te voeren.' }
 
   try {
     const response = await client.fetch(`features/${documentId}`, { method: 'DELETE' })
     if (!response.ok && response.status !== 204) {
       const body = await response.text().catch(() => '')
       console.error('[deleteFeatureAction] Failed', response.status, body)
-      return { error: 'Er is iets misgegaan. Probeer het opnieuw.' }
+      return { error: 'Dat is helaas niet gelukt. Probeer het opnieuw of kom later terug.' }
     }
   } catch (error) {
     console.error('[deleteFeatureAction] Error:', error)
-    return { error: 'Er is iets misgegaan. Probeer het opnieuw.' }
+    return { error: 'Dat is helaas niet gelukt. Probeer het opnieuw of kom later terug.' }
   }
 
   revalidatePath('/')
@@ -480,18 +488,18 @@ export async function deleteFeatureAction(documentId: string): Promise<DeleteRes
 export async function deleteStoryAction(documentId: string): Promise<DeleteResponse> {
   const user = await getCurrentUser()
   if (!user) return { needsLogin: true }
-  if (!user.isTeam) return { error: 'Geen toegang.' }
+  if (!user.isTeam) return { error: 'Je hebt geen rechten om deze actie uit te voeren.' }
 
   try {
     const response = await client.fetch(`stories/${documentId}`, { method: 'DELETE' })
     if (!response.ok && response.status !== 204) {
       const body = await response.text().catch(() => '')
       console.error('[deleteStoryAction] Failed', response.status, body)
-      return { error: 'Er is iets misgegaan. Probeer het opnieuw.' }
+      return { error: 'Dat is helaas niet gelukt. Probeer het opnieuw of kom later terug.' }
     }
   } catch (error) {
     console.error('[deleteStoryAction] Error:', error)
-    return { error: 'Er is iets misgegaan. Probeer het opnieuw.' }
+    return { error: 'Dat is helaas niet gelukt. Probeer het opnieuw of kom later terug.' }
   }
 
   revalidatePath('/')

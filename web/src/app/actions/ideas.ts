@@ -21,10 +21,10 @@ export async function createIdeaAction(formData: FormData): Promise<CreateIdeaRe
   const imageFile = formData.get('image')
 
   const fieldErrors: { content?: string; title?: string } = {}
-  if (!title) fieldErrors.title = 'Vul een titel in.'
-  else if (title.length > 140) fieldErrors.title = 'Titel mag maximaal 140 tekens bevatten.'
-  if (!content) fieldErrors.content = 'Vul een samenvatting in.'
-  else if (content.length > 10000) fieldErrors.content = 'Samenvatting mag maximaal 10.000 tekens bevatten.'
+  if (!title) fieldErrors.title = 'Vul een titel in voor je idee.'
+  else if (title.length > 140) fieldErrors.title = 'De titel is te lang. Gebruik maximaal 140 tekens.'
+  if (!content) fieldErrors.content = 'Beschrijf je idee kort in de samenvatting.'
+  else if (content.length > 10000) fieldErrors.content = 'De samenvatting is te lang. Gebruik maximaal 10.000 tekens.'
 
   if (Object.keys(fieldErrors).length > 0) return { fieldErrors }
 
@@ -63,15 +63,19 @@ export async function createIdeaAction(formData: FormData): Promise<CreateIdeaRe
     if (!res.ok) {
       const body = await res.text().catch(() => '')
       console.error('[createIdeaAction] Failed', res.status, body)
-      return { error: 'Er is iets misgegaan. Probeer het opnieuw.' }
+      return { error: 'Dat is helaas niet gelukt. Probeer het opnieuw of kom later terug.' }
     }
 
     const json = await res.json()
     documentId = json.data?.documentId
-    if (!documentId) return { error: 'Er is iets misgegaan bij het verwerken van het antwoord.' }
+    if (!documentId)
+      return {
+        error:
+          'Het verzoek is verstuurd, maar de bevestiging is niet ontvangen. Ververs de pagina om te zien of de wijziging is doorgekomen.',
+      }
   } catch (err) {
     console.error('[createIdeaAction] Error:', err)
-    return { error: 'Er is iets misgegaan. Probeer het opnieuw.' }
+    return { error: 'Dat is helaas niet gelukt. Probeer het opnieuw of kom later terug.' }
   }
 
   revalidatePath('/')

@@ -89,7 +89,7 @@ const LoginForm = ({
       </FieldSet>
 
       {error && (
-        <Alert heading="Er is een fout opgetreden" headingLevel={2} severity="error">
+        <Alert heading="Inloggen is niet gelukt" headingLevel={2} severity="error">
           {error}
         </Alert>
       )}

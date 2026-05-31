@@ -43,7 +43,7 @@ async function toggleLike<T extends z.ZodType<{ documentId: string }>>({
         method: 'POST',
       })
 
-      if (!res.ok) return { error: 'Kon like niet toevoegen.' }
+      if (!res.ok) return { error: 'Je stem kon niet worden opgeslagen. Probeer het opnieuw.' }
     } else {
       const params = new URLSearchParams({
         [`filters[${entityField}][documentId][$eq]`]: documentId,
@@ -51,18 +51,18 @@ async function toggleLike<T extends z.ZodType<{ documentId: string }>>({
       })
 
       const searchRes = await client.fetch(`${collection}?${params}`)
-      if (!searchRes.ok) return { error: 'Kon like niet vinden om te verwijderen.' }
+      if (!searchRes.ok) return { error: 'Je stem kon niet worden gevonden. Ververs de pagina en probeer het opnieuw.' }
 
       const parsed = strapiCollection(schema).safeParse(await searchRes.json())
 
       if (!parsed.success) {
         console.error(`[toggleLike] Invalid ${collection} response:`, parsed.error)
-        return { error: 'Kon like niet verwerken om te verwijderen.' }
+        return { error: 'Er is iets misgegaan bij het verwerken van je stem. Probeer het opnieuw.' }
       }
 
       if (parsed.data.data.length > 0) {
         const deleteRes = await client.fetch(`${collection}/${parsed.data.data[0].documentId}`, { method: 'DELETE' })
-        if (!deleteRes.ok) return { error: 'Kon like niet verwijderen.' }
+        if (!deleteRes.ok) return { error: 'Je stem kon niet worden verwijderd. Probeer het opnieuw.' }
       }
     }
 
@@ -70,7 +70,7 @@ async function toggleLike<T extends z.ZodType<{ documentId: string }>>({
     return { success: true }
   } catch (error) {
     console.error('[toggleLike] Error:', error)
-    return { error: 'Er is een onverwachte fout opgetreden.' }
+    return { error: 'Dat is helaas niet gelukt. Probeer het opnieuw of kom later terug.' }
   }
 }
 
