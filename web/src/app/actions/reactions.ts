@@ -8,89 +8,21 @@ import type { ActionResponse } from './likes'
 
 import { getCurrentUser } from './login'
 
-type CommentNotificationType = 'comment_on_feature' | 'comment_on_idea' | 'comment_on_story'
-
-type NotifyContext = {
-  actorDocumentId: string
-  actorName: string
-  entity: Record<string, unknown>
-}
-
 type StoredReaction = {
   content: string
   end_user?: { documentId: string } | null
   id: number
 }
 
-const titleOf = (entity: Record<string, unknown>): string => (typeof entity.title === 'string' ? entity.title : '')
-
-async function createCommentNotifications({
-  actorDocumentId,
-  href,
-  message,
-  recipientDocumentIds,
-  type,
-}: {
-  actorDocumentId: string
-  href: string
-  message: string
-  recipientDocumentIds: (string | undefined)[]
-  type: CommentNotificationType
-}): Promise<void> {
-  const recipients = [...new Set(recipientDocumentIds)].filter(
-    (documentId): documentId is string => !!documentId && documentId !== actorDocumentId,
-  )
-
-  await Promise.all(
-    recipients.map((recipient) =>
-      client
-        .fetch('notifications', {
-          body: JSON.stringify({ data: { href, message, read: false, recipient, type } }),
-          headers: { 'Content-Type': 'application/json' },
-          method: 'POST',
-        })
-        .catch((error) => {
-          console.error('[createCommentNotifications] Error:', error)
-        }),
-    ),
-  )
-}
-
-async function getLikerDocumentIds(
-  likeCollection: string,
-  entityField: string,
-  entityDocumentId: string,
-): Promise<string[]> {
-  try {
-    const params = new URLSearchParams({
-      [`filters[${entityField}][documentId][$eq]`]: entityDocumentId,
-      'pagination[pageSize]': '100',
-      'populate[end_user][fields][0]': 'documentId',
-    })
-    const res = await client.fetch(`${likeCollection}?${params}`)
-    if (!res.ok) return []
-
-    const likes: { end_user?: { documentId?: string } | null }[] = (await res.json()).data ?? []
-    return likes.map((like) => like.end_user?.documentId).filter((id): id is string => !!id)
-  } catch (error) {
-    console.error('[getLikerDocumentIds] Error:', error)
-    return []
-  }
-}
-
 async function addReaction({
   collection,
   content,
   documentId,
-  extraParams,
-  notify,
   path,
 }: {
   collection: string
   content: string
   documentId: string
-  extraParams?: Record<string, string>
-  notify?: (context: NotifyContext) => Promise<void>
   path: string
 }): Promise<ActionResponse> {
   const user = await getCurrentUser()
@@ -104,7 +36,6 @@ async function addReaction({
       'fields[0]': 'id',
       'populate[reactions][fields][0]': 'content',
       'populate[reactions][populate][end_user][fields][0]': 'documentId',
-      ...extraParams,
     })
 
     const getRes = await client.fetch(`${collection}/${documentId}?${params}`)
@@ -128,14 +59,6 @@ async function addReaction({
 
     if (!putRes.ok) return { error: 'Je reactie kon niet worden opgeslagen. Probeer het opnieuw.' }
 
-    if (notify) {
-      try {
-        await notify({ actorDocumentId: user.documentId, actorName: user.name, entity })
-      } catch (error) {
-        console.error('[addReaction] Notification step failed:', error)
-      }
-    }
-
     revalidatePath(path)
     return { success: true }
   } catch (err) {
@@ -147,26 +70,22 @@ async function addReaction({
 async function deleteReaction({
   collection,
   documentId,
-  extraParams,
   path,
   reactionId,
 }: {
   collection: string
   documentId: string
-  extraParams?: Record<string, string>
   path: string
   reactionId: number
 }): Promise<ActionResponse> {
   const user = await getCurrentUser()
   if (!user) return { needsLogin: true }
-  if (!user.isTeam) return { error: 'Je hebt geen rechten om deze reactie te verwijderen.' }
 
   try {
     const params = new URLSearchParams({
       'fields[0]': 'id',
       'populate[reactions][fields][0]': 'content',
       'populate[reactions][populate][end_user][fields][0]': 'documentId',
-      ...extraParams,
     })
 
     const getRes = await client.fetch(`${collection}/${documentId}?${params}`)
@@ -175,12 +94,22 @@ async function deleteReaction({
     const entity: Record<string, unknown> = (await getRes.json()).data ?? {}
     const existing = (entity.reactions as StoredReaction[] | undefined) ?? []
 
+    const reaction = existing.find((storedReaction) => storedReaction.id === reactionId)
+    if (!reaction) return { error: 'Reactie niet gevonden.' }
+
+    if (!user.isTeam && reaction.end_user?.documentId !== user.documentId) {
+      return { error: 'Je hebt geen rechten om deze reactie te verwijderen.' }
+    }
+
     const putRes = await client.fetch(`${collection}/${documentId}`, {
       body: JSON.stringify({
         data: {
           reactions: existing
-            .filter((reaction) => reaction.id !== reactionId)
-            .map((reaction) => ({ content: reaction.content, end_user: reaction.end_user?.documentId })),
+            .filter((storedReaction) => storedReaction.id !== reactionId)
+            .map((storedReaction) => ({
+              content: storedReaction.content,
+              end_user: storedReaction.end_user?.documentId,
+            })),
         },
       }),
       headers: { 'Content-Type': 'application/json' },
@@ -195,6 +124,91 @@ async function deleteReaction({
     console.error('[deleteReaction] Error:', err)
     return { error: 'Dat is helaas niet gelukt. Probeer het opnieuw of kom later terug.' }
   }
+}
+
+async function editReaction({
+  collection,
+  content,
+  documentId,
+  path,
+  reactionId,
+}: {
+  collection: string
+  content: string
+  documentId: string
+  path: string
+  reactionId: number
+}): Promise<ActionResponse> {
+  const user = await getCurrentUser()
+  if (!user) return { needsLogin: true }
+
+  const normalizedContent = content.trim()
+  if (!normalizedContent) return { error: 'Vul je reactie in voordat je deze opslaat.' }
+
+  try {
+    const params = new URLSearchParams({
+      'fields[0]': 'id',
+      'populate[reactions][fields][0]': 'content',
+      'populate[reactions][populate][end_user][fields][0]': 'documentId',
+    })
+
+    const getRes = await client.fetch(`${collection}/${documentId}?${params}`)
+    if (!getRes.ok) return { error: 'De reacties konden niet worden geladen. Probeer de pagina te verversen.' }
+
+    const entity: Record<string, unknown> = (await getRes.json()).data ?? {}
+    const existing = (entity.reactions as StoredReaction[] | undefined) ?? []
+
+    const reaction = existing.find((storedReaction) => storedReaction.id === reactionId)
+    if (!reaction) return { error: 'Reactie niet gevonden.' }
+
+    if (!user.isTeam && reaction.end_user?.documentId !== user.documentId) {
+      return { error: 'Je hebt geen rechten om deze reactie te bewerken.' }
+    }
+
+    const putRes = await client.fetch(`${collection}/${documentId}`, {
+      body: JSON.stringify({
+        data: {
+          reactions: existing.map((storedReaction) =>
+            storedReaction.id === reactionId
+              ? { content: normalizedContent, end_user: storedReaction.end_user?.documentId }
+              : { content: storedReaction.content, end_user: storedReaction.end_user?.documentId },
+          ),
+        },
+      }),
+      headers: { 'Content-Type': 'application/json' },
+      method: 'PUT',
+    })
+
+    if (!putRes.ok) return { error: 'Je reactie kon niet worden bijgewerkt. Probeer het opnieuw.' }
+
+    revalidatePath(path)
+    return { success: true }
+  } catch (err) {
+    console.error('[editReaction] Error:', err)
+    return { error: 'Dat is helaas niet gelukt. Probeer het opnieuw of kom later terug.' }
+  }
+}
+
+export async function addIdeaReactionAction(ideaDocumentId: string, content: string): Promise<ActionResponse> {
+  return addReaction({ collection: 'ideas', content, documentId: ideaDocumentId, path: `/ideeen/${ideaDocumentId}` })
+}
+
+export async function addFeatureReactionAction(featureDocumentId: string, content: string): Promise<ActionResponse> {
+  return addReaction({
+    collection: 'features',
+    content,
+    documentId: featureDocumentId,
+    path: `/features/${featureDocumentId}`,
+  })
+}
+
+export async function addStoryReactionAction(storyDocumentId: string, content: string): Promise<ActionResponse> {
+  return addReaction({
+    collection: 'stories',
+    content,
+    documentId: storyDocumentId,
+    path: `/stories/${storyDocumentId}`,
+  })
 }
 
 export async function deleteIdeaReactionAction(ideaDocumentId: string, reactionId: number): Promise<ActionResponse> {
@@ -227,62 +241,44 @@ export async function deleteStoryReactionAction(storyDocumentId: string, reactio
   })
 }
 
-export async function addIdeaReactionAction(ideaDocumentId: string, content: string): Promise<ActionResponse> {
-  return addReaction({
+export async function editIdeaReactionAction(
+  ideaDocumentId: string,
+  reactionId: number,
+  content: string,
+): Promise<ActionResponse> {
+  return editReaction({
     collection: 'ideas',
     content,
     documentId: ideaDocumentId,
-    extraParams: { 'fields[1]': 'title', 'populate[end_users][fields][0]': 'documentId' },
-    notify: async ({ actorDocumentId, actorName, entity }) => {
-      const authors = ((entity.end_users as { documentId?: string }[] | null | undefined) ?? []).map(
-        (author) => author.documentId,
-      )
-      await createCommentNotifications({
-        actorDocumentId,
-        href: `/ideeen/${ideaDocumentId}`,
-        message: `${actorName} reageerde op jouw idee '${titleOf(entity)}'.`,
-        recipientDocumentIds: authors,
-        type: 'comment_on_idea',
-      })
-    },
     path: `/ideeen/${ideaDocumentId}`,
+    reactionId,
   })
 }
 
-export async function addStoryReactionAction(storyDocumentId: string, content: string): Promise<ActionResponse> {
-  return addReaction({
-    collection: 'stories',
-    content,
-    documentId: storyDocumentId,
-    extraParams: { 'fields[1]': 'title' },
-    notify: async ({ actorDocumentId, actorName, entity }) => {
-      await createCommentNotifications({
-        actorDocumentId,
-        href: `/stories/${storyDocumentId}`,
-        message: `${actorName} reageerde op de story '${titleOf(entity)}' die je leuk vindt.`,
-        recipientDocumentIds: await getLikerDocumentIds('story-likes', 'story', storyDocumentId),
-        type: 'comment_on_story',
-      })
-    },
-    path: `/stories/${storyDocumentId}`,
-  })
-}
-
-export async function addFeatureReactionAction(featureDocumentId: string, content: string): Promise<ActionResponse> {
-  return addReaction({
+export async function editFeatureReactionAction(
+  featureDocumentId: string,
+  reactionId: number,
+  content: string,
+): Promise<ActionResponse> {
+  return editReaction({
     collection: 'features',
     content,
     documentId: featureDocumentId,
-    extraParams: { 'fields[1]': 'title' },
-    notify: async ({ actorDocumentId, actorName, entity }) => {
-      await createCommentNotifications({
-        actorDocumentId,
-        href: `/features/${featureDocumentId}`,
-        message: `${actorName} reageerde op de feature '${titleOf(entity)}' die je leuk vindt.`,
-        recipientDocumentIds: await getLikerDocumentIds('feature-likes', 'feature', featureDocumentId),
-        type: 'comment_on_feature',
-      })
-    },
     path: `/features/${featureDocumentId}`,
+    reactionId,
+  })
+}
+
+export async function editStoryReactionAction(
+  storyDocumentId: string,
+  reactionId: number,
+  content: string,
+): Promise<ActionResponse> {
+  return editReaction({
+    collection: 'stories',
+    content,
+    documentId: storyDocumentId,
+    path: `/stories/${storyDocumentId}`,
+    reactionId,
   })
 }

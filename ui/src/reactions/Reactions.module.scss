@@ -41,13 +41,19 @@
   color: var(--ams-color-text);
 }
 
-.reactions__delete {
+.reactions__actions {
+  align-items: center;
+  display: flex;
+  gap: var(--ams-space-xs);
+  margin-inline-start: auto;
+}
+
+.reactions__action {
   background: none;
   border: none;
   color: var(--ams-color-text-secondary);
   cursor: pointer;
   font-size: var(--ams-typography-body-text-small-font-size);
-  margin-inline-start: auto;
   padding-block: 0;
   padding-inline: 0;
   text-decoration: underline;
@@ -55,10 +61,28 @@
   &:hover {
     color: var(--ams-color-text);
   }
+
+  &:disabled {
+    cursor: not-allowed;
+    opacity: 50%;
+  }
 }
 
-.reactions__item--team .reactions__delete {
+.reactions__item--team .reactions__action {
   color: var(--ams-color-text);
+}
+
+.reactions__edit {
+  display: flex;
+  flex-direction: column;
+  gap: var(--ams-space-xs);
+  margin-block-end: var(--ams-space-s);
+}
+
+.reactions__edit-actions {
+  align-items: center;
+  display: flex;
+  gap: var(--ams-space-s);
 }
 
 .reactions--compact {
@@ -85,7 +109,7 @@
       color: var(--ams-color-text-secondary);
     }
 
-    .reactions__delete {
+    .reactions__action {
       color: var(--ams-color-text-secondary);
     }
   }

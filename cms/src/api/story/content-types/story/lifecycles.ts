@@ -3,15 +3,14 @@ import {
   getEndUserName,
   getFeatureFollowers,
   getIdeaAuthors,
-  getIdeaLikers,
+  getStoryFollowers,
 } from '../../../../utils/notifications'
 
-// Lifecycle hooks for the feature content type.
-// Sends notifications when a feature is created from an idea, or when a feature is edited or commented on.
+// Lifecycle hooks for the story content type.
+// Sends notifications when a story is updated, completed, or commented on.
 
 type LifecycleEvent = {
   params: { data?: Record<string, unknown>; where?: Record<string, unknown> }
-  result?: { id?: number | string }
 }
 
 type StoredReaction = {
@@ -20,11 +19,11 @@ type StoredReaction = {
   id: number
 }
 
-type Feature = {
+type Story = {
   content?: string
   documentId: string
   endDate?: null | string
-  idea?: { documentId: string; end_users?: { documentId?: string }[]; title: string }
+  feature?: { documentId: string; idea?: { documentId: string } }
   reactions?: StoredReaction[]
   startDate?: null | string
   title: string
@@ -53,27 +52,6 @@ async function notifyMany(
 }
 
 export default {
-  async afterCreate(event: LifecycleEvent) {
-    if (process.env.IS_SEEDING === 'true') return
-
-    const id = event.result?.id
-    if (id === undefined) return
-
-    const feature: Feature | null = await strapi.db.query('api::feature.feature').findOne({
-      populate: { idea: { populate: { end_users: true } } },
-      where: { id: id },
-    })
-
-    if (!feature?.idea) return
-
-    const ideaLikers = await getIdeaLikers(strapi, feature.idea.documentId)
-    const ideaAuthors = await getIdeaAuthors(strapi, feature.idea.documentId)
-    const message = `Een idee dat je volgt, '${feature.idea.title}', is opgepakt. Er is een feature aangemaakt: '${feature.title}'.`
-    const href = `/ideeen/${feature.idea.documentId}`
-
-    await notifyMany([...ideaLikers, ...ideaAuthors], message, href, 'idea_promoted')
-  },
-
   async beforeUpdate(event: LifecycleEvent) {
     if (process.env.IS_SEEDING === 'true') return
 
@@ -85,15 +63,16 @@ export default {
     const hasNonMetaKeys = keys.some((key) => key !== 'updatedAt' && key !== 'createdAt' && key !== 'publishedAt')
     if (!hasNonMetaKeys) return
 
-    const current: Feature | null = await strapi.db.query('api::feature.feature').findOne({
-      populate: { idea: { populate: { end_users: true } }, reactions: true },
+    const current: Story | null = await strapi.db.query('api::story.story').findOne({
+      populate: { feature: { populate: { idea: true } }, reactions: true },
       where: where,
     })
     if (!current) return
 
-    const followers = await getFeatureFollowers(strapi, current.documentId)
-    const ideaAuthors = current.idea ? await getIdeaAuthors(strapi, current.idea.documentId) : []
-    const href = `/features/${current.documentId}`
+    const storyFollowers = await getStoryFollowers(strapi, current.documentId)
+    const featureFollowers = current.feature ? await getFeatureFollowers(strapi, current.feature.documentId) : []
+    const ideaAuthors = current.feature?.idea ? await getIdeaAuthors(strapi, current.feature.idea.documentId) : []
+    const href = `/stories/${current.documentId}`
 
     // New comment posted
     if ('reactions' in data) {
@@ -104,23 +83,23 @@ export default {
         const commenterDocumentId = extractCommenterDocumentId(lastReaction)
         const commenterName = commenterDocumentId ? await getEndUserName(strapi, commenterDocumentId) : 'Iemand'
         const title = typeof data.title === 'string' ? data.title : current.title
-        const recipients = [...new Set([...followers, ...ideaAuthors])].filter(
+        const recipients = [...new Set([...storyFollowers, ...featureFollowers, ...ideaAuthors])].filter(
           (recipientId) => recipientId && recipientId !== commenterDocumentId,
         )
         for (const recipientId of recipients) {
           await createNotification(
             strapi,
             recipientId,
-            `${commenterName} reageerde op de feature '${title}' die je volgt.`,
+            `${commenterName} reageerde op de story '${title}' die je volgt.`,
             href,
-            'comment_on_feature',
+            'comment_on_story',
           )
         }
       }
     }
 
-    // Content change — feature updated or completed
-    const contentFields: (keyof Feature)[] = ['title', 'content', 'startDate', 'endDate']
+    // Content change, story updated or completed
+    const contentFields: (keyof Story)[] = ['title', 'content', 'startDate', 'endDate']
     const hasContentChange = contentFields.some((field) => data[field] !== undefined && data[field] !== current[field])
     if (!hasContentChange) return
 
@@ -132,9 +111,9 @@ export default {
     }
 
     const title = typeof data.title === 'string' ? data.title : current.title
-    const message = justCompleted ? `De feature '${title}' is afgerond.` : `De feature '${title}' is bijgewerkt.`
+    const message = justCompleted ? `De story '${title}' is afgerond.` : `De story '${title}' is bijgewerkt.`
     const type = justCompleted ? 'story_completed' : 'story_updated'
 
-    await notifyMany([...followers, ...ideaAuthors], message, href, type)
+    await notifyMany([...storyFollowers, ...featureFollowers, ...ideaAuthors], message, href, type)
   },
 }

@@ -45,10 +45,12 @@ export default async function FeaturePage({ params }: Props) {
   const isLiked =
     !!currentUserDocumentId && (feature.likes?.some((l) => l.end_user?.documentId === currentUserDocumentId) ?? false)
 
-  const reactions: ReactionItem[] = (feature.reactions ?? []).map((r) => ({
-    author: r.end_user ? { isTeam: r.end_user.isTeam, name: r.end_user.name } : null,
-    content: r.content,
-    id: r.id,
+  const reactions: ReactionItem[] = (feature.reactions ?? []).map((reaction) => ({
+    author: reaction.end_user
+      ? { documentId: reaction.end_user.documentId, isTeam: reaction.end_user.isTeam, name: reaction.end_user.name }
+      : null,
+    content: reaction.content,
+    id: reaction.id,
   }))
 
   const linkedIdea = feature.idea ? { title: feature.idea.title, documentId: feature.idea.documentId } : null
