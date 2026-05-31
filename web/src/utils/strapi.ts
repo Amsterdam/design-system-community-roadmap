@@ -126,6 +126,8 @@ export const strapi = {
         'populate[stories][fields][2]': 'startDate',
         'populate[stories][fields][3]': 'endDate',
         'populate[stories][fields][4]': 'id',
+        'populate[stories][fields][5]': 'rank',
+        'populate[stories][fields][6]': 'progressStatus',
       })
       return fetchParsed(`features/${id}?${params}`, strapiSingle(FeatureSchema), init)
     },
@@ -171,6 +173,8 @@ export const strapi = {
         'populate[features][fields][2]': 'id',
         'populate[features][fields][3]': 'startDate',
         'populate[features][fields][4]': 'endDate',
+        'populate[features][fields][5]': 'rank',
+        'populate[features][fields][6]': 'progressStatus',
         ...imagePopulateParams,
         'populate[likes][populate][end_user][fields][0]': 'documentId',
         'populate[likes][populate][end_user][fields][1]': 'name',

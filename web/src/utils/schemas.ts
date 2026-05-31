@@ -75,6 +75,8 @@ export const NestedFeatureSchema = z.object({
   documentId: z.string(),
   endDate: z.string().nullable().optional(),
   id: z.number(),
+  progressStatus: z.string().nullable().optional(),
+  rank: z.number().nullable().optional(),
   startDate: z.string().optional(),
 })
 
@@ -83,6 +85,8 @@ export const NestedStorySchema = z.object({
   documentId: z.string(),
   endDate: z.string().nullable().optional(),
   id: z.number(),
+  progressStatus: z.string().nullable().optional(),
+  rank: z.number().nullable().optional(),
   startDate: z.string().optional(),
 })
 
@@ -111,7 +115,9 @@ export const FeatureSchema = strapiBase.extend({
   idea: NestedIdeaSchema.nullable().optional(),
   images: z.array(StrapiImageSchema).nullable().optional(),
   likes: z.array(PopulatedLikeSchema).optional(),
+  progressStatus: z.string().nullable().optional(),
   publishedAt: z.string().nullable().optional(),
+  rank: z.number().nullable().optional(),
   reactions: z.array(ReactionSchema).optional(),
   startDate: z.string().optional(),
   stories: z.array(NestedStorySchema).optional(),
@@ -124,7 +130,9 @@ export const StorySchema = strapiBase.extend({
   feature: NestedFeatureSchema.nullable().optional(),
   images: z.array(StrapiImageSchema).nullable().optional(),
   likes: z.array(PopulatedLikeSchema).optional(),
+  progressStatus: z.string().nullable().optional(),
   publishedAt: z.string().nullable().optional(),
+  rank: z.number().nullable().optional(),
   reactions: z.array(ReactionSchema).optional(),
   startDate: z.string().optional(),
 })

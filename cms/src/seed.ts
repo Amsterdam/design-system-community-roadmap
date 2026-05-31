@@ -9,7 +9,14 @@ export default async ({ strapi }: { strapi: Core.Strapi }) => {
 
   const uploadFromUrl = async (url: string, filename: string): Promise<number | null> => {
     try {
-      const response = await fetch(url)
+      const controller = new AbortController()
+      const timeoutId = setTimeout(() => controller.abort(), 5000)
+      let response: Response
+      try {
+        response = await fetch(url, { signal: controller.signal })
+      } finally {
+        clearTimeout(timeoutId)
+      }
       if (!response.ok) {
         console.warn(`Skipping image ${url}: HTTP ${response.status}`)
         return null
@@ -121,14 +128,23 @@ export default async ({ strapi }: { strapi: Core.Strapi }) => {
     endUsers.push(user)
   }
 
-  const teamUser = await strapi.documents('api::end-user.end-user').create({
-    data: {
-      emoji: '❌',
-      isTeam: true,
-      name: 'Amsterdam Design System Team',
-    },
-    status: 'published',
-  })
+  const teamMembers = []
+  for (const { emoji, name } of [
+    { emoji: '🎯', name: 'Vincent' },
+    { emoji: '🚀', name: 'Bas' },
+    { emoji: '🌻', name: 'Evi' },
+    { emoji: '🧩', name: 'Niels' },
+  ]) {
+    const member = await strapi.documents('api::end-user.end-user').create({
+      data: { emoji, isTeam: true, name },
+      status: 'published',
+    })
+    teamMembers.push(member)
+  }
+
+  function randomTeamMember() {
+    return teamMembers[Math.floor(Math.random() * teamMembers.length)]
+  }
 
   const ideaData: {
     content: string
@@ -872,32 +888,48 @@ export default async ({ strapi }: { strapi: Core.Strapi }) => {
     },
   ]
 
+  const today = new Intl.DateTimeFormat('en-CA', { timeZone: 'Europe/Amsterdam' }).format(new Date())
+
+  function seedProgressStatus(startDate: string, endDate: string): 'Bezig' | 'Voltooid' | undefined {
+    if (endDate < today) return 'Voltooid'
+    if (startDate <= today) return 'Bezig'
+    return undefined
+  }
+
   const allCreatedFeatures = []
   const allCreatedStories = []
 
-  for (const entry of roadmapData) {
+  for (let featureIndex = 0; featureIndex < roadmapData.length; featureIndex++) {
+    const entry = roadmapData[featureIndex]
+    const featureStatus = seedProgressStatus(entry.feature.startDate, entry.feature.endDate)
+
     const feature = await strapi.documents('api::feature.feature').create({
       data: {
         title: entry.feature.title,
         content: entry.feature.content,
         endDate: entry.feature.endDate,
         idea: entry.feature.idea?.documentId,
+        rank: featureIndex + 1,
         startDate: entry.feature.startDate,
+        ...(featureStatus ? { progressStatus: featureStatus } : {}),
       },
-      status: 'published',
     })
     allCreatedFeatures.push(feature)
 
-    for (const storyData of entry.stories) {
+    for (let storyIndex = 0; storyIndex < entry.stories.length; storyIndex++) {
+      const storyData = entry.stories[storyIndex]
+      const storyStatus = seedProgressStatus(storyData.startDate, storyData.endDate)
+
       const story = await strapi.documents('api::story.story').create({
         data: {
           title: storyData.title,
           content: storyData.content,
           endDate: storyData.endDate,
           feature: feature.documentId,
+          rank: storyIndex + 1,
           startDate: storyData.startDate,
+          ...(storyStatus ? { progressStatus: storyStatus } : {}),
         },
-        status: 'published',
       })
       allCreatedStories.push(story)
     }
@@ -957,12 +989,12 @@ export default async ({ strapi }: { strapi: Core.Strapi }) => {
     if (idea.statusIdea === 'accepted') {
       reactions.push({
         content: teamReactionsIdeaAccepted[Math.floor(Math.random() * teamReactionsIdeaAccepted.length)],
-        end_user: teamUser.documentId,
+        end_user: randomTeamMember().documentId,
       })
     } else if (idea.statusIdea === 'postponed') {
       reactions.push({
         content: teamReactionsIdeaPostponed[Math.floor(Math.random() * teamReactionsIdeaPostponed.length)],
-        end_user: teamUser.documentId,
+        end_user: randomTeamMember().documentId,
       })
     }
 
@@ -1016,7 +1048,7 @@ export default async ({ strapi }: { strapi: Core.Strapi }) => {
     if (Math.random() > 0.4) {
       reactions.push({
         content: teamReactionsFeatureStory[Math.floor(Math.random() * teamReactionsFeatureStory.length)],
-        end_user: teamUser.documentId,
+        end_user: randomTeamMember().documentId,
       })
     }
 

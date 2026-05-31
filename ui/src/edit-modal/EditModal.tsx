@@ -55,6 +55,7 @@ export type EditModalProps = {
     endDate?: string
     featureDocumentId?: string
     ideaDocumentId?: string
+    progressStatus?: string
     startDate?: string
     statusIdea?: string
     title: string
@@ -67,6 +68,7 @@ export type EditModalProps = {
     endDate?: string
     featureDocumentId?: string
     ideaDocumentId?: string
+    progressStatus?: string
     startDate?: string
     statusIdea?: string
     title: string
@@ -111,6 +113,7 @@ const EditModal = ({
   type,
 }: EditModalProps) => {
   const showStatusField = type === 'idea' && canEditStatus
+  const showProgressStatusField = type === 'feature'
   const showIdeaField = type === 'feature' && ideaOptions !== undefined
   const showFeatureField = type === 'idea' && featureOptions !== undefined
   const dialogRef = useRef<HTMLDialogElement>(null)
@@ -118,6 +121,7 @@ const EditModal = ({
   const [title, setTitle] = useState(initialValues.title)
   const [content, setContent] = useState(initialValues.content)
   const [statusIdea, setStatusIdea] = useState(initialValues.statusIdea ?? 'in_review')
+  const [progressStatus, setProgressStatus] = useState(initialValues.progressStatus ?? '')
   const [startDate, setStartDate] = useState(initialValues.startDate ?? '')
   const [endDate, setEndDate] = useState(initialValues.endDate ?? '')
   const [ideaDocumentId, setIdeaDocumentId] = useState(initialValues.ideaDocumentId ?? '')
@@ -128,6 +132,7 @@ const EditModal = ({
     setTitle(initialValues.title)
     setContent(initialValues.content)
     setStatusIdea(initialValues.statusIdea ?? 'in_review')
+    setProgressStatus(initialValues.progressStatus ?? '')
     setStartDate(initialValues.startDate ?? '')
     setEndDate(initialValues.endDate ?? '')
     setIdeaDocumentId(initialValues.ideaDocumentId ?? '')
@@ -140,6 +145,7 @@ const EditModal = ({
     initialValues.endDate,
     initialValues.ideaDocumentId,
     initialValues.featureDocumentId,
+    initialValues.progressStatus,
   ])
 
   useEffect(() => {
@@ -162,6 +168,7 @@ const EditModal = ({
       title: title.trim(),
       content: content.trim(),
       ...(showStatusField ? { statusIdea } : {}),
+      ...(showProgressStatusField ? { progressStatus: progressStatus || undefined } : {}),
       ...(showIdeaField ? { ideaDocumentId } : {}),
       ...(showFeatureField ? { featureDocumentId } : {}),
       ...(type !== 'idea' ? { endDate: endDate.trim(), startDate: startDate.trim() } : {}),
@@ -339,6 +346,21 @@ const EditModal = ({
                   <option value="in_review">Ter beoordeling</option>
                   <option value="accepted">Geaccepteerd</option>
                   <option value="postponed">Uitgesteld</option>
+                </Select>
+              </Field>
+            )}
+
+            {showProgressStatusField && (
+              <Field>
+                <Label htmlFor={`${id}-progress-status`}>Voortgang</Label>
+                <Select
+                  id={`${id}-progress-status`}
+                  onChange={(event) => setProgressStatus(event.target.value)}
+                  value={progressStatus}
+                >
+                  <option value="">Gepland</option>
+                  <option value="Bezig">Bezig</option>
+                  <option value="Voltooid">Voltooid</option>
                 </Select>
               </Field>
             )}

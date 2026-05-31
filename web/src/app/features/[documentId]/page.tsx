@@ -73,6 +73,7 @@ export default async function FeaturePage({ params }: Props) {
       linkedIdea={linkedIdea}
       reactions={reactions}
       startDate={feature.startDate}
+      status={feature.progressStatus ?? undefined}
       stories={feature.stories ?? []}
       title={feature.title}
       voteCount={feature.likes?.length ?? 0}

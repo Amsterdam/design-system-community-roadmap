@@ -14,9 +14,10 @@ import {
   Paragraph,
   ProgressList,
   Row,
+  Select,
   StandaloneLink,
 } from '@amsterdam/design-system-react'
-import { DocumentWithPencilIcon } from '@amsterdam/design-system-react-icons'
+import { ChevronDownIcon, ChevronUpIcon, DocumentWithPencilIcon } from '@amsterdam/design-system-react-icons'
 import { EditModal, Reactions } from '@design-system-community-roadmap/ui'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
@@ -24,9 +25,10 @@ import { useState } from 'react'
 
 import type { StrapiImage } from '@/utils/schemas'
 
-import { deleteIdeaAction, updateIdeaAction } from '@/app/actions/edits'
+import { deleteIdeaAction, updateFeatureProgressAction, updateIdeaAction } from '@/app/actions/edits'
 import { deleteIdeaReactionAction } from '@/app/actions/reactions'
-import { formatDateRange, getProgressStatus } from '@/utils/date'
+import { formatDateRange } from '@/utils/date'
+import { toProgressStepStatus } from '@/utils/status'
 
 import AddReaction from './AddReaction'
 import Breadcrumbs from './Breadcrumbs'
@@ -43,6 +45,8 @@ const statusLabels: Record<string, string> = {
 type Feature = {
   documentId: string
   endDate?: string | null
+  progressStatus?: string | null
+  rank?: number | null
   startDate?: string
   title: string
 }
@@ -175,12 +179,21 @@ export default function IdeaDetail({
     if (result.success) router.refresh()
   }
 
-  const sortedFeatures = [...features].sort((featureA, featureB) => {
-    if (!featureA.startDate && !featureB.startDate) return 0
-    if (!featureA.startDate) return 1
-    if (!featureB.startDate) return -1
-    return new Date(featureA.startDate).getTime() - new Date(featureB.startDate).getTime()
-  })
+  const sortedFeatures = [...features].sort((featureA, featureB) => (featureA.rank ?? 0) - (featureB.rank ?? 0))
+
+  const handleFeatureStatus = async (featureDocumentId: string, progressStatus: string | null) => {
+    await updateFeatureProgressAction(featureDocumentId, { progressStatus })
+    router.refresh()
+  }
+
+  const handleMoveFeature = async (index: number, direction: -1 | 1) => {
+    const target = sortedFeatures[index]
+    const neighbor = sortedFeatures[index + direction]
+    if (!neighbor) return
+    await updateFeatureProgressAction(target.documentId, { rank: neighbor.rank ?? index + direction + 1 })
+    await updateFeatureProgressAction(neighbor.documentId, { rank: target.rank ?? index + 1 })
+    router.refresh()
+  }
 
   return (
     <Grid gapVertical="large">
@@ -235,17 +248,52 @@ export default function IdeaDetail({
               </>
             ) : (
               <ProgressList headingLevel={3}>
-                {sortedFeatures.map((feature) => (
+                {sortedFeatures.map((feature, featureIndex) => (
                   <ProgressList.Step
                     heading={feature.title}
                     key={feature.documentId}
-                    status={getProgressStatus(feature.startDate, feature.endDate)}
+                    status={toProgressStepStatus(feature.progressStatus)}
                   >
                     <Column alignHorizontal="start" className={styles['idea-detail__story-content']} gap="x-small">
                       <Badge label={formatDateRange(feature.startDate, feature.endDate)} />
                       <Link href={`/features/${feature.documentId}`} legacyBehavior passHref>
                         <StandaloneLink>Bekijk details</StandaloneLink>
                       </Link>
+                      {currentUserIsTeam && (
+                        <Row alignVertical="center" gap="small" wrap>
+                          <Select
+                            aria-label="Voortgang"
+                            onChange={(event) => handleFeatureStatus(feature.documentId, event.target.value || null)}
+                            value={feature.progressStatus ?? ''}
+                          >
+                            <option value="">Gepland</option>
+                            <option value="Bezig">Bezig</option>
+                            <option value="Voltooid">Voltooid</option>
+                          </Select>
+                          <ActionGroup role="toolbar">
+                            <Button
+                              disabled={featureIndex === 0}
+                              icon={ChevronUpIcon}
+                              iconOnly
+                              onClick={() => handleMoveFeature(featureIndex, -1)}
+                              type="button"
+                              variant="tertiary"
+                            >
+                              Naar boven
+                            </Button>
+                            <Button
+                              disabled={featureIndex === sortedFeatures.length - 1}
+                              icon={ChevronDownIcon}
+                              iconOnly
+                              onClick={() => handleMoveFeature(featureIndex, 1)}
+                              type="button"
+                              variant="tertiary"
+                            >
+                              Naar beneden
+                            </Button>
+                          </ActionGroup>
+                        </Row>
+                      )}
                     </Column>
                   </ProgressList.Step>
                 ))}
