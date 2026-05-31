@@ -84,7 +84,7 @@ export default function StoryForm({ features, preselectedFeatureDocumentId }: Pr
     const result = await createStoryAction({
       title,
       content,
-      endDate,
+      endDate: endDate || null,
       featureDocumentId: featureDocumentId || undefined,
       imageIds: upload.ids,
       startDate,
@@ -181,7 +181,7 @@ export default function StoryForm({ features, preselectedFeatureDocumentId }: Pr
               />
             </Field>
             <Field invalid={!!fieldErrors.endDate}>
-              <Label htmlFor="story-end-date" inFieldSet>
+              <Label htmlFor="story-end-date" inFieldSet optional>
                 Einddatum
               </Label>
               {fieldErrors.endDate && <ErrorMessage id="story-end-date-error">{fieldErrors.endDate}</ErrorMessage>}

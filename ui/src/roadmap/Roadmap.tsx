@@ -5,7 +5,7 @@ import { useCallback, useEffect, useRef, useState } from 'react'
 
 import type { RoadmapFeature, RoadmapStory, RoadmapViewRange } from './dateUtils'
 
-import { getDays, getDefaultRangeForFeatures, getGranularity, panRange, zoomRange } from './dateUtils'
+import { getDays, getDefaultRangeForFeatures, getGranularity, panRange, resolveEndDate, zoomRange } from './dateUtils'
 import styles from './Roadmap.module.scss'
 import RoadmapSidebar from './RoadmapSidebar'
 import RoadmapTimeline from './RoadmapTimeline'
@@ -86,7 +86,7 @@ const Roadmap = ({
     (feature: RoadmapFeature) => {
       setSelectedItem({ id: feature.id, type: 'feature' })
       setExpandedFeatureIds([feature.id])
-      animateToRange(paddedRange(new Date(feature.startDate), new Date(feature.endDate), 3))
+      animateToRange(paddedRange(new Date(feature.startDate), resolveEndDate(feature.endDate, feature.startDate), 3))
     },
     [animateToRange],
   )
@@ -118,9 +118,7 @@ const Roadmap = ({
 
       setSelectedItem({ id: story.id, type: 'story' })
 
-      const startDate = new Date(story.startDate)
-      const endDate = story.endDate ? new Date(story.endDate) : addDays(startDate, 7)
-      animateToRange(paddedRange(startDate, endDate, 2))
+      animateToRange(paddedRange(new Date(story.startDate), resolveEndDate(story.endDate, story.startDate), 2))
     },
     [animateToRange, resolvedInitialRange, selectedItem],
   )

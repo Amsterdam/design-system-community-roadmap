@@ -206,7 +206,7 @@ export async function updateFeatureAction(
 
 export async function updateStoryAction(
   documentId: string,
-  input: { content: string; endDate: string; imageIds?: number[]; startDate: string; title: string },
+  input: { content: string; endDate: string | null; imageIds?: number[]; startDate: string; title: string },
 ): Promise<EditResponse> {
   const user = await getCurrentUser()
   if (!user) return { needsLogin: true }
@@ -227,14 +227,10 @@ export async function updateStoryAction(
     fieldErrors.startDate = 'Vul een geldige datum in, bijvoorbeeld 01-01-2025.'
   }
 
-  if (!trimmedEndDate) {
-    fieldErrors.endDate = 'Vul een einddatum in, bijvoorbeeld 31-12-2025.'
-  } else if (!DATE_PATTERN.test(trimmedEndDate)) {
-    fieldErrors.endDate = 'Vul een geldige datum in, bijvoorbeeld 01-01-2025.'
-  }
-
-  if (!fieldErrors.startDate && !fieldErrors.endDate) {
-    if (trimmedEndDate < trimmedStartDate) {
+  if (trimmedEndDate) {
+    if (!DATE_PATTERN.test(trimmedEndDate)) {
+      fieldErrors.endDate = 'Vul een geldige datum in, bijvoorbeeld 01-01-2025.'
+    } else if (trimmedStartDate && trimmedEndDate < trimmedStartDate) {
       fieldErrors.endDate = 'De einddatum moet op of na de startdatum liggen.'
     }
   }
@@ -247,7 +243,7 @@ export async function updateStoryAction(
         data: {
           title: trimmedTitle,
           content: trimmedContent,
-          endDate: trimmedEndDate,
+          endDate: trimmedEndDate || null,
           startDate: trimmedStartDate,
           ...(input.imageIds !== undefined ? { images: input.imageIds } : {}),
         },
@@ -352,7 +348,7 @@ export async function createFeatureAction(input: {
 
 export async function createStoryAction(input: {
   content: string
-  endDate: string
+  endDate: string | null
   featureDocumentId?: string
   imageIds?: number[]
   startDate: string
@@ -378,14 +374,10 @@ export async function createStoryAction(input: {
     fieldErrors.startDate = 'Vul een geldige datum in, bijvoorbeeld 01-01-2025.'
   }
 
-  if (!trimmedEndDate) {
-    fieldErrors.endDate = 'Vul een einddatum in, bijvoorbeeld 31-12-2025.'
-  } else if (!DATE_PATTERN.test(trimmedEndDate)) {
-    fieldErrors.endDate = 'Vul een geldige datum in, bijvoorbeeld 01-01-2025.'
-  }
-
-  if (!fieldErrors.startDate && !fieldErrors.endDate) {
-    if (trimmedEndDate < trimmedStartDate) {
+  if (trimmedEndDate) {
+    if (!DATE_PATTERN.test(trimmedEndDate)) {
+      fieldErrors.endDate = 'Vul een geldige datum in, bijvoorbeeld 01-01-2025.'
+    } else if (trimmedStartDate && trimmedEndDate < trimmedStartDate) {
       fieldErrors.endDate = 'De einddatum moet op of na de startdatum liggen.'
     }
   }
@@ -399,7 +391,7 @@ export async function createStoryAction(input: {
         data: {
           title: trimmedTitle,
           content: trimmedContent,
-          endDate: trimmedEndDate,
+          endDate: trimmedEndDate || null,
           publishedAt: new Date().toISOString(),
           startDate: trimmedStartDate,
           ...(featureDocumentId ? { feature: featureDocumentId } : {}),

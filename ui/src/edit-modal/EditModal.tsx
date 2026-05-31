@@ -405,13 +405,12 @@ const EditModal = ({
                 </Field>
 
                 <Field invalid={!!endDateError}>
-                  <Label htmlFor={`${id}-end-date`} inFieldSet optional={type === 'feature'}>
+                  <Label htmlFor={`${id}-end-date`} inFieldSet optional>
                     Einddatum
                   </Label>
                   {endDateError && <ErrorMessage id={endDateErrorId}>{endDateError}</ErrorMessage>}
                   <DateInput
                     aria-describedby={endDateError ? endDateErrorId : undefined}
-                    aria-required={type === 'story' ? 'true' : undefined}
                     id={`${id}-end-date`}
                     invalid={!!endDateError}
                     onChange={(event) => setEndDate(event.target.value)}
