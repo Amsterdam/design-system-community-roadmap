@@ -7,6 +7,7 @@ import type { Feature } from '@/utils/schemas'
 
 import { getCurrentUser } from '@/app/actions/login'
 import FeatureDetail from '@/components/FeatureDetail'
+import { metaDescription } from '@/utils/meta'
 import { strapi } from '@/utils/strapi'
 
 type Props = {
@@ -19,6 +20,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     const res = await strapi.features.findOne(documentId)
     return {
       title: res.data.title,
+      description: metaDescription(res.data.content),
     }
   } catch {
     return {

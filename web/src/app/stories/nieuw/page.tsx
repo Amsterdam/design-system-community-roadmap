@@ -9,6 +9,7 @@ import StoryForm from './StoryForm'
 
 export const metadata: Metadata = {
   title: 'Nieuwe story',
+  description: 'Maak een nieuwe story aan voor de roadmap van het Amsterdam Design System.',
 }
 
 type Props = {
