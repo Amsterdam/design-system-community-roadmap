@@ -1,8 +1,6 @@
 'use client'
 
-import { Link, Paragraph } from '@amsterdam/design-system-react'
 import { LoginForm } from '@design-system-community-roadmap/ui'
-import NextLink from 'next/link'
 import { useState } from 'react'
 
 import { registerAction } from '@/app/actions/login'
@@ -19,20 +17,5 @@ export default function RegisterClient() {
     if (result?.error) setError(result.error)
   }
 
-  return (
-    <LoginForm
-      error={error}
-      footer={
-        <Paragraph>
-          Al een account?{' '}
-          <NextLink href="/inloggen" legacyBehavior passHref>
-            <Link>Log in</Link>
-          </NextLink>
-        </Paragraph>
-      }
-      loading={loading}
-      onSubmit={handleSubmit}
-      submitLabel="Account aanmaken"
-    />
-  )
+  return <LoginForm error={error} loading={loading} onSubmit={handleSubmit} submitLabel="Account aanmaken" />
 }
