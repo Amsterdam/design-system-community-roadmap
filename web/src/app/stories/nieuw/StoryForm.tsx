@@ -9,6 +9,7 @@ import {
   ErrorMessage,
   Field,
   FieldSet,
+  FileInput,
   Grid,
   Heading,
   InvalidFormAlert,
@@ -21,6 +22,8 @@ import { useRouter } from 'next/navigation'
 import { useState } from 'react'
 
 import { createStoryAction } from '@/app/actions/edits'
+import { uploadImages } from '@/app/actions/upload'
+import { MAX_IMAGES } from '@/utils/images'
 
 type FeatureOption = {
   documentId: string
@@ -48,6 +51,7 @@ export default function StoryForm({ features, preselectedFeatureDocumentId }: Pr
   const [content, setContent] = useState('')
   const [startDate, setStartDate] = useState('')
   const [endDate, setEndDate] = useState('')
+  const [images, setImages] = useState<File[]>([])
   const [featureDocumentId, setFeatureDocumentId] = useState(
     preselectedFeatureDocumentId && features.some((feature) => feature.documentId === preselectedFeatureDocumentId)
       ? preselectedFeatureDocumentId
@@ -70,11 +74,19 @@ export default function StoryForm({ features, preselectedFeatureDocumentId }: Pr
     setError(undefined)
     setFieldErrors({})
 
+    const upload = await uploadImages(images)
+    if (upload.error) {
+      setError(upload.error)
+      setLoading(false)
+      return
+    }
+
     const result = await createStoryAction({
       title,
       content,
       endDate,
       featureDocumentId: featureDocumentId || undefined,
+      imageIds: upload.ids,
       startDate,
     })
 
@@ -181,6 +193,15 @@ export default function StoryForm({ features, preselectedFeatureDocumentId }: Pr
               />
             </Field>
           </FieldSet>
+          <Field className="ams-mb-m">
+            <Label htmlFor="story-images">Afbeeldingen (optioneel)</Label>
+            <FileInput
+              accept="image/*"
+              id="story-images"
+              multiple
+              onChange={(event) => setImages(Array.from(event.target.files ?? []).slice(0, MAX_IMAGES))}
+            />
+          </Field>
           <Button disabled={loading} type="submit" variant="primary">
             {loading ? 'Bezig…' : 'Story aanmaken'}
           </Button>

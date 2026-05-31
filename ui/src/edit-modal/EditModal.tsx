@@ -11,6 +11,8 @@ import {
   ErrorMessage,
   Field,
   FieldSet,
+  FileInput,
+  Image,
   InvalidFormAlert,
   Label,
   Paragraph,
@@ -31,6 +33,15 @@ export type EditModalFieldErrors = {
   title?: string
 }
 
+export type EditModalImage = {
+  alternativeText?: null | string
+  id: number
+  url: string
+}
+
+// Maximum number of images allowed per feature or story.
+const MAX_IMAGES = 4
+
 export type EditModalIdeaOption = {
   documentId: string
   title: string
@@ -46,6 +57,7 @@ export type EditModalProps = {
   deleteError?: string
   deleteLoading?: boolean
   error?: string
+  existingImages?: EditModalImage[]
   featureOptions?: EditModalFeatureOption[]
   fieldErrors?: EditModalFieldErrors
   id: string
@@ -68,6 +80,8 @@ export type EditModalProps = {
     endDate?: string
     featureDocumentId?: string
     ideaDocumentId?: string
+    keepImageIds?: number[]
+    newImages?: File[]
     progressStatus?: string
     startDate?: string
     statusIdea?: string
@@ -101,6 +115,7 @@ const EditModal = ({
   deleteError,
   deleteLoading = false,
   error,
+  existingImages,
   featureOptions,
   fieldErrors,
   id,
@@ -116,6 +131,7 @@ const EditModal = ({
   const showProgressStatusField = type === 'feature'
   const showIdeaField = type === 'feature' && ideaOptions !== undefined
   const showFeatureField = type === 'idea' && featureOptions !== undefined
+  const showImagesField = type !== 'idea' && existingImages !== undefined
   const dialogRef = useRef<HTMLDialogElement>(null)
 
   const [title, setTitle] = useState(initialValues.title)
@@ -126,6 +142,8 @@ const EditModal = ({
   const [endDate, setEndDate] = useState(initialValues.endDate ?? '')
   const [ideaDocumentId, setIdeaDocumentId] = useState(initialValues.ideaDocumentId ?? '')
   const [featureDocumentId, setFeatureDocumentId] = useState(initialValues.featureDocumentId ?? '')
+  const [keptImageIds, setKeptImageIds] = useState<number[]>((existingImages ?? []).map((image) => image.id))
+  const [newImages, setNewImages] = useState<File[]>([])
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false)
 
   useEffect(() => {
@@ -137,6 +155,8 @@ const EditModal = ({
     setEndDate(initialValues.endDate ?? '')
     setIdeaDocumentId(initialValues.ideaDocumentId ?? '')
     setFeatureDocumentId(initialValues.featureDocumentId ?? '')
+    setKeptImageIds((existingImages ?? []).map((image) => image.id))
+    setNewImages([])
   }, [
     initialValues.title,
     initialValues.content,
@@ -146,6 +166,7 @@ const EditModal = ({
     initialValues.ideaDocumentId,
     initialValues.featureDocumentId,
     initialValues.progressStatus,
+    existingImages,
   ])
 
   useEffect(() => {
@@ -172,6 +193,7 @@ const EditModal = ({
       ...(showIdeaField ? { ideaDocumentId } : {}),
       ...(showFeatureField ? { featureDocumentId } : {}),
       ...(type !== 'idea' ? { endDate: endDate.trim(), startDate: startDate.trim() } : {}),
+      ...(showImagesField ? { keepImageIds: keptImageIds, newImages } : {}),
     })
     if (shouldClose) {
       dialogRef.current?.close()
@@ -397,6 +419,44 @@ const EditModal = ({
                   />
                 </Field>
               </FieldSet>
+            )}
+
+            {showImagesField && (
+              <Field>
+                <Label htmlFor={`${id}-images`}>Afbeeldingen</Label>
+                {keptImageIds.length > 0 && (
+                  <ul className={styles['edit-modal__images']}>
+                    {(existingImages ?? [])
+                      .filter((image) => keptImageIds.includes(image.id))
+                      .map((image) => (
+                        <li className={styles['edit-modal__image']} key={image.id}>
+                          <Image
+                            alt={image.alternativeText ?? ''}
+                            className={styles['edit-modal__image-preview']}
+                            src={image.url}
+                          />
+                          <Button
+                            icon={TrashBinIcon}
+                            iconBefore
+                            onClick={() => setKeptImageIds((current) => current.filter((keptId) => keptId !== image.id))}
+                            type="button"
+                            variant="tertiary"
+                          >
+                            Verwijderen
+                          </Button>
+                        </li>
+                      ))}
+                  </ul>
+                )}
+                <FileInput
+                  accept="image/*"
+                  id={`${id}-images`}
+                  multiple
+                  onChange={(event) =>
+                    setNewImages(Array.from(event.target.files ?? []).slice(0, MAX_IMAGES - keptImageIds.length))
+                  }
+                />
+              </Field>
             )}
 
             {error && (

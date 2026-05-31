@@ -133,6 +133,7 @@ export async function updateFeatureAction(
     content: string
     endDate: string | null
     ideaDocumentId?: string | null
+    imageIds?: number[]
     progressStatus?: string | null
     startDate: string
     title: string
@@ -178,6 +179,7 @@ export async function updateFeatureAction(
           idea: ideaDocumentId,
           progressStatus: input.progressStatus || null,
           startDate: trimmedStartDate,
+          ...(input.imageIds !== undefined ? { images: input.imageIds } : {}),
         },
       }),
       headers: { 'Content-Type': 'application/json' },
@@ -204,7 +206,7 @@ export async function updateFeatureAction(
 
 export async function updateStoryAction(
   documentId: string,
-  input: { content: string; endDate: string; startDate: string; title: string },
+  input: { content: string; endDate: string; imageIds?: number[]; startDate: string; title: string },
 ): Promise<EditResponse> {
   const user = await getCurrentUser()
   if (!user) return { needsLogin: true }
@@ -247,6 +249,7 @@ export async function updateStoryAction(
           content: trimmedContent,
           endDate: trimmedEndDate,
           startDate: trimmedStartDate,
+          ...(input.imageIds !== undefined ? { images: input.imageIds } : {}),
         },
       }),
       headers: { 'Content-Type': 'application/json' },
@@ -273,6 +276,7 @@ export async function updateStoryAction(
 export async function createFeatureAction(input: {
   content: string
   endDate: string | null
+  imageIds?: number[]
   startDate: string
   title: string
 }): Promise<CreateResponse> {
@@ -315,6 +319,7 @@ export async function createFeatureAction(input: {
           endDate: trimmedEndDate || null,
           publishedAt: new Date().toISOString(),
           startDate: trimmedStartDate,
+          ...(input.imageIds && input.imageIds.length > 0 ? { images: input.imageIds } : {}),
         },
       }),
       headers: { 'Content-Type': 'application/json' },
@@ -349,6 +354,7 @@ export async function createStoryAction(input: {
   content: string
   endDate: string
   featureDocumentId?: string
+  imageIds?: number[]
   startDate: string
   title: string
 }): Promise<CreateResponse> {

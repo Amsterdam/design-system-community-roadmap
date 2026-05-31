@@ -25,6 +25,8 @@ import type { StrapiImage } from '@/utils/schemas'
 import { deleteStoryAction, updateStoryAction } from '@/app/actions/edits'
 import { toggleStoryLikeAction } from '@/app/actions/likes'
 import { addStoryReactionAction, deleteStoryReactionAction, editStoryReactionAction } from '@/app/actions/reactions'
+import { uploadImages } from '@/app/actions/upload'
+import { getStrapiMedia } from '@/utils/media'
 import { getStatusBadge } from '@/utils/status'
 
 import Breadcrumbs from './Breadcrumbs'
@@ -106,6 +108,8 @@ export default function StoryDetail({
   const handleEditSubmit = async (values: {
     content: string
     endDate?: string
+    keepImageIds?: number[]
+    newImages?: File[]
     startDate?: string
     statusIdea?: string
     title: string
@@ -114,10 +118,19 @@ export default function StoryDetail({
     setEditError(undefined)
     setEditFieldErrors(undefined)
 
+    const upload = await uploadImages(values.newImages ?? [])
+    if (upload.error) {
+      setEditError(upload.error)
+      setEditLoading(false)
+      return false
+    }
+    const imageIds = [...(values.keepImageIds ?? []), ...(upload.ids ?? [])]
+
     const result = await updateStoryAction(storyDocumentId, {
       title: values.title,
       content: values.content,
       endDate: values.endDate ?? '',
+      imageIds,
       startDate: values.startDate ?? '',
     })
 
@@ -309,6 +322,11 @@ export default function StoryDetail({
           deleteError={deleteError}
           deleteLoading={deleteLoading}
           error={editError}
+          existingImages={(images ?? []).map((image) => ({
+            alternativeText: image.alternativeText,
+            id: image.id ?? 0,
+            url: getStrapiMedia(image.url) ?? image.url,
+          }))}
           fieldErrors={editFieldErrors}
           id={editModalId}
           initialValues={{ title, content, endDate: endDate ?? '', startDate: startDate ?? '' }}
