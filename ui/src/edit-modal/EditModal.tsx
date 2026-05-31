@@ -437,7 +437,9 @@ const EditModal = ({
                           <Button
                             icon={TrashBinIcon}
                             iconBefore
-                            onClick={() => setKeptImageIds((current) => current.filter((keptId) => keptId !== image.id))}
+                            onClick={() =>
+                              setKeptImageIds((current) => current.filter((keptId) => keptId !== image.id))
+                            }
                             type="button"
                             variant="tertiary"
                           >

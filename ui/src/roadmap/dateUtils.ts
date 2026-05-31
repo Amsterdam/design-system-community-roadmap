@@ -128,9 +128,7 @@ export function getDefaultRangeForFeatures(
 
   const allEndDates: Date[] = [
     ...features.map((feature) => resolveEndDate(feature.endDate, feature.startDate)),
-    ...features.flatMap((feature) =>
-      feature.stories.map((story) => resolveEndDate(story.endDate, story.startDate)),
-    ),
+    ...features.flatMap((feature) => feature.stories.map((story) => resolveEndDate(story.endDate, story.startDate))),
     ...standaloneStories.map((story) => resolveEndDate(story.endDate, story.startDate)),
   ]
 
