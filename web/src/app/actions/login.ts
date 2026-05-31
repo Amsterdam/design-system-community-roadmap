@@ -45,9 +45,9 @@ const ALLOWED_EMOJIS = new Set([
 
 function validateInputs(name: string, emoji: string): string | null {
   const trimmed = name.trim()
-  if (!trimmed) return 'Vul je voornaam in.'
-  if (trimmed.length > 50) return 'Naam mag maximaal 50 tekens bevatten.'
-  if (!ALLOWED_EMOJIS.has(emoji)) return 'Ongeldige emoji gekozen.'
+  if (!trimmed) return 'Vul je voornaam in om verder te gaan.'
+  if (trimmed.length > 50) return 'Je naam is te lang. Gebruik maximaal 50 tekens.'
+  if (!ALLOWED_EMOJIS.has(emoji)) return 'Kies een emoji uit de lijst om door te gaan.'
   return null
 }
 
@@ -86,7 +86,7 @@ export async function loginAction(name: string, emoji: string): Promise<AuthResu
   })
 
   const res = await client.fetch(`end-users?${params}`)
-  if (!res.ok) return { error: 'Er is iets misgegaan. Probeer het opnieuw.' }
+  if (!res.ok) return { error: 'Dat is helaas niet gelukt. Probeer het opnieuw of kom later terug.' }
 
   const parsed = strapiCollection(EndUserSchema).safeParse(await res.json())
   if (!parsed.success || parsed.data.data.length === 0) {
@@ -112,12 +112,12 @@ export async function registerAction(name: string, emoji: string): Promise<AuthR
   })
 
   const duplicateCheck = await client.fetch(`end-users?${duplicateParams}`)
-  if (!duplicateCheck.ok) return { error: 'Er is iets misgegaan. Probeer het opnieuw.' }
+  if (!duplicateCheck.ok) return { error: 'Dat is helaas niet gelukt. Probeer het opnieuw of kom later terug.' }
 
   const duplicateParsed = strapiCollection(EndUserSchema).safeParse(await duplicateCheck.json())
   if (!duplicateParsed.success) {
     console.error('[registerAction] Failed to parse duplicate check response', duplicateParsed.error)
-    return { error: 'Er is iets misgegaan. Probeer het opnieuw.' }
+    return { error: 'Dat is helaas niet gelukt. Probeer het opnieuw of kom later terug.' }
   }
   if (duplicateParsed.data.data.length > 0) {
     return { error: 'Er bestaat al een account met deze naam en emoji. Kies een andere combinatie.' }
@@ -132,14 +132,17 @@ export async function registerAction(name: string, emoji: string): Promise<AuthR
   if (!res.ok) {
     const body = await res.text().catch(() => '')
     console.error('[registerAction] Failed to create end-user', res.status, body)
-    return { error: `Er is iets misgegaan (${res.status}). Probeer het opnieuw.` }
+    return { error: 'Aanmelden is helaas niet gelukt. Probeer het opnieuw of kom later terug.' }
   }
 
   const json = await res.json()
   const parsed = strapiSingle(EndUserSchema).safeParse(json)
   if (!parsed.success) {
     console.error('[registerAction] Failed to parse end-user response', parsed.error, json)
-    return { error: 'Er is iets misgegaan bij het verwerken van het antwoord.' }
+    return {
+      error:
+        'Je account is aangemaakt, maar inloggen is niet gelukt. Ga naar de inlogpagina en probeer opnieuw in te loggen.',
+    }
   }
 
   const newUser = parsed.data.data

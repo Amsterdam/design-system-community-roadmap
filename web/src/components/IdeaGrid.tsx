@@ -2,7 +2,7 @@
 
 import type { AnchorHTMLAttributes, ComponentProps } from 'react'
 
-import { Grid, Heading, Pagination, Row, StandaloneLink } from '@amsterdam/design-system-react'
+import { Column, Grid, Heading, Pagination, Paragraph, Row, StandaloneLink } from '@amsterdam/design-system-react'
 import { Card, SearchBar } from '@design-system-community-roadmap/ui'
 import NextLink from 'next/link'
 import { useRouter } from 'next/navigation'
@@ -54,17 +54,18 @@ export default function IdeaGrid({ currentPage = 1, currentUserDocumentId, ideas
   return (
     <>
       <Grid paddingBottom="large">
-        <Grid.Cell span={{ narrow: 2, medium: 4, wide: 4 }}>
-          <Heading level={1} size="level-2">
-            Ideeën
-          </Heading>
+        <Grid.Cell span={{ narrow: 4, medium: 5, wide: 8 }}>
+          <Column gap="x-small">
+            <Heading level={1} size="level-2">
+              Ideeën
+            </Heading>
+            <Paragraph>Deel ideeën voor het Amsterdam Design System en stem op de voorstellen van anderen.</Paragraph>
+            <Row>
+              <StandaloneLink href="/idee-delen">Idee delen</StandaloneLink>
+            </Row>
+          </Column>
         </Grid.Cell>
-        <Grid.Cell span={{ narrow: 2, medium: 4, wide: 2 }} start={{ narrow: 3, medium: 5, wide: 7 }}>
-          <Row align="end" alignVertical="center">
-            <StandaloneLink href="/idee-delen">Idee delen</StandaloneLink>
-          </Row>
-        </Grid.Cell>
-        <Grid.Cell span={{ narrow: 4, medium: 4, wide: 4 }}>
+        <Grid.Cell span={{ narrow: 4, medium: 3, wide: 4 }}>
           <SearchBar onSearch={searchIdeasAction} placeholder="Zoek tussen de ideeën" />
         </Grid.Cell>
       </Grid>

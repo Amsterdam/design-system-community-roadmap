@@ -11,6 +11,7 @@ import {
   ErrorMessage,
   Field,
   FieldSet,
+  InvalidFormAlert,
   Label,
   Paragraph,
   Select,
@@ -192,6 +193,14 @@ const EditModal = ({
   const startDateErrorId = `${id}-start-date-error`
   const endDateErrorId = `${id}-end-date-error`
 
+  const invalidFields = [
+    ...(titleError ? [{ id: `#${id}-title`, label: titleError }] : []),
+    ...(contentError ? [{ id: `#${id}-content`, label: contentError }] : []),
+    ...(statusIdeaError ? [{ id: `#${id}-status`, label: statusIdeaError }] : []),
+    ...(startDateError ? [{ id: `#${id}-start-date`, label: startDateError }] : []),
+    ...(endDateError ? [{ id: `#${id}-end-date`, label: endDateError }] : []),
+  ]
+
   const editFooter = (
     <div className={styles['edit-modal__footer']}>
       <ActionGroup>
@@ -240,138 +249,141 @@ const EditModal = ({
         <div className={styles['edit-modal__confirm']}>
           <Paragraph>{deleteBodyPerType[type]}</Paragraph>
           {deleteError && (
-            <Alert heading="Verwijderen mislukt" headingLevel={3} severity="error">
+            <Alert heading="Verwijderen is niet gelukt" headingLevel={3} severity="error">
               <Paragraph>{deleteError}</Paragraph>
             </Alert>
           )}
         </div>
       ) : (
-        <form className={styles['edit-modal__form']} id={formId} noValidate onSubmit={handleSubmit}>
-          <Field invalid={!!titleError}>
-            <Label htmlFor={`${id}-title`}>Titel</Label>
-            {titleError && <ErrorMessage id={titleErrorId}>{titleError}</ErrorMessage>}
-            <TextInput
-              aria-describedby={titleError ? titleErrorId : undefined}
-              aria-required="true"
-              id={`${id}-title`}
-              invalid={!!titleError}
-              onChange={(event) => setTitle(event.target.value)}
-              value={title}
-            />
-          </Field>
-
-          <Field invalid={!!contentError}>
-            <Label htmlFor={`${id}-content`}>Inhoud</Label>
-            {contentError && <ErrorMessage id={contentErrorId}>{contentError}</ErrorMessage>}
-            <TextArea
-              aria-describedby={contentError ? contentErrorId : undefined}
-              aria-required="true"
-              id={`${id}-content`}
-              invalid={!!contentError}
-              onChange={(event) => setContent(event.target.value)}
-              rows={6}
-              value={content}
-            />
-          </Field>
-
-          {showIdeaField && (
-            <Field>
-              <Label htmlFor={`${id}-idea`} optional>
-                Gekoppeld idee
-              </Label>
-              <Select
-                id={`${id}-idea`}
-                onChange={(event) => setIdeaDocumentId(event.target.value)}
-                value={ideaDocumentId}
-              >
-                <option value="">Geen idee gekoppeld</option>
-                {ideaOptions?.map((idea) => (
-                  <option key={idea.documentId} value={idea.documentId}>
-                    {idea.title}
-                  </option>
-                ))}
-              </Select>
+        <>
+          {invalidFields.length > 0 && <InvalidFormAlert errors={invalidFields} headingLevel={2} />}
+          <form className={styles['edit-modal__form']} id={formId} noValidate onSubmit={handleSubmit}>
+            <Field invalid={!!titleError}>
+              <Label htmlFor={`${id}-title`}>Titel</Label>
+              {titleError && <ErrorMessage id={titleErrorId}>{titleError}</ErrorMessage>}
+              <TextInput
+                aria-describedby={titleError ? titleErrorId : undefined}
+                aria-required="true"
+                id={`${id}-title`}
+                invalid={!!titleError}
+                onChange={(event) => setTitle(event.target.value)}
+                value={title}
+              />
             </Field>
-          )}
 
-          {showFeatureField && (
-            <Field>
-              <Label htmlFor={`${id}-feature`} optional>
-                Gekoppelde feature
-              </Label>
-              <Select
-                id={`${id}-feature`}
-                onChange={(event) => setFeatureDocumentId(event.target.value)}
-                value={featureDocumentId}
-              >
-                <option value="">Geen feature gekoppeld</option>
-                {featureOptions?.map((feature) => (
-                  <option key={feature.documentId} value={feature.documentId}>
-                    {feature.title}
-                  </option>
-                ))}
-              </Select>
+            <Field invalid={!!contentError}>
+              <Label htmlFor={`${id}-content`}>Inhoud</Label>
+              {contentError && <ErrorMessage id={contentErrorId}>{contentError}</ErrorMessage>}
+              <TextArea
+                aria-describedby={contentError ? contentErrorId : undefined}
+                aria-required="true"
+                id={`${id}-content`}
+                invalid={!!contentError}
+                onChange={(event) => setContent(event.target.value)}
+                rows={6}
+                value={content}
+              />
             </Field>
-          )}
 
-          {showStatusField && (
-            <Field invalid={!!statusIdeaError}>
-              <Label htmlFor={`${id}-status`}>Status</Label>
-              {statusIdeaError && <ErrorMessage id={statusIdeaErrorId}>{statusIdeaError}</ErrorMessage>}
-              <Select
-                aria-describedby={statusIdeaError ? statusIdeaErrorId : undefined}
-                id={`${id}-status`}
-                invalid={!!statusIdeaError}
-                onChange={(event) => setStatusIdea(event.target.value)}
-                value={statusIdea}
-              >
-                <option value="in_review">Ter beoordeling</option>
-                <option value="accepted">Geaccepteerd</option>
-                <option value="postponed">Uitgesteld</option>
-              </Select>
-            </Field>
-          )}
-
-          {type !== 'idea' && (
-            <FieldSet legend="Looptijd">
-              <Field invalid={!!startDateError}>
-                <Label htmlFor={`${id}-start-date`} inFieldSet>
-                  Startdatum
+            {showIdeaField && (
+              <Field>
+                <Label htmlFor={`${id}-idea`} optional>
+                  Gekoppeld idee
                 </Label>
-                {startDateError && <ErrorMessage id={startDateErrorId}>{startDateError}</ErrorMessage>}
-                <DateInput
-                  aria-describedby={startDateError ? startDateErrorId : undefined}
-                  aria-required="true"
-                  id={`${id}-start-date`}
-                  invalid={!!startDateError}
-                  onChange={(event) => setStartDate(event.target.value)}
-                  value={startDate}
-                />
+                <Select
+                  id={`${id}-idea`}
+                  onChange={(event) => setIdeaDocumentId(event.target.value)}
+                  value={ideaDocumentId}
+                >
+                  <option value="">Geen idee gekoppeld</option>
+                  {ideaOptions?.map((idea) => (
+                    <option key={idea.documentId} value={idea.documentId}>
+                      {idea.title}
+                    </option>
+                  ))}
+                </Select>
               </Field>
+            )}
 
-              <Field invalid={!!endDateError}>
-                <Label htmlFor={`${id}-end-date`} inFieldSet optional={type === 'feature'}>
-                  Einddatum
+            {showFeatureField && (
+              <Field>
+                <Label htmlFor={`${id}-feature`} optional>
+                  Gekoppelde feature
                 </Label>
-                {endDateError && <ErrorMessage id={endDateErrorId}>{endDateError}</ErrorMessage>}
-                <DateInput
-                  aria-describedby={endDateError ? endDateErrorId : undefined}
-                  aria-required={type === 'story' ? 'true' : undefined}
-                  id={`${id}-end-date`}
-                  invalid={!!endDateError}
-                  onChange={(event) => setEndDate(event.target.value)}
-                  value={endDate}
-                />
+                <Select
+                  id={`${id}-feature`}
+                  onChange={(event) => setFeatureDocumentId(event.target.value)}
+                  value={featureDocumentId}
+                >
+                  <option value="">Geen feature gekoppeld</option>
+                  {featureOptions?.map((feature) => (
+                    <option key={feature.documentId} value={feature.documentId}>
+                      {feature.title}
+                    </option>
+                  ))}
+                </Select>
               </Field>
-            </FieldSet>
-          )}
+            )}
 
-          {error && (
-            <Alert heading="Bewerken mislukt" headingLevel={3} severity="error">
-              <Paragraph>{error}</Paragraph>
-            </Alert>
-          )}
-        </form>
+            {showStatusField && (
+              <Field invalid={!!statusIdeaError}>
+                <Label htmlFor={`${id}-status`}>Status</Label>
+                {statusIdeaError && <ErrorMessage id={statusIdeaErrorId}>{statusIdeaError}</ErrorMessage>}
+                <Select
+                  aria-describedby={statusIdeaError ? statusIdeaErrorId : undefined}
+                  id={`${id}-status`}
+                  invalid={!!statusIdeaError}
+                  onChange={(event) => setStatusIdea(event.target.value)}
+                  value={statusIdea}
+                >
+                  <option value="in_review">Ter beoordeling</option>
+                  <option value="accepted">Geaccepteerd</option>
+                  <option value="postponed">Uitgesteld</option>
+                </Select>
+              </Field>
+            )}
+
+            {type !== 'idea' && (
+              <FieldSet legend="Looptijd">
+                <Field invalid={!!startDateError}>
+                  <Label htmlFor={`${id}-start-date`} inFieldSet>
+                    Startdatum
+                  </Label>
+                  {startDateError && <ErrorMessage id={startDateErrorId}>{startDateError}</ErrorMessage>}
+                  <DateInput
+                    aria-describedby={startDateError ? startDateErrorId : undefined}
+                    aria-required="true"
+                    id={`${id}-start-date`}
+                    invalid={!!startDateError}
+                    onChange={(event) => setStartDate(event.target.value)}
+                    value={startDate}
+                  />
+                </Field>
+
+                <Field invalid={!!endDateError}>
+                  <Label htmlFor={`${id}-end-date`} inFieldSet optional={type === 'feature'}>
+                    Einddatum
+                  </Label>
+                  {endDateError && <ErrorMessage id={endDateErrorId}>{endDateError}</ErrorMessage>}
+                  <DateInput
+                    aria-describedby={endDateError ? endDateErrorId : undefined}
+                    aria-required={type === 'story' ? 'true' : undefined}
+                    id={`${id}-end-date`}
+                    invalid={!!endDateError}
+                    onChange={(event) => setEndDate(event.target.value)}
+                    value={endDate}
+                  />
+                </Field>
+              </FieldSet>
+            )}
+
+            {error && (
+              <Alert heading="Opslaan is niet gelukt" headingLevel={3} severity="error">
+                <Paragraph>{error}</Paragraph>
+              </Alert>
+            )}
+          </form>
+        </>
       )}
     </Dialog>
   )
