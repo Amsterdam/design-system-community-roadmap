@@ -22,14 +22,14 @@
     "@strapi/plugin-cloud": "5.47.0",
     "@strapi/plugin-users-permissions": "5.47.0",
     "@strapi/strapi": "5.47.0",
-    "pg": "8.21.0",
+    "pg": "8.22.0",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-router-dom": "^6.30.4",
     "styled-components": "^6.4.2"
   },
   "devDependencies": {
-    "@types/node": "^25",
+    "@types/node": "^26",
     "@types/react": "^18",
     "@types/react-dom": "^18",
     "typescript": "^6"
