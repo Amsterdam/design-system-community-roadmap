@@ -2,7 +2,7 @@
   "name": "@amsterdam/design-system-community-roadmap",
   "version": "1.0.0",
   "private": true,
-  "packageManager": "pnpm@10.34.7",
+  "packageManager": "pnpm@12.14.0",
   "scripts": {
     "dev": "pnpm --parallel --filter ./web --filter ./cms --filter ./storybook run dev",
     "build": "pnpm --filter ./web --filter ./cms --filter ./storybook run build",
