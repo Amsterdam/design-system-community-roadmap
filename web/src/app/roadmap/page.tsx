@@ -38,15 +38,13 @@ export default async function Page() {
 
   const standaloneStories: RoadmapStory[] = allStories
     .filter((story) => !story.feature && !!story.startDate)
-    .map(
-      (story): RoadmapStory => ({
-        title: story.title,
-        documentId: story.documentId,
-        endDate: story.endDate ?? null,
-        id: story.id,
-        startDate: story.startDate!,
-      }),
-    )
+    .map((story): RoadmapStory => ({
+      title: story.title,
+      documentId: story.documentId,
+      endDate: story.endDate ?? null,
+      id: story.id,
+      startDate: story.startDate!,
+    }))
 
   return (
     <RoadmapPage
