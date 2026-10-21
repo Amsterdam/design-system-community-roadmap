@@ -26,16 +26,16 @@
   "devDependencies": {
     "@types/react": "^19",
     "@types/react-dom": "^19",
-    "react": "^19.2.5",
-    "react-dom": "^19.2.5",
+    "react": "^19.3.1",
+    "react-dom": "^19.3.1",
     "typescript": "^6"
   },
   "dependencies": {
-    "@amsterdam/design-system-assets": "^2.3.0",
-    "@amsterdam/design-system-css": "^4.1.0",
-    "@amsterdam/design-system-react": "^4.1.0",
-    "@amsterdam/design-system-react-icons": "^2.0.0",
-    "@amsterdam/design-system-tokens": "^4.0.1",
+    "@amsterdam/design-system-assets": "^2.6.0",
+    "@amsterdam/design-system-css": "^4.4.0",
+    "@amsterdam/design-system-react": "^4.4.0",
+    "@amsterdam/design-system-react-icons": "^2.2.0",
+    "@amsterdam/design-system-tokens": "^4.3.0",
     "clsx": "^2.1.1",
     "date-fns": "^4.4.0"
   }
