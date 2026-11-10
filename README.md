@@ -24,7 +24,7 @@ This is a [pnpm](https://pnpm.io/) workspace with four packages:
 
 Make sure the following are installed before setting up the project:
 
-- **Node.js** ≥ 20 — [nodejs.org](https://nodejs.org)
+- **Node.js** 26.x — [nodejs.org](https://nodejs.org)
 - **pnpm** — `npm install -g pnpm`
 - **PostgreSQL** ≥ 14 — on macOS: `brew install postgresql@16`
 
