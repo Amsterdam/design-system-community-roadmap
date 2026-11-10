@@ -1,0 +1,1 @@
+import{n as e}from"./rolldown-runtime-BCiCTKAo.js";function t(e,t){if(!e)return`Onbekend`;let n=new Date(e).toLocaleDateString(`nl-NL`,{day:`numeric`,month:`short`});return t?`${n} - ${new Date(t).toLocaleDateString(`nl-NL`,{day:`numeric`,month:`short`})}`:n}function n(){return(n=e((()=>{})))()}export{n,t};
