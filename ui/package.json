@@ -28,7 +28,7 @@
     "@types/react-dom": "^19",
     "react": "^19.3.1",
     "react-dom": "^19.3.1",
-    "typescript": "^7"
+    "typescript": "npm:@typescript/typescript6@^6.0.2"
   },
   "dependencies": {
     "@amsterdam/design-system-assets": "^2.7.0",

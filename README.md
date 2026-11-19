@@ -8,6 +8,8 @@ The Community Roadmap is a digital platform that helps software development team
 
 The front-end is built with **Next.js** and the back-end is powered by **Strapi**. Shared UI components live in a separate package and are previewed with **Storybook**.
 
+Typechecking uses TypeScript 7 via the root `@typescript/native` alias. The `typescript` dependencies alias `@typescript/typescript6` to provide the compiler API required by ESLint, Strapi, Next.js, and Storybook; this compatibility package exposes `tsc6` without shadowing TypeScript 7's `tsc`.
+
 ## Project structure
 
 This is a [pnpm](https://pnpm.io/) workspace with four packages:
