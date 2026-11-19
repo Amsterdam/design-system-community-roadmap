@@ -1,4 +1,4 @@
-import{n as e}from"./rolldown-runtime-BCiCTKAo.js";import{t,w as n}from"./src-v0Yv7WE8.js";var r,i,a,o,s;function c(){return(c=e((()=>{t(),r={title:`Atoms/Like Button`,component:n,argTypes:{count:{control:{min:0,type:`number`}},isLiked:{control:`boolean`}}},i={args:{count:25,isLiked:!1}},a={args:{count:25,isLiked:!0}},o={args:{count:7,isLiked:!1}},s=[`Default`,`Liked`,`Small`],i.parameters={...i.parameters,docs:{...i.parameters?.docs,source:{originalSource:`{
+import{n as e}from"./rolldown-runtime-BCiCTKAo.js";import{t,w as n}from"./src-BbpeF4PQ.js";var r,i,a,o,s;function c(){return(c=e((()=>{t(),r={title:`Atoms/Like Button`,component:n,argTypes:{count:{control:{min:0,type:`number`}},isLiked:{control:`boolean`}}},i={args:{count:25,isLiked:!1}},a={args:{count:25,isLiked:!0}},o={args:{count:7,isLiked:!1}},s=[`Default`,`Liked`,`Small`],i.parameters={...i.parameters,docs:{...i.parameters?.docs,source:{originalSource:`{
   args: {
     count: 25,
     isLiked: false

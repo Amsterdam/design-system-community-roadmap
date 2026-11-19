@@ -1,4 +1,4 @@
-import{n as e}from"./rolldown-runtime-BCiCTKAo.js";import{t,u as n}from"./src-v0Yv7WE8.js";var r,i,a,o,s,c;function l(){return(l=e((()=>{t(),r={title:`Molecules/Add Reaction`,component:n,args:{onSubmit:()=>{}},argTypes:{onSubmit:{action:`submitted`}}},i={args:{isLoggedIn:!0}},a={args:{isLoggedIn:!1}},o={args:{isLoggedIn:!0,loading:!0}},s={args:{error:`Er is iets misgegaan bij het plaatsen van je reactie.`,isLoggedIn:!0}},c=[`Default`,`NotLoggedIn`,`Loading`,`WithError`],i.parameters={...i.parameters,docs:{...i.parameters?.docs,source:{originalSource:`{
+import{n as e}from"./rolldown-runtime-BCiCTKAo.js";import{t,u as n}from"./src-BbpeF4PQ.js";var r,i,a,o,s,c;function l(){return(l=e((()=>{t(),r={title:`Molecules/Add Reaction`,component:n,args:{onSubmit:()=>{}},argTypes:{onSubmit:{action:`submitted`}}},i={args:{isLoggedIn:!0}},a={args:{isLoggedIn:!1}},o={args:{isLoggedIn:!0,loading:!0}},s={args:{error:`Er is iets misgegaan bij het plaatsen van je reactie.`,isLoggedIn:!0}},c=[`Default`,`NotLoggedIn`,`Loading`,`WithError`],i.parameters={...i.parameters,docs:{...i.parameters?.docs,source:{originalSource:`{
   args: {
     isLoggedIn: true
   }
